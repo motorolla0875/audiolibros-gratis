@@ -15,6 +15,11 @@ const falso = http.createServer((req, res) => {
       { identifier: n + '_otro_librivox', title: ['Rimas'], creator: ['Bécquer, Gustavo Adolfo'], downloads: 500 }
     ] } });
   }
+  if (u.pathname.startsWith('/download/')) {
+    res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Content-Type', 'audio/mpeg');
+    return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/cap1-ef_dora.mp3')));
+  }
+  if (u.pathname.startsWith('/services/img/')) { res.statusCode = 404; return res.end(); }
   if (u.pathname.startsWith('/metadata/')) {
     return json({ metadata: { identifier: 'x', title: 'Cuentos de la Selva', creator: 'Quiroga, Horacio, 1878-1937', description: '<p>Ocho cuentos.</p><br>(Summary by Juan)' },
       files: [
@@ -24,13 +29,14 @@ const falso = http.createServer((req, res) => {
         { name: 'cover.jpg', format: 'JPEG' }
       ] });
   }
-  if (u.pathname === '/api/v2/ar/podcasts/top/20/podcasts.json' || u.pathname === '/api/v2/ar/podcasts/top/50/podcasts.json') {
-    return json({ feed: { results: [{ id: '111', name: 'Pod Uno', artistName: 'Radio X', artworkUrl100: 'https://img/a/100x100bb.jpg', genres: [{ name: 'Historia' }] }] } });
+  if (/^\/api\/v2\/(ar|us|br)\/podcasts\/top\/\d+\/podcasts.json$/.test(u.pathname)) {
+    return json({ feed: { results: [{ id: '111', name: 'Pod Uno', artistName: 'Radio X', artworkUrl100: 'https://img/a/100x100bb.jpg', genres: [{ name: 'Historia' }] }, { id: '999', name: 'Adultos', contentAdvisoryRating: 'Explicit' }] } });
   }
   if (u.pathname === '/search') {
     return json({ results: [
       { collectionId: 222, collectionName: 'Pod Dos', artistName: 'Ana', artworkUrl600: 'https://img/b/600x600bb.jpg', feedUrl: 'http://127.0.0.1:' + falso.address().port + '/feed.xml', primaryGenreName: 'Ciencia' },
-      { collectionId: 333, collectionName: 'Sin feed', artistName: 'X' }
+      { collectionId: 333, collectionName: 'Sin feed', artistName: 'X' },
+      { collectionId: 444, collectionName: 'Explícito', artistName: 'X', feedUrl: 'http://x/f', collectionExplicitness: 'explicit' }
     ] });
   }
   if (u.pathname === '/lookup') {
@@ -43,6 +49,7 @@ const falso = http.createServer((req, res) => {
       <item><title>Episodio 2</title><guid isPermaLink="false">g2</guid><pubDate>Tue, 06 Oct 2026 10:00:00 GMT</pubDate><itunes:duration>01:02:03</itunes:duration><enclosure url="${MP3}" type="audio/mpeg" length="1"/><itunes:image href="https://img/ep.jpg"/></item>
       <item><title>Episodio 1</title><guid>g1</guid><pubDate>Mon, 05 Oct 2026 10:00:00 GMT</pubDate><itunes:duration>754</itunes:duration><enclosure url="${MP3}?1" type="audio/mpeg"/></item>
       <item><title>Sin audio</title></item>
+      <item><title>Adulto</title><itunes:explicit>yes</itunes:explicit><enclosure url="${MP3}?x"/></item>
     </channel></rss>`);
   }
   res.statusCode = 404; res.end('no');
@@ -92,6 +99,23 @@ falso.listen(0, '127.0.0.1', async () => {
 
       r = await api('/api/buscar?q=quijote');
       assert.equal(r.body.libros[0].id, 'quijote-kokoro');
+
+      r = await api('/api/inicio?idioma=en');
+      assert.ok(!r.body.filas.some(f => f.id === 'propios'), 'en inglés no hay propios');
+      assert.equal(r.body.destacado.etiqueta, 'Featured');
+      assert.equal(r.body.filas.find(f => f.id === 'cuentos').titulo, 'Short stories');
+
+      r = await api('/api/podcasts');
+      assert.ok(!r.body.podcasts.some(x => x.id === '999'), 'oculta explícitos del ranking');
+
+      r = await api('/api/categorias?idioma=pt');
+      assert.equal(r.body.libros[0].nombre, 'Contos');
+
+      r = await api('/api/config');
+      assert.equal(r.body.afiliado, null);
+
+      r = await api('/api/candidatos');
+      assert.ok(r.body[0].includes(' | Cuentos de la Selva | Horacio Quiroga | 9000'));
 
       r = await api('/api/libros?cat=poesia&pagina=2');
       assert.equal(r.body.total, 42);
