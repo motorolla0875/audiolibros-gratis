@@ -26,7 +26,7 @@ const ICO = {
 // ================= Textos en 3 idiomas =================
 const TX = {
   es: {
-    tabInicio:"Inicio", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolibro", completo:"Completo", guardarClip:"Guardar", siguienteClip:"Siguiente", tocaEmpezar:"Tocá para empezar", deslizaTxt:"Deslizá para arriba para el siguiente", sinClips:"No hay clips por ahora. Probá en un rato.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
+    tabInicio:"Inicio", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolibro", completo:"Completo", guardarClip:"Guardar", siguienteClip:"Siguiente", tocaEmpezar:"Tocá para empezar", reiniciarGustos:"Empezar de cero las recomendaciones", gustosTxt:"Clips aprende qué temas te gustan según lo que escuchás y lo que pasás. Se guarda solo en tu teléfono.", gustosOk:"Listo, Clips vuelve a empezar.", deslizaTxt:"Deslizá para arriba para el siguiente", sinClips:"No hay clips por ahora. Probá en un rato.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
     escuchar:"Escuchar", seguirEsc:"Seguir escuchando", miLista:"Mi lista", enMiLista:"En mi lista", masInfo:"Más información", verTodo:"Ver todo",
     pie:"Audiolibros de dominio público grabados por voluntarios de LibriVox y alojados en archive.org.<br>Podcasts del directorio público de Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolibros por género", porTema:"Podcasts por tema",
@@ -59,7 +59,7 @@ const TX = {
     cancelar:"Cancelar", borrar:"Borrar"
   },
   en: {
-    tabInicio:"Home", tabClips:"Clips", tabBuscar:"Search", clipPodcast:"Podcast", clipLibro:"Audiobook", completo:"Full", guardarClip:"Save", siguienteClip:"Next", tocaEmpezar:"Tap to start", deslizaTxt:"Swipe up for the next one", sinClips:"No clips right now. Try again soon.", tabPodcasts:"Podcasts", tabBiblioteca:"Library",
+    tabInicio:"Home", tabClips:"Clips", tabBuscar:"Search", clipPodcast:"Podcast", clipLibro:"Audiobook", completo:"Full", guardarClip:"Save", siguienteClip:"Next", tocaEmpezar:"Tap to start", reiniciarGustos:"Reset recommendations", gustosTxt:"Clips learns which topics you like from what you listen to and skip. It's stored only on your phone.", gustosOk:"Done, Clips starts fresh.", deslizaTxt:"Swipe up for the next one", sinClips:"No clips right now. Try again soon.", tabPodcasts:"Podcasts", tabBiblioteca:"Library",
     escuchar:"Listen", seguirEsc:"Continue listening", miLista:"My list", enMiLista:"In my list", masInfo:"More info", verTodo:"See all",
     pie:"Public domain audiobooks recorded by LibriVox volunteers and hosted on archive.org.<br>Podcasts from the public Apple Podcasts directory.",
     buscar:"Search", buscarPh:"Titles, authors, podcasts", porGenero:"Audiobooks by genre", porTema:"Podcasts by topic",
@@ -92,7 +92,7 @@ const TX = {
     cancelar:"Cancel", borrar:"Delete"
   },
   pt: {
-    tabInicio:"Início", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolivro", completo:"Completo", guardarClip:"Salvar", siguienteClip:"Próximo", tocaEmpezar:"Toque para começar", deslizaTxt:"Deslize para cima para o próximo", sinClips:"Não há clips agora. Tente daqui a pouco.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
+    tabInicio:"Início", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolivro", completo:"Completo", guardarClip:"Salvar", siguienteClip:"Próximo", tocaEmpezar:"Toque para começar", reiniciarGustos:"Recomeçar as recomendações", gustosTxt:"Clips aprende quais temas você gosta pelo que ouve e pula. Fica salvo só no seu celular.", gustosOk:"Pronto, Clips recomeça.", deslizaTxt:"Deslize para cima para o próximo", sinClips:"Não há clips agora. Tente daqui a pouco.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
     escuchar:"Ouvir", seguirEsc:"Continuar ouvindo", miLista:"Minha lista", enMiLista:"Na minha lista", masInfo:"Mais informações", verTodo:"Ver tudo",
     pie:"Audiolivros de domínio público gravados por voluntários do LibriVox e hospedados no archive.org.<br>Podcasts do diretório público do Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolivros por gênero", porTema:"Podcasts por tema",
@@ -129,7 +129,7 @@ const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
 // ================= Estado guardado en el teléfono =================
 const CLAVE = "ag:v1";
-let E = { progreso:{}, recientes:[], lista:[], subs:[], desc:{}, voz:"ef_dora", vel:1, idioma:null };
+let E = { progreso:{}, recientes:[], lista:[], subs:[], desc:{}, gustos:{}, voz:"ef_dora", vel:1, idioma:null };
 try { Object.assign(E, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
 if (!E.idioma || !TX[E.idioma]) { const n = (navigator.language || "es").slice(0, 2).toLowerCase(); E.idioma = TX[n] ? n : "es"; }
 // País del ranking de podcasts: sale de la configuración del teléfono (es-AR → Argentina).
@@ -349,7 +349,9 @@ async function masClips(){
   if (CL.cargando || !CL.hayMas) return;
   CL.cargando = true;
   try {
-    const d = await api("/api/clips?pagina=" + CL.pagina);
+    const ya = CL.lista.flatMap(c => [c.clave, c.item.id]).filter(Boolean).concat(E.subs.map(s => s.id)).slice(-300);
+    const gustos = Object.entries(E.gustos || {}).map(([k, v]) => k + ":" + v.toFixed(2)).join(",");
+    const d = await api("/api/clips?pagina=" + CL.pagina + "&gustos=" + encodeURIComponent(gustos) + "&ya=" + encodeURIComponent(ya.join(",")));
     CL.pagina++; CL.hayMas = d.hayMas;
     const desde = CL.lista.length;
     CL.lista = CL.lista.concat(d.clips);
@@ -383,8 +385,9 @@ function prepararTarjetas(){
       const b = e.target.closest("[data-acc]"), k = +el.dataset.k, c = CL.lista[k];
       if (!b) return tocarClip();
       e.stopPropagation();
-      if (b.dataset.acc === "completo") return escucharClipCompleto(c);
-      if (b.dataset.acc === "info") { salirClips(); location.hash = ruta(c.item); return; }
+      if (b.dataset.acc === "completo") { ajustarGusto(c.tema, 1.35); return escucharClipCompleto(c); }
+      if (b.dataset.acc === "info") { ajustarGusto(c.tema, 1.15); salirClips(); location.hash = ruta(c.item); return; }
+      ajustarGusto(c.tema, 1.35);
       if (c.item.tipo === "podcast") { const i = E.subs.findIndex(s => s.id === c.item.id); if (i >= 0) E.subs.splice(i, 1); else { E.subs.unshift(corto(c.item)); toast(t("ahoraSeguis", c.item.titulo)); } guardar(); }
       else alternarLista(c.item);
       const nueva = document.createElement("div"); nueva.innerHTML = tarjetaClip(c, k);
@@ -394,6 +397,12 @@ function prepararTarjetas(){
 }
 function activarClip(k){
   if (k === CL.actual || !CL.lista[k]) return;
+  // Aprende del clip que se deja: si lo pasaste enseguida, ese tema baja; si lo escuchaste entero, sube.
+  const previo = CL.lista[CL.actual];
+  if (previo && CL.base != null && CL.desbloqueado) {
+    const oido = (AC.currentTime || 0) - CL.base;
+    if (oido < 5) ajustarGusto(previo.tema, 0.85); else if (oido >= DUR_CLIP - 3) ajustarGusto(previo.tema, 1.1);
+  }
   CL.actual = k;
   const c = CL.lista[k];
   document.querySelectorAll("#clips .clip").forEach(el => el.classList.remove("sonando", "pausado"));
@@ -439,6 +448,14 @@ function siguienteClip(){
   const k = CL.actual + 1;
   if (!CL.lista[k]) { AC.pause(); return; }
   cont.scrollTo({ top:k * cont.clientHeight, behavior:"smooth" });
+}
+// Pesos por tema que se guardan solo en el teléfono (1 = normal; más alto = aparece más).
+function ajustarGusto(tema, f){
+  if (!tema) return;
+  E.gustos = E.gustos || {};
+  const base = E.gustos[tema] != null ? E.gustos[tema] : (tema === "libro" ? 0.35 : 1);
+  E.gustos[tema] = Math.max(0.15, Math.min(5, base * f));
+  guardar();
 }
 function salirClips(){
   RES.forEach(a => { if (!a.paused) a.pause(); });
@@ -560,10 +577,12 @@ function vAjustes(){
       '<a class="op" href="' + abs("/terminos?l=" + L) + '" target="_blank" rel="noopener">' + t("terminos") + '<small>↗</small></a>' +
       '<a class="op" href="mailto:dmith.builds@gmail.com?subject=Audiolibros%20Gratis">' + t("contacto") + '<small>dmith.builds@gmail.com</small></a>' +
       '<div class="op"><span>' + t("version") + '</span><small>' + VERSION + '</small></div></div>' +
+    '<p class="lbl">' + t("tabClips") + '</p><div class="grupo"><button class="op" id="aj-gustos">' + t("reiniciarGustos") + '</button></div><p class="aviso" style="text-align:left">' + t("gustosTxt") + '</p>' +
     '<p class="lbl">' + t("creditos") + '</p><p class="sub" style="line-height:1.6">' + t("creditosTxt") + '</p>';
   V.querySelectorAll("[data-idioma]").forEach(b => b.onclick = () => cambiarIdioma(b.dataset.idioma));
   V.querySelectorAll("[data-paisaj]").forEach(b => b.onclick = () => { elegirPais(b.dataset.paisaj); vAjustes(); });
   if (!cats) api("/api/categorias").then(c => { cats = c; if (rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
+  if ($("aj-gustos")) $("aj-gustos").onclick = () => { E.gustos = {}; guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true; toast(t("gustosOk")); };
   if ($("aj-borrar")) $("aj-borrar").onclick = () => confirmar(t("borrarTodasQ"), async () => { for (const u of Object.keys(E.desc)) await DL.borrar(u); vAjustes(); });
 }
 function elegirPais(p){ if (p === E.pais) return; E.pais = p; guardar(); cacheInicio = null; CL.lista = []; CL.pagina = 0; CL.hayMas = true; }

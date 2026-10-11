@@ -145,6 +145,13 @@ falso.listen(0, '127.0.0.1', async () => {
       const c = r.body.clips.find(x => x.item.tipo === 'podcast');
       assert.ok(c && c.pista.url && c.inicio > 0 && c.inicio < c.pista.duracion, 'el clip arranca adelantado: ' + JSON.stringify(c && [c.inicio, c.pista.duracion]));
 
+      // Gustos: si a la persona le encanta 'libro' y nada lo demás, el primer clip es un libro; 'ya' excluye lo visto.
+      r = await api('/api/clips?gustos=' + encodeURIComponent('libro:5,top:0.05,ciencia:0.05,historia:0.05,cuentos:0.05'));
+      assert.equal(r.body.clips[0].item.tipo, 'libro', 'los gustos pesan: ' + r.body.clips.map(c => c.tema));
+      const vistosIds = r.body.clips.flatMap(c => [c.clave, c.item.id]).join(',');
+      r = await api('/api/clips?ya=' + encodeURIComponent(vistosIds));
+      assert.ok(!r.body.clips.some(c => vistosIds.split(',').includes(c.item.id)), 'no repite lo ya visto: ' + vistosIds + ' => ' + r.body.clips.map(c => c.item.id));
+
       r = await api('/api/categorias?idioma=pt');
       assert.deepEqual(r.body.paises.map(p => p.id), ['br', 'pt', 'mundo']);
       assert.equal(r.body.libros[0].nombre, 'Contos');

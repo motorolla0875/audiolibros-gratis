@@ -553,29 +553,38 @@ app.get('/api/podcasts', ruta(async req => {
 app.get('/api/podcast/:id', ruta(req => podcast(req.params.id)));
 
 // ---------- Clips: previas de 30 segundos para deslizar ----------
-// Mezcla el top del país, varios temas y algunos audiolibros. Cambia el orden cada día.
-function mezclar(arr, semilla) {
-  const a = arr.slice(); let s = semilla || 1;
-  for (let i = a.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; const j = Math.floor(s / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-  return a;
-}
+// Clips: junta el top del país, varios temas y audiolibros.
 async function poolClips(L, pais) {
   return conCache('clips:' + L + pais, 6 * 3600, async () => {
     const temas = ['humor', 'historia', 'ciencia', 'terror', 'cuentos', 'bienestar', 'negocios', 'aprender', 'deportes'];
     const [top, ...porTema] = await Promise.all([seguro(topPodcasts(L, 40, pais)), ...temas.map(k => seguro(podcastsDeTema(L, k, 20)))]);
     const sel = seleccion(L);
     const libros = sel ? await seguro(buscarLibros({ ids: sel, filas: 60 })) : await seguro(buscarLibros({ idioma: L, filas: 40 }));
-    const vistos = new Set(), pods = [];
-    const sumar = x => { if (x && !vistos.has(x.id)) { vistos.add(x.id); pods.push(x); } };
-    (top || []).slice(0, 25).forEach(sumar);
-    for (let k = 0; k < 8; k++) porTema.forEach(l => sumar((l || [])[k]));
-    const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5);
-    const ps = mezclar(pods, dia + 7), ls = mezclar(((libros && libros.libros) || []), dia + 3);
-    // Un audiolibro cada 5 clips.
-    const salida = [];
-    for (let i = 0, j = 0; i < ps.length; i++) { salida.push(ps[i]); if (i % 5 === 4 && ls[j]) salida.push(ls[j++]); }
+    const vistos = new Set(), salida = [];
+    const sumar = (x, tema) => { if (x && !vistos.has(x.id)) { vistos.add(x.id); salida.push({ ...x, tema }); } };
+    (top || []).slice(0, 25).forEach(x => sumar(x, 'top'));
+    for (let k = 0; k < 12; k++) porTema.forEach((l, i) => sumar((l || [])[k], temas[i]));
+    ((libros && libros.libros) || []).forEach(x => sumar(x, 'libro'));
     return salida;
   });
+}
+const hashTxt = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+// Ordena los candidatos según los gustos de la persona (pesos por tema que aprende el teléfono).
+// Cada candidato recibe un número al azar (fijo por día) elevado a 1/peso: los temas con más peso salen antes.
+function elegirClips(pool, gustos, ya, n) {
+  const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5);
+  const base = { libro: 0.35 };
+  const puntaje = x => {
+    const w = Math.max(0.05, Math.min(6, gustos[x.tema] != null ? gustos[x.tema] : (base[x.tema] || 1)));
+    const r = (hashTxt(x.id + ':' + dia) % 100000 + 1) / 100001;
+    return Math.pow(r, 1 / w);
+  };
+  const orden = pool.filter(x => !ya.has(x.id)).map(x => [puntaje(x), x]).sort((a, b) => b[0] - a[0]).map(a => a[1]);
+  // Variedad: como mucho 3 del mismo tema por tanda.
+  const salida = [], cuenta = {};
+  for (const x of orden) { if ((cuenta[x.tema] || 0) >= 3) continue; cuenta[x.tema] = (cuenta[x.tema] || 0) + 1; salida.push(x); if (salida.length >= n) break; }
+  for (const x of orden) { if (salida.length >= n) break; if (!salida.includes(x)) salida.push(x); }
+  return { elegidos: salida, quedan: orden.length - salida.length };
 }
 // Elige el episodio (o capítulo) y el segundo donde arranca la previa.
 async function armarClip(x, semilla) {
@@ -593,12 +602,16 @@ async function armarClip(x, semilla) {
   return { item: { id: p.id, tipo: 'podcast', titulo: p.titulo, autor: p.autor, portada: p.portada }, pista: { titulo: e.titulo, url: e.url, duracion: e.duracion, portada: e.portada, fecha: e.fecha }, indice: p.episodios.indexOf(e), inicio: e.duracion ? inicioDe(e.duracion) : 120 };
 }
 app.get('/api/clips', ruta(async req => {
-  const L = idiomaDe(req), pais = paisDe(req, L);
-  const pagina = Math.max(0, Math.min(40, parseInt(req.query.pagina) || 0)), POR = 8;
+  const L = idiomaDe(req), pais = paisDe(req, L), POR = 8;
+  const gustos = {};
+  String(req.query.gustos || '').split(',').slice(0, 30).forEach(p => { const [k, v] = p.split(':'); if (/^[a-z]{2,15}$/.test(k) && isFinite(+v)) gustos[k] = +v; });
+  const ya = new Set(String(req.query.ya || '').split(',').filter(x => /^(pi)?[\w.-]{1,80}$/.test(x)).slice(0, 300));
   const pool = await poolClips(L, pais);
-  const parte = pool.slice(pagina * POR, pagina * POR + POR);
-  const clips = (await Promise.all(parte.map((x, k) => seguro(armarClip(x, pagina * POR + k + 1))))).filter(Boolean);
-  return { clips, hayMas: pool.length > (pagina + 1) * POR };
+  const { elegidos, quedan } = elegirClips(pool, gustos, ya, POR);
+  const vistosPag = new Set();
+  const clips = (await Promise.all(elegidos.map(x => seguro(armarClip(x, hashTxt(x.id) % 97 + 1).then(c => c && { ...c, tema: x.tema, clave: x.id })))))
+    .filter(c => c && !ya.has(c.item.id) && !vistosPag.has(c.item.id) && vistosPag.add(c.item.id));
+  return { clips, hayMas: quedan > 0 };
 }));
 
 app.get('/api/buscar', ruta(async req => {
@@ -635,7 +648,7 @@ async function precargarTemas() {
   // Primeras páginas de clips del país principal de cada idioma (bajan los episodios de antemano).
   for (const L of Object.keys(IDIOMAS)) {
     const pool = await seguro(poolClips(L, IDIOMAS[L].pais)) || [];
-    for (const [k, x] of pool.slice(0, 24).entries()) { await seguro(armarClip(x, k + 1)); await espera(800); }
+    for (const x of pool.slice(0, 40)) { await seguro(armarClip(x, hashTxt(x.id) % 97 + 1)); await espera(800); }
   }
   for (const L of Object.keys(IDIOMAS)) for (const clave of Object.keys(GENEROS_POD)) {
     for (const term of GENEROS_POD[clave].term[L]) { await seguro(buscarPodcasts(L, term, 50)); await espera(3500); }
