@@ -12,7 +12,7 @@
 <style>
 :root{
   --bg:#0E0C0A; --card:#1B1815; --card2:#24201C; --ink:#F4EEE6; --muted:#9F958A; --line:rgba(244,238,230,.10);
-  --accent:#E8834F; --accent-ink:#1A120C; --hl:rgba(232,131,79,.22); --track:rgba(244,238,230,.16); --shade:rgba(244,238,230,.07);
+  --accent:#EB4345; --accent-ink:#FFFFFF; --hl:rgba(235,67,69,.22); --track:rgba(244,238,230,.16); --shade:rgba(244,238,230,.07);
   --serif:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,-apple-system,sans-serif;
   --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
   color-scheme:dark;
@@ -47,6 +47,7 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .logo{font:700 19px var(--serif);letter-spacing:-.01em}.logo i{color:var(--accent);font-style:normal}
 .hero .cnt{position:relative;z-index:2;width:100%;text-align:center;padding:0 16px 4px}
 .kick{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.hero .kick{color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 .hero h1{font:700 40px/1 var(--serif);margin:8px 0 10px;text-shadow:0 2px 20px rgba(0,0,0,.5)}
 .gens{font-size:13px;color:var(--muted);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .gens span+span::before{content:"·";margin-right:8px}
@@ -207,7 +208,7 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .grupo .op:last-child{border-bottom:0}
 .grupo .op small{color:var(--muted);font-size:13px}
 .grupo .op.on{color:var(--accent);font-weight:700}
-.grupo .op.peligro{color:#FF7A6B}
+.grupo .op.peligro{color:#FF8A80}
 .hero.libro{background:none}
 .hero.libro .fondo{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(28px) brightness(.55);transform:scale(1.15)}
 .hero.libro .cv{width:min(46vw,200px);margin:0 auto 18px;box-shadow:0 24px 50px -16px rgba(0,0,0,.9)}
@@ -273,6 +274,6 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=2"></script>
+<script src="/app.js?v=3"></script>
 </body>
 </html>
