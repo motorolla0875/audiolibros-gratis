@@ -1,0 +1,9 @@
+{
+  "name": "audiolibros-gratis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Audiolibros gratis y podcasts en español",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "test": "node test/prueba.js" },
+  "dependencies": { "express": "^5.1.0", "fast-xml-parser": "^5.2.5" }
+}

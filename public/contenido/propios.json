@@ -1,0 +1,62 @@
+{
+ "destacado": {
+  "id": "quijote-kokoro",
+  "titulo": "Don Quijote de la Mancha",
+  "autor": "Miguel de Cervantes",
+  "etiqueta": "Narrado por nosotros",
+  "generos": [
+   "Aventura",
+   "Humor",
+   "3 voces"
+  ],
+  "imagen": "/contenido/quijote/hero.jpg"
+ },
+ "voces": [
+  {
+   "id": "ef_dora",
+   "nombre": "Dora",
+   "desc": "Mujer · cálida"
+  },
+  {
+   "id": "em_alex",
+   "nombre": "Alex",
+   "desc": "Hombre · claro"
+  },
+  {
+   "id": "em_santa",
+   "nombre": "Santa",
+   "desc": "Hombre · grave"
+  }
+ ],
+ "libros": [
+  {
+   "id": "quijote-kokoro",
+   "tipo": "libro",
+   "propio": true,
+   "titulo": "Don Quijote de la Mancha",
+   "autor": "Miguel de Cervantes",
+   "portada": "/contenido/quijote/portada.jpg",
+   "descripcion": "Un hidalgo de La Mancha lee tantos libros de caballerías que decide hacerse caballero andante. Junto a Sancho Panza sale a recorrer los caminos de España en la novela más famosa de la lengua castellana.\n\nPor ahora está narrado el comienzo del Capítulo I. Elegí la voz que más te guste y seguí el texto mientras escuchás.",
+   "lectores": [
+    "Voz digital"
+   ],
+   "fuente": "Narrado por Audiolibros Gratis",
+   "licencia": "Dominio público",
+   "duracion": 72,
+   "capitulos": [
+    {
+     "n": 1,
+     "titulo": "Capítulo I · Que trata de la condición del famoso hidalgo (comienzo)",
+     "duracion": 72,
+     "url": "/contenido/quijote/cap1-ef_dora.mp3",
+     "voces": {
+      "ef_dora": "/contenido/quijote/cap1-ef_dora.mp3",
+      "em_alex": "/contenido/quijote/cap1-em_alex.mp3",
+      "em_santa": "/contenido/quijote/cap1-em_santa.mp3"
+     },
+     "texto": "/contenido/quijote/cap1-texto.json"
+    }
+   ]
+  }
+ ]
+}
