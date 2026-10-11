@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 3050;
 const ARCHIVE = process.env.ARCHIVE_BASE || 'https://archive.org';
 const ITUNES = process.env.ITUNES_BASE || 'https://itunes.apple.com';
 const APPLE_RSS = process.env.APPLE_RSS_BASE || 'https://rss.applemarketingtools.com';
+// Podcast Index (directorio abierto). Se activa solo si están las claves.
+const PI = process.env.PODCASTINDEX_BASE || 'https://api.podcastindex.org';
+const PI_KEY = process.env.PODCASTINDEX_KEY || '';
+const PI_SECRET = process.env.PODCASTINDEX_SECRET || '';
 // Enlace de afiliado para "Comprar en papel". {q} se reemplaza por título + autor.
 // Ejemplo: AFILIADO_URL="https://www.amazon.com/s?k={q}&tag=TU-TAG-20"
 const AFILIADO_URL = process.env.AFILIADO_URL || '';
@@ -61,13 +65,13 @@ async function conCache(clave, segundos, fn) {
   }
 }
 
-async function traer(url, tipo = 'json') {
+async function traer(url, tipo = 'json', extra = {}) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 15000);
   try {
     const r = await fetch(url, {
       signal: ctrl.signal,
-      headers: { 'User-Agent': 'AudiolibrosGratis/1.0 (+https://dmith.app)' },
+      headers: { 'User-Agent': 'AudiolibrosGratis/1.0 (+https://dmith.app)', ...extra },
       redirect: 'follow'
     });
     if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url);
@@ -251,19 +255,73 @@ async function topPodcasts(idioma, n = 25) {
   });
 }
 
-async function buscarPodcasts(idioma, term, n = 25) {
+async function buscarApple(idioma, term, n) {
   const p = new URLSearchParams({ media: 'podcast', term, country: IDIOMAS[idioma].pais, limit: String(n), explicit: 'No' });
   return conCache('pods:' + p, 6 * 3600, async () => {
     const r = await traer(`${ITUNES}/search?${p}`);
-    return (r.results || []).filter(x => x.feedUrl && !esExplicito(x)).map(aPodCorto);
+    return (r.results || []).filter(x => x.feedUrl && !esExplicito(x)).map(x => ({ ...aPodCorto(x), _feed: x.feedUrl }));
   });
+}
+
+// ---------- Podcast Index ----------
+function piGet(ruta) {
+  const fecha = String(Math.floor(Date.now() / 1000));
+  const firma = require('crypto').createHash('sha1').update(PI_KEY + PI_SECRET + fecha).digest('hex');
+  return traer(PI + '/api/1.0' + ruta, 'json', { 'X-Auth-Key': PI_KEY, 'X-Auth-Date': fecha, Authorization: firma });
+}
+const piIdiomaOk = (lang, idioma) => !lang || String(lang).toLowerCase().startsWith(idioma);
+function aPodPI(f) {
+  return { id: 'pi' + f.id, tipo: 'podcast', titulo: f.title, autor: f.author || f.ownerName || '', portada: f.artwork || f.image || '',
+    genero: f.categories ? Object.values(f.categories)[0] || '' : '', _feed: f.url, _itunes: f.itunesId ? String(f.itunesId) : null };
+}
+async function buscarPI(idioma, term, n) {
+  if (!PI_KEY || !PI_SECRET) return [];
+  return conCache('pi:' + idioma + ':' + term + n, 6 * 3600, async () => {
+    const r = await piGet('/search/byterm?' + new URLSearchParams({ q: term, max: String(n * 2), clean: '1' }));
+    return (r.feeds || []).filter(f => !f.explicit && f.dead !== 1 && piIdiomaOk(f.language, idioma)).slice(0, n).map(aPodPI);
+  });
+}
+
+// Junta Apple + Podcast Index sin repetir (mismo podcast = mismo id de Apple, mismo feed o mismo título).
+async function buscarPodcasts(idioma, term, n = 25) {
+  const [a, b] = await Promise.all([seguro(buscarApple(idioma, term, n)), seguro(buscarPI(idioma, term, n))]);
+  if (!a && !b) throw new Error('Sin podcasts');
+  const vistos = new Set(), salida = [];
+  const clave = x => [x.id, x._itunes, x._feed && x._feed.replace(/^https?:\/\//, '').toLowerCase(), sinAcentos(x.titulo || '').replace(/\W+/g, '')].filter(Boolean);
+  for (const x of (a || []).concat(b || [])) {
+    const k = clave(x);
+    if (k.some(c => vistos.has(c))) continue;
+    k.forEach(c => vistos.add(c));
+    const { _feed, _itunes, ...limpio } = x;
+    salida.push(limpio);
+  }
+  return salida.slice(0, Math.max(n, (a || []).length + 10));
+}
+
+async function podcastPI(id) {
+  const n = id.slice(2);
+  const [f, e] = await Promise.all([piGet('/podcasts/byfeedid?id=' + n), piGet('/episodes/byfeedid?' + new URLSearchParams({ id: n, max: '100' }))]);
+  const feed = f && f.feed;
+  if (!feed || !feed.id) throw Object.assign(new Error('No encontrado'), { status: 404 });
+  if (feed.explicit) throw Object.assign(new Error('Este podcast no está disponible.'), { status: 404 });
+  const episodios = ((e && e.items) || []).filter(it => !it.explicit && it.enclosureUrl && /^https?:/i.test(it.enclosureUrl)).map(it => ({
+    id: String(it.guid || it.id), titulo: limpiarHtml(it.title), fecha: it.datePublished ? new Date(it.datePublished * 1000).toISOString() : null,
+    duracion: it.duration || 0, tamano: it.enclosureLength || 0, descripcion: limpiarHtml(it.description).slice(0, 600),
+    url: it.enclosureUrl, portada: it.image || it.feedImage || null
+  }));
+  const { _feed, _itunes, ...corto } = aPodPI(feed);
+  return { ...corto, descripcion: limpiarHtml(feed.description).slice(0, 1200), episodios };
 }
 
 const xml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_', textNodeName: '#t', cdataPropName: false, processEntities: true, htmlEntities: true });
 const texto = v => v == null ? '' : typeof v === 'object' ? (v['#t'] != null ? String(v['#t']) : '') : String(v);
 
 async function podcast(id) {
-  if (!/^\d+$/.test(id)) throw Object.assign(new Error('id inválido'), { status: 400 });
+  if (!/^(pi)?\d+$/.test(id)) throw Object.assign(new Error('id inválido'), { status: 400 });
+  if (id.startsWith('pi')) {
+    if (!PI_KEY) throw Object.assign(new Error('No encontrado'), { status: 404 });
+    return conCache('pod:' + id, 3600, () => podcastPI(id));
+  }
   return conCache('pod:' + id, 3600, async () => {
     const l = await traer(`${ITUNES}/lookup?id=${id}&entity=podcast`);
     const info = (l.results || [])[0];

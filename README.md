@@ -19,3 +19,9 @@ npm test           # prueba sin internet
 - Proceso pm2: `audiolibros`
 - nginx: `deploy/nginx-audiolibros.conf`
 - Dominio: audiolibros.dmith.app
+
+## Podcast Index (opcional)
+Suma podcasts que no están en Apple. Claves gratis en https://api.podcastindex.org/signup
+```
+PODCASTINDEX_KEY=xxxx PODCASTINDEX_SECRET=yyyy pm2 restart audiolibros --update-env && pm2 save
+```

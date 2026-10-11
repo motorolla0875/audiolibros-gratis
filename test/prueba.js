@@ -21,6 +21,20 @@ const falso = http.createServer((req, res) => {
     return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/cap1-ef_dora.mp3')));
   }
   if (u.pathname.startsWith('/services/img/')) { res.setHeader('Content-Type', 'image/jpeg'); return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/portada.jpg'))); }
+  if (u.pathname === '/api/1.0/search/byterm') {
+    if (!req.headers['x-auth-key'] || !req.headers.authorization) { res.statusCode = 401; return res.end('{}'); }
+    return json({ feeds: [
+      { id: 77, title: 'Pod Dos', itunesId: 222, language: 'es', url: 'http://otro/feed.xml' },
+      { id: 88, title: 'Solo en Podcast Index', author: 'Juan', language: 'es-AR', url: 'http://x/pi.xml', artwork: 'https://img/pi.jpg', categories: { '1': 'Arte' } },
+      { id: 89, title: 'English show', language: 'en', url: 'http://x/en.xml' },
+      { id: 90, title: 'Adultos PI', language: 'es', explicit: true, url: 'http://x/adult.xml' }
+    ] });
+  }
+  if (u.pathname === '/api/1.0/podcasts/byfeedid') return json({ feed: { id: 88, title: 'Solo en Podcast Index', author: 'Juan', description: '<b>Hola</b>', artwork: 'https://img/pi.jpg' } });
+  if (u.pathname === '/api/1.0/episodes/byfeedid') return json({ items: [
+    { id: 1, title: 'Ep PI', datePublished: 1791600000, duration: 600, enclosureUrl: 'https://x/ep.mp3', explicit: 0 },
+    { id: 2, title: 'Ep adulto', enclosureUrl: 'https://x/ep2.mp3', explicit: 1 }
+  ] });
   if (u.pathname.startsWith('/metadata/')) {
     return json({ metadata: { identifier: 'x', title: 'Cuentos de la Selva', creator: 'Quiroga, Horacio, 1878-1937', description: '<p>Ocho cuentos.</p><br>(Summary by Juan)' },
       files: [
@@ -58,7 +72,7 @@ const falso = http.createServer((req, res) => {
 
 falso.listen(0, '127.0.0.1', async () => {
   const base = 'http://127.0.0.1:' + falso.address().port;
-  process.env.ARCHIVE_BASE = base; process.env.ITUNES_BASE = base; process.env.APPLE_RSS_BASE = base;
+  process.env.ARCHIVE_BASE = base; process.env.ITUNES_BASE = base; process.env.APPLE_RSS_BASE = base; process.env.PODCASTINDEX_BASE = base; process.env.PODCASTINDEX_KEY = 'k'; process.env.PODCASTINDEX_SECRET = 's';
   const app = require('../server.js');
   if (process.env.DEMO) { app.listen(3050, '127.0.0.1', () => console.log('demo en 3050')); return; }
   const srv = app.listen(0, '127.0.0.1', async () => {
@@ -96,7 +110,12 @@ falso.listen(0, '127.0.0.1', async () => {
       r = await api('/api/podcasts');
       assert.equal(r.body.podcasts[0].portada, 'https://img/a/600x600bb.jpg');
       r = await api('/api/podcasts?genero=ciencia');
-      assert.equal(r.body.podcasts.length, 1, 'filtra podcasts sin feed');
+      assert.deepEqual(r.body.podcasts.map(x => x.id), ['222', 'pi88'], 'junta Apple + Podcast Index sin repetir ni explícitos ni otro idioma');
+
+      r = await api('/api/podcast/pi88');
+      assert.equal(r.status, 200);
+      assert.equal(r.body.descripcion, 'Hola');
+      assert.deepEqual(r.body.episodios.map(e => e.titulo), ['Ep PI']);
 
       r = await api('/api/buscar?q=quijote');
       assert.ok(!r.body.libros.some(l => l.id === 'quijote-kokoro'), 'sin propios en la búsqueda');
