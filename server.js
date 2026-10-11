@@ -137,7 +137,7 @@ function aLibroCorto(d) {
 }
 
 async function buscarLibros({ idioma = 'es', q = '', cat = '', ids = null, pagina = 1, filas = 30, orden = 'downloads desc' }) {
-  let consulta = `collection:(librivoxaudio) AND mediatype:(audio) AND NOT title:(Bible OR "Reina Valera" OR Biblia)`;
+  let consulta = `collection:(librivoxaudio) AND mediatype:(audio) AND NOT title:(Bible OR "Reina Valera" OR Biblia) AND NOT creator:("Reina Valera" OR "Reina-Valera" OR "Casiodoro de Reina")`;
   if (ids) consulta += ` AND identifier:(${ids.map(i => '"' + i + '"').join(' OR ')})`;
   else consulta += ` AND language:${IDIOMAS[idioma].lang}`;
   if (cat && CATEGORIAS[cat]) consulta += ' AND ' + CATEGORIAS[cat].q;
