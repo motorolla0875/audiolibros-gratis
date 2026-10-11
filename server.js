@@ -219,17 +219,43 @@ function seleccion(idioma) {
 }
 
 // ---------- Podcasts (directorio de Apple + RSS de cada podcast) ----------
+// Cada tema busca varias palabras por separado y junta los resultados (Apple exige todas las palabras
+// de una misma búsqueda, por eso "emprendedores negocios" traía muy pocos).
 const GENEROS_POD = {
-  historia:    { nombre: { es: 'Historia', en: 'History', pt: 'História' }, term: { es: 'historia', en: 'history', pt: 'história' } },
-  ciencia:     { nombre: { es: 'Ciencia', en: 'Science', pt: 'Ciência' }, term: { es: 'ciencia', en: 'science', pt: 'ciência' } },
-  cuentos:     { nombre: { es: 'Cuentos y relatos', en: 'Stories', pt: 'Contos e histórias' }, term: { es: 'cuentos relatos', en: 'stories fiction', pt: 'contos histórias' } },
-  terror:      { nombre: { es: 'Terror y misterio', en: 'Horror & mystery', pt: 'Terror e mistério' }, term: { es: 'terror misterio', en: 'horror mystery', pt: 'terror mistério' } },
-  negocios:    { nombre: { es: 'Negocios', en: 'Business', pt: 'Negócios' }, term: { es: 'emprendedores negocios', en: 'business entrepreneur', pt: 'negócios empreendedorismo' } },
-  humor:       { nombre: { es: 'Humor', en: 'Comedy', pt: 'Humor' }, term: { es: 'humor', en: 'comedy', pt: 'humor' } },
-  bienestar:   { nombre: { es: 'Bienestar', en: 'Wellness', pt: 'Bem-estar' }, term: { es: 'meditación bienestar', en: 'meditation wellness', pt: 'meditação bem-estar' } },
-  aprender:    { nombre: { es: 'Aprender', en: 'Learning', pt: 'Aprender' }, term: { es: 'aprender educación', en: 'learning education', pt: 'aprender educação' } },
-  audiolibros: { nombre: { es: 'Audiolibros en podcast', en: 'Audiobook podcasts', pt: 'Audiolivros em podcast' }, term: { es: 'audiolibro', en: 'audiobook', pt: 'audiolivro' } }
+  historia:    { nombre: { es: 'Historia', en: 'History', pt: 'História' },
+                 term: { es: ['historia', 'historia argentina', 'historia de españa', 'biografías', 'segunda guerra mundial'], en: ['history', 'biography', 'world war'], pt: ['história', 'história do brasil', 'biografia'] } },
+  ciencia:     { nombre: { es: 'Ciencia', en: 'Science', pt: 'Ciência' },
+                 term: { es: ['ciencia', 'divulgación científica', 'astronomía', 'universo', 'tecnología'], en: ['science', 'astronomy', 'technology'], pt: ['ciência', 'astronomia', 'tecnologia'] } },
+  cuentos:     { nombre: { es: 'Cuentos y relatos', en: 'Stories', pt: 'Contos e histórias' },
+                 term: { es: ['cuentos', 'relatos', 'cuentos para dormir', 'audiorelatos', 'ficción sonora'], en: ['stories', 'fiction', 'bedtime stories'], pt: ['contos', 'histórias para dormir', 'ficção'] } },
+  terror:      { nombre: { es: 'Terror y misterio', en: 'Horror & mystery', pt: 'Terror e mistério' },
+                 term: { es: ['terror', 'misterio', 'paranormal', 'crímenes', 'leyendas'], en: ['horror', 'mystery', 'true crime', 'paranormal'], pt: ['terror', 'mistério', 'crimes reais', 'paranormal'] } },
+  negocios:    { nombre: { es: 'Negocios', en: 'Business', pt: 'Negócios' },
+                 term: { es: ['negocios', 'emprendedores', 'emprender', 'finanzas personales', 'marketing', 'inversiones', 'liderazgo'], en: ['business', 'entrepreneur', 'marketing', 'investing'], pt: ['negócios', 'empreendedorismo', 'finanças', 'marketing'] } },
+  humor:       { nombre: { es: 'Humor', en: 'Comedy', pt: 'Humor' },
+                 term: { es: ['humor', 'comedia', 'risas', 'stand up', 'radio humor'], en: ['comedy', 'funny', 'stand up'], pt: ['humor', 'comédia', 'risadas'] } },
+  bienestar:   { nombre: { es: 'Bienestar', en: 'Wellness', pt: 'Bem-estar' },
+                 term: { es: ['meditación', 'bienestar', 'psicología', 'salud mental', 'autoayuda', 'mindfulness'], en: ['meditation', 'wellness', 'mindfulness'], pt: ['meditação', 'bem-estar', 'psicologia'] } },
+  aprender:    { nombre: { es: 'Aprender', en: 'Learning', pt: 'Aprender' },
+                 term: { es: ['aprender', 'educación', 'aprender inglés', 'cultura general', 'filosofía'], en: ['learning', 'education', 'philosophy'], pt: ['aprender', 'educação', 'aprender inglês', 'filosofia'] } },
+  deportes:    { nombre: { es: 'Deportes', en: 'Sports', pt: 'Esportes' },
+                 term: { es: ['fútbol', 'deportes', 'fútbol argentino', 'tenis', 'básquet'], en: ['sports', 'football', 'basketball'], pt: ['futebol', 'esportes'] } },
+  audiolibros: { nombre: { es: 'Audiolibros en podcast', en: 'Audiobook podcasts', pt: 'Audiolivros em podcast' },
+                 term: { es: ['audiolibro', 'audiolibros', 'audiolibro completo', 'novela leída'], en: ['audiobook', 'audiobooks'], pt: ['audiolivro', 'audiolivros'] } }
 };
+// Junta varias búsquedas de un tema sin repetir, alternando para que no dominen los de una sola palabra.
+async function podcastsDeTema(L, clave, n = 60) {
+  const terms = GENEROS_POD[clave].term[L];
+  return conCache('tema:' + L + clave + n, 24 * 3600, async () => {
+    const res = await Promise.all(terms.map(term => seguro(buscarPodcasts(L, term, 50))));
+    const listas = res.map(r => enIdioma(r || [], L));
+    const vistos = new Set(), salida = [];
+    for (let k = 0; salida.length < n && listas.some(l => k < l.length); k++)
+      for (const l of listas) { const x = l[k]; if (x && !vistos.has(x.id)) { vistos.add(x.id); salida.push(x); } }
+    if (!salida.length) throw new Error('Sin podcasts del tema ' + clave);
+    return salida.slice(0, n);
+  });
+}
 
 const grande = u => String(u || '').replace(/\/\d+x\d+(bb)?\.(jpg|png|webp)$/i, '/600x600bb.jpg');
 // Ocultamos lo marcado como contenido para adultos, así la app es apta para todo público.
@@ -257,7 +283,7 @@ async function topPodcasts(idioma, n = 25) {
 
 async function buscarApple(idioma, term, n) {
   const p = new URLSearchParams({ media: 'podcast', term, country: IDIOMAS[idioma].pais, limit: String(n), explicit: 'No' });
-  return conCache('pods:' + p, 6 * 3600, async () => {
+  return conCache('pods:' + p, 24 * 3600, async () => {
     const r = await traer(`${ITUNES}/search?${p}`);
     return (r.results || []).filter(x => x.feedUrl && !esExplicito(x)).map(x => ({ ...aPodCorto(x), _feed: x.feedUrl }));
   });
@@ -276,7 +302,7 @@ function aPodPI(f) {
 }
 async function buscarPI(idioma, term, n) {
   if (!PI_KEY || !PI_SECRET) return [];
-  return conCache('pi:' + idioma + ':' + term + n, 6 * 3600, async () => {
+  return conCache('pi:' + idioma + ':' + term + n, 24 * 3600, async () => {
     const r = await piGet('/search/byterm?' + new URLSearchParams({ q: term, max: String(n * 2), clean: '1' }));
     return (r.feeds || []).filter(f => !f.explicit && f.dead !== 1 && piIdiomaOk(f.language, idioma)).slice(0, n).map(aPodPI);
   });
@@ -401,8 +427,8 @@ app.get('/api/inicio', ruta(async req => {
     seguro(buscarLibros({ idioma: L, cat: 'poesia', filas: 20 })),
     seguro(buscarLibros({ idioma: L, cat: 'infantil', filas: 20 })),
     seguro(buscarLibros({ idioma: L, cat: 'misterio', filas: 20 })),
-    seguro(buscarPodcasts(L, g('historia'), 30).then(x => enIdioma(x, L))),
-    seguro(buscarPodcasts(L, g('cuentos'), 30).then(x => enIdioma(x, L)))
+    seguro(podcastsDeTema(L, 'historia', 20)),
+    seguro(podcastsDeTema(L, 'cuentos', 20))
   ]);
   const pop = (populares && populares.libros) || [];
   const filas = [];
@@ -468,7 +494,7 @@ app.get('/api/podcasts', ruta(async req => {
   const g = GENEROS_POD[req.query.genero];
   const q = String(req.query.q || '').slice(0, 80).trim();
   if (q) return { podcasts: await buscarPodcasts(L, q, 30) };
-  if (g) return { podcasts: enIdioma(await buscarPodcasts(L, g.term[L], 50), L) };
+  if (g) return { podcasts: await podcastsDeTema(L, req.query.genero, 60) };
   return { podcasts: await topPodcasts(L, 50) };
 }));
 
@@ -497,7 +523,19 @@ app.use('/api', (req, res) => res.status(404).json({ error: 'No existe' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1h', extensions: ['html'] }));
 app.get(/^\/(?!api).*/, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
+// Apple permite unas 20 búsquedas por minuto. Para que los temas abran rápido, el servidor los va
+// buscando de a poco en segundo plano (una búsqueda cada 3,5 s) y los deja guardados.
+async function precargarTemas() {
+  const espera = ms => new Promise(r => setTimeout(r, ms));
+  for (const L of Object.keys(IDIOMAS)) for (const clave of Object.keys(GENEROS_POD)) {
+    for (const term of GENEROS_POD[clave].term[L]) { await seguro(buscarPodcasts(L, term, 50)); await espera(3500); }
+    cache.delete('tema:' + L + clave + 60); cache.delete('tema:' + L + clave + 20);
+  }
+}
+
 if (require.main === module) {
   app.listen(PORT, '127.0.0.1', () => console.log('Audiolibros Gratis en http://127.0.0.1:' + PORT));
+  setTimeout(precargarTemas, 5000);
+  setInterval(precargarTemas, 12 * 3600e3);
 }
 module.exports = app;
