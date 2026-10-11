@@ -51,23 +51,32 @@ const T = {
 
 // ---------- Caché en memoria ----------
 const cache = new Map();
+const enCurso = new Map();
+// Si lo guardado ya venció, se devuelve igual al instante y se actualiza por detrás,
+// así la persona nunca espera a que respondan archive.org o Apple.
 async function conCache(clave, segundos, fn) {
   const c = cache.get(clave);
+  const actualizar = () => {
+    if (enCurso.has(clave)) return enCurso.get(clave);
+    const p = (async () => {
+      try {
+        const valor = await fn();
+        cache.set(clave, { valor, vence: Date.now() + segundos * 1000 });
+        if (cache.size > 4000) cache.delete(cache.keys().next().value);
+        return valor;
+      } finally { enCurso.delete(clave); }
+    })();
+    enCurso.set(clave, p);
+    return p;
+  };
   if (c && c.vence > Date.now()) return c.valor;
-  try {
-    const valor = await fn();
-    cache.set(clave, { valor, vence: Date.now() + segundos * 1000 });
-    if (cache.size > 3000) cache.delete(cache.keys().next().value);
-    return valor;
-  } catch (e) {
-    if (c) return c.valor; // si falla la fuente, devolvemos lo último que teníamos
-    throw e;
-  }
+  if (c) { actualizar().catch(e => console.error('Actualizando ' + clave.slice(0, 60) + ': ' + e.message)); return c.valor; }
+  return actualizar();
 }
 
-async function traer(url, tipo = 'json', extra = {}) {
+async function traer(url, tipo = 'json', extra = {}, ms = 15000) {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 15000);
+  const t = setTimeout(() => ctrl.abort(), ms);
   try {
     const r = await fetch(url, {
       signal: ctrl.signal,
@@ -286,13 +295,13 @@ const paisDe = (req, L) => req.query.pais === 'mundo' ? 'mundo' : (PAISES[L].som
 async function topDePais(pais, n) {
   return conCache('top:' + pais + n, 6 * 3600, async () => {
     try {
-      const r = await traer(`${APPLE_RSS}/api/v2/${pais}/podcasts/top/${n}/podcasts.json`);
+      const r = await traer(`${APPLE_RSS}/api/v2/${pais}/podcasts/top/${n}/podcasts.json`, 'json', {}, 8000);
       const l = ((r.feed && r.feed.results) || []).filter(x => !esExplicito(x)).map(aPodCorto);
       if (l.length) return l;
       throw new Error('ranking vacío ' + pais);
     } catch (e) {
       console.error('Ranking nuevo falló (' + pais + '): ' + e.message + ' — uso el de iTunes');
-      const r = await traer(`${ITUNES}/${pais}/rss/toppodcasts/limit=${Math.min(n, 100)}/explicit=false/json`);
+      const r = await traer(`${ITUNES}/${pais}/rss/toppodcasts/limit=${Math.min(n, 100)}/explicit=false/json`, 'json', {}, 10000);
       const l = lista(r.feed && r.feed.entry).map(x => ({
         id: String(x.id && x.id.attributes && x.id.attributes['im:id']),
         tipo: 'podcast',
@@ -570,6 +579,10 @@ app.get(/^\/(?!api).*/, (req, res) => res.sendFile(path.join(__dirname, 'public'
 // buscando de a poco en segundo plano (una búsqueda cada 3,5 s) y los deja guardados.
 async function precargarTemas() {
   const espera = ms => new Promise(r => setTimeout(r, ms));
+  for (const L of Object.keys(IDIOMAS)) {
+    for (const [p] of PAISES[L]) { await seguro(topDePais(p, 50)); await espera(1500); }
+    await seguro(topPodcasts(L, 50, 'mundo'));
+  }
   for (const L of Object.keys(IDIOMAS)) for (const clave of Object.keys(GENEROS_POD)) {
     for (const term of GENEROS_POD[clave].term[L]) { await seguro(buscarPodcasts(L, term, 50)); await espera(3500); }
     cache.delete('tema:' + L + clave + 60); cache.delete('tema:' + L + clave + 20);
@@ -579,7 +592,7 @@ async function precargarTemas() {
 if (require.main === module) {
   app.listen(PORT, '127.0.0.1', () => console.log('Audiolibros Gratis en http://127.0.0.1:' + PORT));
   setTimeout(precargarTemas, 5000);
-  setInterval(precargarTemas, 12 * 3600e3);
+  setInterval(precargarTemas, 5 * 3600e3);
 }
 module.exports = app;
 module.exports._topDePais = topDePais;
