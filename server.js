@@ -282,6 +282,24 @@ async function buscarPI(idioma, term, n) {
   });
 }
 
+// Apple no dice en qué idioma está cada podcast. Para las categorías y el inicio adivinamos por
+// las palabras del título y el autor, y sacamos los que claramente están en otro idioma.
+const PALABRAS = {
+  es: 'el la los las de del y con que en un una por para mi tu su al se es lo como más mas pero nos cuentos historias historia humor risa risas noche vida mundo hablemos charla charlas hoy aquí aqui entre ciencia negocios mujeres hombres amigos sin todo todos'.split(' '),
+  en: 'the and of with my your our show podcast hour daily life talk talks stories story news comedy funny guys girls friends what how why who this that you we it is are on to for from about with not all best new real true needs friend friends people world inside behind time week guide crime murder wondery siriusxm iheartpodcasts iheartradio npr bbc audacy cumulus coco'.split(' '),
+  pt: 'o a os as de do da dos das e com que em um uma por para meu seu sua no na não nao mais como histórias historias humor vida mundo papo conversa ciência negócios mulheres amigos'.split(' ')
+};
+function idiomaProbable(texto) {
+  const w = sinAcentos(texto).split(/[^a-z0-9ñç]+/).filter(Boolean);
+  const pts = {};
+  for (const L of Object.keys(PALABRAS)) pts[L] = w.filter(x => PALABRAS[L].includes(x)).length;
+  if (/[ñ¿¡]/i.test(texto)) pts.es += 2;
+  if (/[ãõç]/i.test(texto)) pts.pt += 2;
+  const orden = Object.entries(pts).sort((a, b) => b[1] - a[1]);
+  return orden[0][1] > orden[1][1] ? orden[0][0] : null; // null = no se sabe
+}
+const enIdioma = (lista, L) => (lista || []).filter(x => { const i = idiomaProbable((x.titulo || '') + ' ' + (x.autor || '')); return !i || i === L; });
+
 // Junta Apple + Podcast Index sin repetir (mismo podcast = mismo id de Apple, mismo feed o mismo título).
 async function buscarPodcasts(idioma, term, n = 25) {
   const [a, b] = await Promise.all([seguro(buscarApple(idioma, term, n)), seguro(buscarPI(idioma, term, n))]);
@@ -383,8 +401,8 @@ app.get('/api/inicio', ruta(async req => {
     seguro(buscarLibros({ idioma: L, cat: 'poesia', filas: 20 })),
     seguro(buscarLibros({ idioma: L, cat: 'infantil', filas: 20 })),
     seguro(buscarLibros({ idioma: L, cat: 'misterio', filas: 20 })),
-    seguro(buscarPodcasts(L, g('historia'), 20)),
-    seguro(buscarPodcasts(L, g('cuentos'), 20))
+    seguro(buscarPodcasts(L, g('historia'), 30).then(x => enIdioma(x, L))),
+    seguro(buscarPodcasts(L, g('cuentos'), 30).then(x => enIdioma(x, L)))
   ]);
   const pop = (populares && populares.libros) || [];
   const filas = [];
@@ -450,7 +468,7 @@ app.get('/api/podcasts', ruta(async req => {
   const g = GENEROS_POD[req.query.genero];
   const q = String(req.query.q || '').slice(0, 80).trim();
   if (q) return { podcasts: await buscarPodcasts(L, q, 30) };
-  if (g) return { podcasts: await buscarPodcasts(L, g.term[L], 40) };
+  if (g) return { podcasts: enIdioma(await buscarPodcasts(L, g.term[L], 50), L) };
   return { podcasts: await topPodcasts(L, 50) };
 }));
 
