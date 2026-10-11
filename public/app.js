@@ -20,6 +20,7 @@ const ICO = {
   bajar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>',
   bajado:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   ajustes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  auris:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 15v-3a8 8 0 0 1 16 0v3" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/><rect x="2.5" y="13.5" width="5" height="8" rx="2" fill="currentColor"/><rect x="16.5" y="13.5" width="5" height="8" rx="2" fill="currentColor"/></svg>',
   cast:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 16a5 5 0 0 1 5 5M2 12a9 9 0 0 1 9 9M2 8.1A13 13 0 0 1 15 21"/><path d="M2 5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-4"/></svg>',
   libro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/></svg>'
 };
@@ -248,7 +249,7 @@ async function vInicio(){
   }
   const d = cacheInicio;
   const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
-  const hd = '<div class="hd"><span class="logo">' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
+  const hd = '<div class="hd"><span class="logo">' + ICO.auris + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {
@@ -296,9 +297,8 @@ function carrusel(n){
   const pista = $("h-pista"), puntos = $("h-puntos");
   if (!pista || n < 2) return;
   let pausa = 0;
-  const paso = () => { const s = pista.children; return s.length > 1 ? s[1].offsetLeft - s[0].offsetLeft : pista.clientWidth; };
-  const actual = () => Math.round(pista.scrollLeft / paso());
-  const ir = k => pista.scrollTo({ left:k * paso(), behavior:"smooth" });
+  const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
+  const ir = k => pista.scrollTo({ left:k * pista.clientWidth, behavior:"smooth" });
   pista.addEventListener("scroll", () => { const k = actual(); puntos.querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i === k)); }, { passive:true });
   ["pointerdown", "touchstart", "wheel"].forEach(ev => pista.addEventListener(ev, () => { pausa = Date.now() + 12000; }, { passive:true }));
   puntos.querySelectorAll("button").forEach(b => b.onclick = () => { pausa = Date.now() + 12000; ir(+b.dataset.punto); });
