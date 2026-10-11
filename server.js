@@ -62,7 +62,7 @@ async function conCache(clave, segundos, fn) {
       try {
         const valor = await fn();
         cache.set(clave, { valor, vence: Date.now() + segundos * 1000 });
-        if (cache.size > 4000) cache.delete(cache.keys().next().value);
+        if (cache.size > 2500) cache.delete(cache.keys().next().value);
         return valor;
       } finally { enCurso.delete(clave); }
     })();
@@ -88,6 +88,34 @@ async function traer(url, tipo = 'json', extra = {}, ms = 15000) {
   } finally {
     clearTimeout(t);
   }
+}
+
+// Baja un feed RSS pero corta en 1,5 MB: algunos podcasts tienen miles de episodios y un feed
+// gigante llenaba la memoria del servidor. Con los primeros (los más nuevos) alcanza.
+const MAX_FEED = 1.5 * 1024 * 1024;
+async function traerFeed(url) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const r = await fetch(url, { signal: ctrl.signal, headers: { 'User-Agent': 'AudiolibrosGratis/1.0 (+https://dmith.app)' }, redirect: 'follow' });
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url);
+    const lector = r.body.getReader(), partes = []; let n = 0, cortado = false;
+    for (;;) {
+      const { done, value } = await lector.read(); if (done) break;
+      partes.push(value); n += value.length;
+      if (n > MAX_FEED) { cortado = true; ctrl.abort(); break; }
+    }
+    let txt = Buffer.concat(partes.map(x => Buffer.from(x))).toString('utf8');
+    if (cortado) { const k = txt.lastIndexOf('</item>'); if (k < 0) throw new Error('feed sin episodios legibles'); txt = txt.slice(0, k + 7) + '</channel></rss>'; }
+    return txt;
+  } finally { clearTimeout(t); }
+}
+// Como mucho 2 feeds procesándose a la vez, para no saturar el servidor.
+let feedsActivos = 0; const colaFeeds = [];
+async function conTurno(fn) {
+  if (feedsActivos >= 2) await new Promise(r => colaFeeds.push(r));
+  feedsActivos++;
+  try { return await fn(); } finally { feedsActivos--; const s = colaFeeds.shift(); if (s) s(); }
 }
 
 // ---------- Utilidades ----------
@@ -421,7 +449,7 @@ async function podcast(id) {
     const info = (l.results || [])[0];
     if (!info || !info.feedUrl) throw Object.assign(new Error('No encontrado'), { status: 404 });
     if (esExplicito(info)) throw Object.assign(new Error('Este podcast no está disponible.'), { status: 404 });
-    const rss = xml.parse(await traer(info.feedUrl, 'text'));
+    const rss = await conTurno(async () => xml.parse(await traerFeed(info.feedUrl)));
     const ch = (rss.rss && rss.rss.channel) || {};
     if (siExplicito(ch['itunes:explicit'])) throw Object.assign(new Error('Este podcast no está disponible.'), { status: 404 });
     const episodios = lista(ch.item).filter(it => !siExplicito(it['itunes:explicit'])).map(it => {
@@ -648,7 +676,7 @@ async function precargarTemas() {
   // Primeras páginas de clips del país principal de cada idioma (bajan los episodios de antemano).
   for (const L of Object.keys(IDIOMAS)) {
     const pool = await seguro(poolClips(L, IDIOMAS[L].pais)) || [];
-    for (const x of pool.slice(0, 40)) { await seguro(armarClip(x, hashTxt(x.id) % 97 + 1)); await espera(800); }
+    for (const x of pool.slice(0, 20)) { await seguro(armarClip(x, hashTxt(x.id) % 97 + 1)); await espera(2500); }
   }
   for (const L of Object.keys(IDIOMAS)) for (const clave of Object.keys(GENEROS_POD)) {
     for (const term of GENEROS_POD[clave].term[L]) { await seguro(buscarPodcasts(L, term, 50)); await espera(3500); }
