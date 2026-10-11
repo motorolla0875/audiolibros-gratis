@@ -3,7 +3,7 @@
 const http = require('http');
 const assert = require('assert');
 
-const MP3 = 'https://example.org/a.mp3';
+let MP3 = 'https://example.org/a.mp3';
 const falso = http.createServer((req, res) => {
   const u = new URL(req.url, 'http://x');
   const json = o => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(o)); };
@@ -74,6 +74,7 @@ const falso = http.createServer((req, res) => {
 
 falso.listen(0, '127.0.0.1', async () => {
   const base = 'http://127.0.0.1:' + falso.address().port;
+  if (process.env.DEMO) MP3 = base + '/download/ep/a.mp3';
   process.env.ARCHIVE_BASE = base; process.env.ITUNES_BASE = base; process.env.APPLE_RSS_BASE = base; process.env.PODCASTINDEX_BASE = base; process.env.PODCASTINDEX_KEY = 'k'; process.env.PODCASTINDEX_SECRET = 's';
   const app = require('../server.js');
   if (process.env.DEMO) { app.listen(3050, '127.0.0.1', () => console.log('demo en 3050')); return; }

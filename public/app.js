@@ -308,7 +308,25 @@ function carrusel(n){
 }
 
 // ================= Clips (previas de 30 segundos para deslizar) =================
-const AC = new Audio(); AC.preload = "auto";
+// Dos reproductores que se turnan: mientras suena uno, el otro ya va cargando el próximo clip
+// (ya adelantado al segundo donde arranca), así al deslizar suena enseguida.
+const RES = [new Audio(), new Audio()];
+RES.forEach(a => a.preload = "auto");
+let AC = RES[0];
+const otro = () => RES[0] === AC ? RES[1] : RES[0];
+function adelantar(a){
+  const d = a.duration || 0, ini = +a.dataset.inicio || 0;
+  try { a.currentTime = d && ini > d - DUR_CLIP - 2 ? Math.max(0, d - DUR_CLIP - 2) : ini; } catch (e) {}
+}
+function cargarEn(a, k){
+  const c = CL.lista[k]; if (!c) return;
+  if (a.dataset.k === String(k) && a.src) return;
+  a.pause();
+  a.dataset.k = k; a.dataset.inicio = c.inicio || 0;
+  a.src = c.pista.url;
+  a.addEventListener("loadedmetadata", () => adelantar(a), { once:true });
+  a.load();
+}
 const CL = { lista:[], pagina:0, hayMas:true, cargando:false, actual:-1, desbloqueado:false, obs:null, finT:null };
 const DUR_CLIP = 30;
 async function vClips(){
@@ -319,7 +337,9 @@ async function vClips(){
   CL.obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6) activarClip(+e.target.dataset.k); }), { root:cont, threshold:[.6] });
   if ($("empezar")) $("empezar").onclick = () => {
     CL.desbloqueado = true; $("empezar").remove();
-    AC.play().catch(() => {}); // el primer toque habilita el audio en el teléfono
+    // El primer toque habilita el audio en el teléfono: destrabamos los dos reproductores.
+    const o = otro(); if (o.src) { o.muted = true; o.play().then(() => { o.pause(); o.muted = false; adelantar(o); }).catch(() => { o.muted = false; }); }
+    AC.play().catch(() => {});
     if (CL.actual >= 0) tocarClip(true);
   };
   if (CL.lista.length) { cont.innerHTML = CL.lista.map(tarjetaClip).join(""); prepararTarjetas(); CL.saltarAuto = !A.paused; requestAnimationFrame(() => { const k = Math.max(0, CL.actual); cont.scrollTop = k * cont.clientHeight; CL.actual = -1; activarClip(k); }); }
@@ -377,14 +397,15 @@ function activarClip(k){
   CL.actual = k;
   const c = CL.lista[k];
   document.querySelectorAll("#clips .clip").forEach(el => el.classList.remove("sonando", "pausado"));
+  const viejo = AC;
+  if (otro().dataset.k === String(k) && otro().src) AC = otro(); // ya estaba cargado: lo usamos
+  if (viejo !== AC) viejo.pause();
   AC.pause();
-  AC.src = c.pista.url;
-  AC.dataset.inicio = c.inicio || 0;
   CL.base = null;
-  AC.addEventListener("loadedmetadata", () => {
-    const d = AC.duration || 0, ini = +AC.dataset.inicio;
-    try { AC.currentTime = d && ini > d - DUR_CLIP - 2 ? Math.max(0, d - DUR_CLIP - 2) : ini; } catch (e) {}
-  }, { once:true });
+  if (AC.dataset.k !== String(k) || !AC.src) cargarEn(AC, k);
+  else if (AC.readyState >= 1 && Math.abs(AC.currentTime - (+AC.dataset.inicio || 0)) > 3 && AC.currentTime < (+AC.dataset.inicio || 0)) adelantar(AC);
+  // El siguiente va cargando en el otro reproductor.
+  cargarEn(otro(), k + 1);
   if (CL.desbloqueado && !CL.saltarAuto) tocarClip(true);
   else if (CL.saltarAuto) { const el = document.querySelector('#clips .clip[data-k="' + k + '"]'); if (el) el.classList.add("pausado"); }
   CL.saltarAuto = false;
@@ -398,18 +419,21 @@ function tocarClip(forzar){
     AC.play().then(() => { el.classList.add("sonando"); el.classList.remove("pausado"); }).catch(() => { el.classList.add("pausado"); });
   } else { AC.pause(); el.classList.remove("sonando"); el.classList.add("pausado"); }
 }
-AC.ontimeupdate = () => {
-  const el = document.querySelector('#clips .clip[data-k="' + CL.actual + '"]'); if (!el) return;
-  if (CL.base == null) return;
-  const pct = Math.max(0, Math.min(1, (AC.currentTime - CL.base) / DUR_CLIP));
-  el.querySelector(".barra i").style.width = pct * 100 + "%";
-  if (pct >= 1 && !AC.paused) siguienteClip();
-};
-AC.onended = () => siguienteClip();
-// El conteo de 30 s arranca desde donde realmente empezó a sonar (por si el servidor no deja adelantar).
-AC.onplaying = () => { if (CL.base == null) CL.base = AC.currentTime; };
-AC.onseeked = () => { if (CL.base != null && Math.abs(AC.currentTime - CL.base) > 5 && AC.currentTime > CL.base) CL.base = AC.currentTime; };
-AC.onerror = () => { if (document.body.classList.contains("en-clips") && AC.src) setTimeout(siguienteClip, 800); };
+RES.forEach(a => {
+  a.ontimeupdate = () => {
+    if (a !== AC) return;
+    const el = document.querySelector('#clips .clip[data-k="' + CL.actual + '"]'); if (!el) return;
+    if (CL.base == null) return;
+    const pct = Math.max(0, Math.min(1, (a.currentTime - CL.base) / DUR_CLIP));
+    el.querySelector(".barra i").style.width = pct * 100 + "%";
+    if (pct >= 1 && !a.paused) siguienteClip();
+  };
+  a.onended = () => { if (a === AC) siguienteClip(); };
+  // El conteo de 30 s arranca desde donde realmente empezó a sonar (por si el servidor no deja adelantar).
+  a.onplaying = () => { if (a === AC && CL.base == null) CL.base = a.currentTime; };
+  a.onseeked = () => { if (a === AC && CL.base != null && Math.abs(a.currentTime - CL.base) > 5 && a.currentTime > CL.base) CL.base = a.currentTime; };
+  a.onerror = () => { if (a === AC && document.body.classList.contains("en-clips") && a.src) setTimeout(siguienteClip, 800); };
+});
 function siguienteClip(){
   const cont = $("clips"); if (!cont) return;
   const k = CL.actual + 1;
@@ -417,7 +441,7 @@ function siguienteClip(){
   cont.scrollTo({ top:k * cont.clientHeight, behavior:"smooth" });
 }
 function salirClips(){
-  if (!AC.paused) AC.pause();
+  RES.forEach(a => { if (!a.paused) a.pause(); });
   if (CL.obs) CL.obs.disconnect();
 }
 async function escucharClipCompleto(c){
