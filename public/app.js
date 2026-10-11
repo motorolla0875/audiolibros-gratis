@@ -249,7 +249,7 @@ async function vInicio(){
   }
   const d = cacheInicio;
   const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
-  const hd = '<div class="hd"><span class="logo">' + ICO.auris + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
+  const hd = '<div class="hd"><span class="logo">' + ICO.auris + '<span>' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span></span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {
