@@ -234,14 +234,18 @@ async function vInicio(){
     V.innerHTML = '<div class="hero"></div><div class="fila-tit"><div class="sk" style="height:16px;width:50%"></div></div>' + skFila() + '<div class="fila-tit"><div class="sk" style="height:16px;width:40%"></div></div>' + skFila();
     cacheInicio = await api("/api/inicio");
   }
-  const d = cacheInicio, h = d.destacado;
+  const d = cacheInicio;
+  const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
   const hd = '<div class="hd"><span class="logo">' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></div>';
+  const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
-  if (h) {
-    const bts = '<div class="bts"><button class="hb w" id="h-play">' + ICO.play + t("escuchar") + '</button><button class="hb g" id="h-lista"></button><a class="hb g" href="#/libro/' + encodeURIComponent(h.id) + '" aria-label="' + t("masInfo") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></a></div>';
-    const gens = '<div class="gens">' + (h.generos || []).map(g => '<span>' + esc(g) + '</span>').join("") + '</div>';
-    if (h.imagen) html = '<div class="hero" style="background-image:url(\'' + esc(abs(h.imagen)) + '\')">' + hd + '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1>' + gens + bts + '</div></div>';
-    else html = '<div class="hero poster"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="arte" style="background-image:url(\'' + esc(abs(h.poster || h.portada)) + '\'),url(\'' + esc(abs(h.portada)) + '\')"></div>' + hd + '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1>' + gens + bts + '</div></div>';
+  if (hs.length) {
+    html = '<div class="hero-car">' + hd + '<div class="pista" id="h-pista">' + hs.map((h, k) => {
+      const bts = '<div class="bts"><button class="hb w" data-hplay="' + k + '">' + ICO.play + t("escuchar") + '</button><button class="hb g" data-hlista="' + k + '"></button><a class="hb g" href="#/libro/' + encodeURIComponent(h.id) + '" aria-label="' + t("masInfo") + '">' + info + '</a></div>';
+      const cnt = '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1><div class="gens">' + (h.generos || []).map(g => '<span>' + esc(g) + '</span>').join("") + '</div>' + bts + '</div>';
+      if (h.imagen) return '<div class="hero slide" style="background-image:url(\'' + esc(abs(h.imagen)) + '\')">' + cnt + '</div>';
+      return '<div class="hero poster slide"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="arte" style="background-image:url(\'' + esc(abs(h.poster || h.portada)) + '\'),url(\'' + esc(abs(h.portada)) + '\')"></div>' + cnt + '</div>';
+    }).join("") + '</div>' + (hs.length > 1 ? '<div class="puntos" id="h-puntos">' + hs.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
   const rec = E.recientes.slice(0, 12);
@@ -263,13 +267,33 @@ async function vInicio(){
   }
   html += '<p class="fuente">' + t("pie") + '</p>';
   V.innerHTML = html;
-  if (h) {
-    const hl = $("h-lista"), x = { id:h.id, tipo:"libro", titulo:h.titulo, autor:h.autor, portada:h.portada || "/contenido/quijote/portada.jpg" };
+  hs.forEach((h, k) => {
+    const hl = V.querySelector('[data-hlista="' + k + '"]'), x = { id:h.id, tipo:"libro", titulo:h.titulo, autor:h.autor, portada:h.portada || "/contenido/quijote/portada.jpg" };
     const pintarL = () => hl.innerHTML = enLista(x) ? ICO.ok + t("enMiLista") : ICO.mas + t("miLista");
     pintarL(); hl.onclick = () => { alternarLista(x); pintarL(); };
-    $("h-play").onclick = () => escucharLibro(h.id);
-  }
+    V.querySelector('[data-hplay="' + k + '"]').onclick = () => escucharLibro(h.id);
+  });
+  carrusel(hs.length);
   V.querySelectorAll("[data-rec]").forEach(b => b.onclick = () => continuar(E.recientes[+b.dataset.rec]));
+}
+
+// Carrusel de destacados: pasa solo cada 7 s; si la persona lo toca, espera un rato.
+let carT = null;
+function carrusel(n){
+  clearInterval(carT);
+  const pista = $("h-pista"), puntos = $("h-puntos");
+  if (!pista || n < 2) return;
+  let pausa = 0;
+  const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
+  const ir = k => pista.scrollTo({ left:k * pista.clientWidth, behavior:"smooth" });
+  pista.addEventListener("scroll", () => { const k = actual(); puntos.querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i === k)); }, { passive:true });
+  ["pointerdown", "touchstart", "wheel"].forEach(ev => pista.addEventListener(ev, () => { pausa = Date.now() + 12000; }, { passive:true }));
+  puntos.querySelectorAll("button").forEach(b => b.onclick = () => { pausa = Date.now() + 12000; ir(+b.dataset.punto); });
+  carT = setInterval(() => {
+    if (!document.body.contains(pista)) return clearInterval(carT);
+    if (Date.now() < pausa || document.hidden || $("full").classList.contains("on")) return;
+    ir((actual() + 1) % n);
+  }, 7000);
 }
 
 // ================= Buscar / Explorar =================

@@ -41,7 +41,7 @@ const T = {
   podHistoria: { es: 'Podcasts de historia', en: 'History podcasts', pt: 'Podcasts de história' },
   podCuentos: { es: 'Relatos en podcast', en: 'Story podcasts', pt: 'Histórias em podcast' },
   populares: { es: 'Más escuchados', en: 'Most listened', pt: 'Mais ouvidos' },
-  destacado: { es: 'Destacado del día', en: 'Today\'s pick', pt: 'Destaque do dia' },
+  destacado: { es: 'Destacado', en: 'Featured', pt: 'Destaque' },
   gratis: { es: 'Gratis', en: 'Free', pt: 'Grátis' }
 };
 
@@ -343,19 +343,20 @@ app.get('/api/inicio', ruta(async req => {
   fila('misterio', CATEGORIAS.misterio.nombre, misterio && misterio.libros, { cat: 'misterio' });
   if (elegidos) fila('populares', T.populares, pop.slice(10), { cat: '' });
 
-  // Destacado: cambia cada día entre los primeros 12 de la selección (o los más escuchados).
-  let destacado = null;
-  if (L === 'es' && PROPIOS_ACTIVOS) destacado = PROPIOS.destacado;
-  else {
-    const base = ((elegidos && elegidos.libros.length) ? elegidos.libros : pop).slice(0, 12);
+  // Destacados: 5 libros de la selección (o los más escuchados) que cambian cada día.
+  let destacados = [];
+  if (L === 'es' && PROPIOS_ACTIVOS) destacados.push(PROPIOS.destacado);
+  const base = (elegidos && elegidos.libros.length) ? elegidos.libros : pop;
+  if (base.length) {
     const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5); // cambia a la medianoche de Argentina
-    const d = base.length ? base[dia % base.length] : null;
-    if (d) {
-      const grande = await seguro(portadaGrande(d.id));
-      destacado = { id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada, poster: grande || d.portada };
-    }
+    const n = Math.min(5, base.length), inicio = (dia * n) % base.length;
+    const elegidosHoy = Array.from({ length: n }, (_, k) => base[(inicio + k) % base.length]);
+    const grandes = await Promise.all(elegidosHoy.map(d => seguro(portadaGrande(d.id))));
+    elegidosHoy.forEach((d, k) => destacados.push({ id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada, poster: grandes[k] || d.portada }));
   }
-  return { destacado, filas };
+  destacados = destacados.slice(0, 5);
+  const destacado = destacados[0] || null;
+  return { destacado, destacados, filas };
 }));
 
 app.get('/api/categorias', ruta(async req => {

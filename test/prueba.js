@@ -66,7 +66,8 @@ falso.listen(0, '127.0.0.1', async () => {
     try {
       let r = await api('/api/inicio');
       assert.equal(r.status, 200);
-      assert.equal(r.body.destacado.etiqueta, 'Destacado del día');
+      assert.equal(r.body.destacado.etiqueta, 'Destacado');
+      assert.ok(r.body.destacados.length >= 1 && r.body.destacados.length <= 5);
       const ids = r.body.filas.map(f => f.id);
       assert.ok(!ids.includes('propios') && ids.includes('top-libros') && ids.includes('top-pods'), ids.join());
       assert.equal(r.body.filas.find(f => f.id === 'top-libros').items[0].autor, 'Horacio Quiroga');
@@ -102,7 +103,7 @@ falso.listen(0, '127.0.0.1', async () => {
 
       r = await api('/api/inicio?idioma=en');
       assert.ok(!r.body.filas.some(f => f.id === 'propios'), 'en inglés no hay propios');
-      assert.equal(r.body.destacado.etiqueta, "Today's pick");
+      assert.equal(r.body.destacado.etiqueta, 'Featured');
       assert.equal(r.body.filas.find(f => f.id === 'cuentos').titulo, 'Short stories');
 
       r = await api('/api/podcasts');

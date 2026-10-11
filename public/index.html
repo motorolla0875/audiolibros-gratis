@@ -43,7 +43,7 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 /* Hero */
 .hero{position:relative;margin:calc(-14px - var(--safe-t)) -16px 0;height:min(120vw,580px);overflow:hidden;display:flex;align-items:flex-end;background:#2A1630 center/cover no-repeat}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,12,10,.6) 0%,rgba(14,12,10,0) 22%,rgba(14,12,10,0) 42%,var(--bg) 97%)}
-.hero .hd{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + var(--safe-t)) 16px 14px}
+.hero .hd,.hero-car .hd{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + var(--safe-t)) 16px 14px}
 .logo{font:700 19px var(--serif);letter-spacing:-.01em}.logo i{color:var(--accent);font-style:normal}
 .hero .cnt{position:relative;z-index:2;width:100%;text-align:center;padding:0 16px 4px}
 .kick{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
@@ -216,6 +216,15 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .hero.poster::after{background:linear-gradient(180deg,rgba(14,12,10,.55) 0%,rgba(14,12,10,0) 18%,rgba(14,12,10,0) 45%,rgba(14,12,10,.75) 72%,var(--bg) 98%)}
 .hero.poster h1{font-size:36px}
 @keyframes zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+.hero-car{position:relative;margin:calc(-14px - var(--safe-t)) -16px 0}
+.hero-car .hd{z-index:4}
+.pista{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.pista::-webkit-scrollbar{display:none}
+.hero.slide{flex:0 0 100%;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
+.hero.slide .cnt{padding-bottom:26px}
+.puntos{position:absolute;left:0;right:0;bottom:4px;display:flex;justify-content:center;gap:6px;z-index:4}
+.puntos button{width:6px;height:6px;border-radius:99px;border:0;padding:0;background:rgba(244,238,230,.35);transition:width .25s,background .25s}
+.puntos button.on{width:20px;background:var(--ink)}
 .hero.libro{background:none}
 .hero.libro .fondo{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(28px) brightness(.55);transform:scale(1.15)}
 .hero.libro .cv{width:min(46vw,200px);margin:0 auto 18px;box-shadow:0 24px 50px -16px rgba(0,0,0,.9)}
@@ -281,6 +290,6 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=4"></script>
+<script src="/app.js?v=5"></script>
 </body>
 </html>
