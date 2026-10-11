@@ -194,6 +194,16 @@ async function libro(id) {
   });
 }
 
+// Portada en tamaño grande (archive.org tiene la tapa original además de la miniatura).
+async function portadaGrande(id) {
+  return conCache('tapa:' + id, 7 * 24 * 3600, async () => {
+    const r = await traer(`${ARCHIVE}/metadata/${encodeURIComponent(id)}`);
+    const jpg = lista(r && r.files).filter(f => /^(JPEG|PNG)$/i.test(f.format || '') && !/thumb|_itemimage/i.test(f.name || ''))
+      .sort((a, b) => (parseInt(b.size) || 0) - (parseInt(a.size) || 0))[0];
+    return jpg ? `${ARCHIVE}/download/${encodeURIComponent(id)}/${jpg.name.split('/').map(encodeURIComponent).join('/')}` : null;
+  });
+}
+
 // ---------- Selección armada a mano ----------
 // contenido/seleccion.json: { "es": ["id1", "id2"], "en": [...], "pt": [...] }
 // Si un idioma no tiene lista, se usan los más descargados.
@@ -340,7 +350,10 @@ app.get('/api/inicio', ruta(async req => {
     const base = ((elegidos && elegidos.libros.length) ? elegidos.libros : pop).slice(0, 12);
     const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5); // cambia a la medianoche de Argentina
     const d = base.length ? base[dia % base.length] : null;
-    if (d) destacado = { id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada };
+    if (d) {
+      const grande = await seguro(portadaGrande(d.id));
+      destacado = { id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada, poster: grande || d.portada };
+    }
   }
   return { destacado, filas };
 }));

@@ -209,6 +209,13 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .grupo .op small{color:var(--muted);font-size:13px}
 .grupo .op.on{color:var(--accent);font-weight:700}
 .grupo .op.peligro{color:#FF8A80}
+.hero.poster{background:var(--bg);height:min(132vw,640px)}
+.hero.poster .fondo{position:absolute;inset:-40px;background:center/cover no-repeat;filter:blur(30px) saturate(1.3) brightness(.6);transform:scale(1.2)}
+.hero.poster .arte{position:absolute;left:0;right:0;top:0;aspect-ratio:1;max-height:100%;background:center top/cover no-repeat;animation:zoom 24s ease-in-out infinite alternate;
+  -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}
+.hero.poster::after{background:linear-gradient(180deg,rgba(14,12,10,.55) 0%,rgba(14,12,10,0) 18%,rgba(14,12,10,0) 45%,rgba(14,12,10,.75) 72%,var(--bg) 98%)}
+.hero.poster h1{font-size:36px}
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
 .hero.libro{background:none}
 .hero.libro .fondo{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(28px) brightness(.55);transform:scale(1.15)}
 .hero.libro .cv{width:min(46vw,200px);margin:0 auto 18px;box-shadow:0 24px 50px -16px rgba(0,0,0,.9)}
@@ -274,6 +281,6 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=3"></script>
+<script src="/app.js?v=4"></script>
 </body>
 </html>

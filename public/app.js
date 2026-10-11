@@ -241,7 +241,7 @@ async function vInicio(){
     const bts = '<div class="bts"><button class="hb w" id="h-play">' + ICO.play + t("escuchar") + '</button><button class="hb g" id="h-lista"></button><a class="hb g" href="#/libro/' + encodeURIComponent(h.id) + '" aria-label="' + t("masInfo") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></a></div>';
     const gens = '<div class="gens">' + (h.generos || []).map(g => '<span>' + esc(g) + '</span>').join("") + '</div>';
     if (h.imagen) html = '<div class="hero" style="background-image:url(\'' + esc(abs(h.imagen)) + '\')">' + hd + '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1>' + gens + bts + '</div></div>';
-    else html = '<div class="hero libro"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div>' + hd + '<div class="cnt">' + cover({ ...h, tipo:"libro" }) + '<div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1>' + gens + bts + '</div></div>';
+    else html = '<div class="hero poster"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="arte" style="background-image:url(\'' + esc(abs(h.poster || h.portada)) + '\'),url(\'' + esc(abs(h.portada)) + '\')"></div>' + hd + '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1>' + gens + bts + '</div></div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
   const rec = E.recientes.slice(0, 12);

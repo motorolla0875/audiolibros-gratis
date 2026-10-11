@@ -15,6 +15,7 @@ const falso = http.createServer((req, res) => {
       { identifier: n + '_otro_librivox', title: ['Rimas'], creator: ['Bécquer, Gustavo Adolfo'], downloads: 500 }
     ] } });
   }
+  if (u.pathname.startsWith('/download/') && u.pathname.endsWith('.jpg')) { res.setHeader('Content-Type', 'image/jpeg'); return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/hero.jpg'))); }
   if (u.pathname.startsWith('/download/')) {
     res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Content-Type', 'audio/mpeg');
     return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/cap1-ef_dora.mp3')));
