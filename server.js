@@ -17,7 +17,7 @@ const app = express();
 app.disable('x-powered-by');
 
 // La app (Capacitor) llama desde otro origen.
-app.use('/api', (req, res, next) => {
+app.use(['/api', '/contenido'], (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
   next();
 });
