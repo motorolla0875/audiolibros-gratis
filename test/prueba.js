@@ -19,7 +19,7 @@ const falso = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Content-Type', 'audio/mpeg');
     return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/cap1-ef_dora.mp3')));
   }
-  if (u.pathname.startsWith('/services/img/')) { res.statusCode = 404; return res.end(); }
+  if (u.pathname.startsWith('/services/img/')) { res.setHeader('Content-Type', 'image/jpeg'); return res.end(require('fs').readFileSync(require('path').join(__dirname, '..', 'public/contenido/quijote/portada.jpg'))); }
   if (u.pathname.startsWith('/metadata/')) {
     return json({ metadata: { identifier: 'x', title: 'Cuentos de la Selva', creator: 'Quiroga, Horacio, 1878-1937', description: '<p>Ocho cuentos.</p><br>(Summary by Juan)' },
       files: [
@@ -65,11 +65,10 @@ falso.listen(0, '127.0.0.1', async () => {
     try {
       let r = await api('/api/inicio');
       assert.equal(r.status, 200);
-      assert.equal(r.body.destacado.id, 'quijote-kokoro');
+      assert.equal(r.body.destacado.etiqueta, 'Destacado del día');
       const ids = r.body.filas.map(f => f.id);
-      assert.ok(ids.includes('propios') && ids.includes('top-libros') && ids.includes('top-pods'), ids.join());
+      assert.ok(!ids.includes('propios') && ids.includes('top-libros') && ids.includes('top-pods'), ids.join());
       assert.equal(r.body.filas.find(f => f.id === 'top-libros').items[0].autor, 'Horacio Quiroga');
-      assert.ok(!r.body.filas[0].items[0].capitulos, 'la fila no debe traer capítulos');
 
       r = await api('/api/libro/cuentos_selva_1101_librivox');
       assert.equal(r.status, 200);
@@ -98,11 +97,11 @@ falso.listen(0, '127.0.0.1', async () => {
       assert.equal(r.body.podcasts.length, 1, 'filtra podcasts sin feed');
 
       r = await api('/api/buscar?q=quijote');
-      assert.equal(r.body.libros[0].id, 'quijote-kokoro');
+      assert.ok(!r.body.libros.some(l => l.id === 'quijote-kokoro'), 'sin propios en la búsqueda');
 
       r = await api('/api/inicio?idioma=en');
       assert.ok(!r.body.filas.some(f => f.id === 'propios'), 'en inglés no hay propios');
-      assert.equal(r.body.destacado.etiqueta, 'Featured');
+      assert.equal(r.body.destacado.etiqueta, "Today's pick");
       assert.equal(r.body.filas.find(f => f.id === 'cuentos').titulo, 'Short stories');
 
       r = await api('/api/podcasts');

@@ -41,7 +41,8 @@ const T = {
   podHistoria: { es: 'Podcasts de historia', en: 'History podcasts', pt: 'Podcasts de história' },
   podCuentos: { es: 'Relatos en podcast', en: 'Story podcasts', pt: 'Histórias em podcast' },
   populares: { es: 'Más escuchados', en: 'Most listened', pt: 'Mais ouvidos' },
-  destacado: { es: 'Destacado', en: 'Featured', pt: 'Destaque' }
+  destacado: { es: 'Destacado del día', en: 'Today\'s pick', pt: 'Destaque do dia' },
+  gratis: { es: 'Gratis', en: 'Free', pt: 'Grátis' }
 };
 
 // ---------- Caché en memoria ----------
@@ -285,6 +286,8 @@ async function podcast(id) {
 
 // ---------- Contenido propio (narrado con Kokoro, solo en español por ahora) ----------
 const PROPIOS = require('./public/contenido/propios.json');
+// Apagado por ahora: se prende con PROPIOS=1 cuando haya libros completos narrados por nosotros.
+const PROPIOS_ACTIVOS = process.env.PROPIOS === '1';
 const sinCapitulos = ({ capitulos, texto, ...r }) => r;
 
 // ---------- Rutas ----------
@@ -318,7 +321,7 @@ app.get('/api/inicio', ruta(async req => {
   const pop = (populares && populares.libros) || [];
   const filas = [];
   const fila = (id, titulo, items, extra = {}) => { if (items && items.length) filas.push({ id, titulo: titulo[L] || titulo.es, items, ...extra }); };
-  if (L === 'es') fila('propios', T.propios, PROPIOS.libros.map(sinCapitulos));
+  if (L === 'es' && PROPIOS_ACTIVOS) fila('propios', T.propios, PROPIOS.libros.map(sinCapitulos));
   fila('seleccion', T.seleccion, elegidos ? elegidos.libros : pop.slice(10, 30));
   fila('top-libros', T.topLibros, pop.slice(0, 10), { estilo: 'top10' });
   fila('top-pods', T.topPods, top);
@@ -330,12 +333,14 @@ app.get('/api/inicio', ruta(async req => {
   fila('misterio', CATEGORIAS.misterio.nombre, misterio && misterio.libros, { cat: 'misterio' });
   if (elegidos) fila('populares', T.populares, pop.slice(10), { cat: '' });
 
-  // Destacado: en español el Quijote narrado por nosotros; en otros idiomas, el primero de la selección.
+  // Destacado: cambia cada día entre los primeros 12 de la selección (o los más escuchados).
   let destacado = null;
-  if (L === 'es') destacado = PROPIOS.destacado;
+  if (L === 'es' && PROPIOS_ACTIVOS) destacado = PROPIOS.destacado;
   else {
-    const d = (elegidos && elegidos.libros[0]) || pop[0];
-    if (d) destacado = { id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor], portada: d.portada };
+    const base = ((elegidos && elegidos.libros.length) ? elegidos.libros : pop).slice(0, 12);
+    const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5); // cambia a la medianoche de Argentina
+    const d = base.length ? base[dia % base.length] : null;
+    if (d) destacado = { id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada };
   }
   return { destacado, filas };
 }));
@@ -383,7 +388,7 @@ app.get('/api/buscar', ruta(async req => {
   const L = idiomaDe(req);
   const q = String(req.query.q || '').slice(0, 80).trim();
   if (q.length < 2) return { libros: [], podcasts: [] };
-  const propios = L === 'es' ? PROPIOS.libros.filter(l => sinAcentos(l.titulo + ' ' + l.autor).includes(sinAcentos(q))).map(sinCapitulos) : [];
+  const propios = L === 'es' && PROPIOS_ACTIVOS ? PROPIOS.libros.filter(l => sinAcentos(l.titulo + ' ' + l.autor).includes(sinAcentos(q))).map(sinCapitulos) : [];
   const [l, p] = await Promise.all([seguro(buscarLibros({ idioma: L, q, filas: 30 })), seguro(buscarPodcasts(L, q, 20))]);
   return { libros: propios.concat((l && l.libros) || []), podcasts: p || [] };
 }));
