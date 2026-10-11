@@ -784,6 +784,13 @@ function tocarDL(item, p){
 // ================= Reproductor =================
 const A = $("audio");
 const P = { item:null, pistas:[], i:0, seguido:true, texto:null };
+// Chromecast: mientras se transmite, el reproductor de la tele manda y el del teléfono queda en pausa.
+const CS = { listo:false, activo:false, player:null, ctrl:null, cargando:false, carga:0, fin:false, ultimo:0 };
+const ahora = () => CS.activo ? (CS.player.currentTime || 0) : A.currentTime;
+const durAhora = () => (CS.activo && CS.player.duration) ? CS.player.duration : A.duration;
+function irA(x){ if (CS.activo) { CS.player.currentTime = x; CS.ctrl.seek(); } else A.currentTime = x; }
+function pausar(){ if (CS.activo) { if (!CS.player.isPaused) CS.ctrl.playOrPause(); } else A.pause(); }
+function tocarYa(){ if (CS.activo) { if (CS.player.isPaused) CS.ctrl.playOrPause(); } else A.play().catch(() => {}); }
 const VELS = [1, 1.25, 1.5, 1.75, 2, .75];
 let VOCES = [], urlLocal = null;
 
@@ -815,7 +822,8 @@ async function cargarPista(desde, tocar){
   if (P.pistas[P.i] !== p) return;
   A.playbackRate = E.vel;
   A.addEventListener("loadedmetadata", () => { if (t0) A.currentTime = Math.min(t0, (A.duration || t0 + 1) - 1); A.playbackRate = E.vel; }, { once:true });
-  if (tocar) A.play().catch(() => { $("full").classList.remove("cargando"); pintarPlay(); });
+  if (CS.activo) mandarACast(t0);
+  else if (tocar) A.play().catch(() => { $("full").classList.remove("cargando"); pintarPlay(); });
   // Texto y voces (solo libros narrados por nosotros)
   $("f-voces").hidden = !p.voces;
   P.texto = null; $("f-texto").hidden = true; $("texto").innerHTML = "";
@@ -863,7 +871,8 @@ function marcarSonando(){
   V.querySelectorAll("#d-caps [data-i]").forEach(b => b.classList.toggle("on", (b.querySelector("b") || {}).textContent === (P.pistas[P.i] || {}).titulo && !!actual));
 }
 function pintarPlay(cargando){
-  const sonando = !A.paused;
+  const sonando = CS.activo ? !CS.player.isPaused : !A.paused;
+  if (CS.activo && CS.cargando) cargando = true;
   const ico = cargando ? ICO.carga : sonando ? ICO.pause : ICO.play;
   $("play").innerHTML = ico; $("mini-play").innerHTML = ico;
   $("play").setAttribute("aria-label", sonando ? "Pausa" : t("escuchar"));
@@ -880,61 +889,64 @@ $("mini").onclick = e => { if (!e.target.closest("#mini-play")) location.hash = 
 $("f-cerrar").onclick = () => rutaActual() === "/reproductor" ? history.back() : cerrarFull(true);
 $("f-ir").onclick = () => { const r = ruta(P.item); cerrarFull(true); location.replace(r); };
 
-const alternar = () => { if (!A.src) return; A.paused ? A.play().catch(() => {}) : A.pause(); };
+const alternar = () => { if (!A.src) return; if (CS.activo) return CS.ctrl.playOrPause(); A.paused ? A.play().catch(() => {}) : A.pause(); };
 $("play").onclick = alternar; $("mini-play").onclick = alternar;
-const saltar = s => { if (A.duration) A.currentTime = Math.max(0, Math.min(A.duration - .5, A.currentTime + s)); };
+const saltar = s => { const d = durAhora(); if (d) irA(Math.max(0, Math.min(d - .5, ahora() + s))); };
 $("atras").onclick = () => saltar(-15);
 $("adel").onclick = () => saltar(30);
-function irPista(d){ const n = P.i + d; if (n < 0 || n >= P.pistas.length) { if (d < 0) A.currentTime = 0; return; } guardarProgreso(); P.i = n; cargarPista(null, true); }
-$("ant").onclick = () => (A.currentTime > 5 && P.item.tipo === "libro") ? (A.currentTime = 0) : irPista(-1);
+function irPista(d){ const n = P.i + d; if (n < 0 || n >= P.pistas.length) { if (d < 0) irA(0); return; } guardarProgreso(); P.i = n; cargarPista(null, true); }
+$("ant").onclick = () => (ahora() > 5 && P.item.tipo === "libro") ? irA(0) : irPista(-1);
 $("sig").onclick = () => irPista(1);
-$("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; A.playbackRate = E.vel; guardar(); pintarFicha(); };
+$("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; A.playbackRate = E.vel; velCast(); guardar(); pintarFicha(); };
 
 A.onplay = () => pintarPlay();
 A.onplaying = () => { $("full").classList.remove("cargando"); pintarPlay(); };
 A.onwaiting = () => pintarPlay(true);
 A.onpause = () => { pintarPlay(); guardarProgreso(); };
 A.onerror = () => { $("full").classList.remove("cargando"); pintarPlay(); if (A.src) toast(navigator.onLine === false ? t("sinInternet") : t("noAudio")); };
-A.onended = () => {
+A.onended = () => alTerminar();
+function alTerminar(){
   guardarProgreso(true);
   if (finCapitulo) { finCapitulo = false; sueñoMin = 0; pintarSueno(0); toast(t("buenasNoches")); return; }
   if (P.seguido && P.i < P.pistas.length - 1) irPista(1);
-};
+}
 
 let ultGuardado = 0;
 function guardarProgreso(fin){
-  const p = P.pistas[P.i]; if (!p || !A.duration || !isFinite(A.duration)) return;
-  E.progreso[claveProg(p)] = { t: fin ? A.duration : A.currentTime, dur: A.duration, ts: Date.now() };
+  const p = P.pistas[P.i], d = durAhora(); if (!p || !d || !isFinite(d)) return;
+  if (CS.activo && CS.fin && !fin) return;
+  E.progreso[claveProg(p)] = { t: fin ? d : ahora(), dur: d, ts: Date.now() };
   const k = Object.keys(E.progreso); if (k.length > 800) k.sort((a, b) => E.progreso[a].ts - E.progreso[b].ts).slice(0, 200).forEach(x => delete E.progreso[x]);
   guardar();
 }
 let ultimaFr = null;
-A.ontimeupdate = () => {
-  const d = A.duration || (P.pistas[P.i] || {}).duracion || 0, tt = A.currentTime;
+A.ontimeupdate = () => { if (!CS.activo) pintarTiempo(A.currentTime, A.duration); };
+function pintarTiempo(tt, d){
+  d = d || (P.pistas[P.i] || {}).duracion || 0;
   const pct = d ? Math.min(100, tt / d * 100) : 0;
   if (!arrastrando) { $("fill").style.width = pct + "%"; $("knob").style.left = pct + "%"; }
   $("mini-p").style.width = pct + "%";
   $("cur").textContent = fmt(tt); $("dur").textContent = "-" + fmt((d - tt) / (E.vel || 1));
   if (Date.now() - ultGuardado > 5000) { ultGuardado = Date.now(); guardarProgreso(); }
   if (P.texto) resaltar(tt);
-  if ("mediaSession" in navigator && d && navigator.mediaSession.setPositionState) { try { navigator.mediaSession.setPositionState({ duration:d, position:Math.min(tt, d), playbackRate:A.playbackRate }); } catch (e) {} }
-};
+  if ("mediaSession" in navigator && d && navigator.mediaSession.setPositionState) { try { navigator.mediaSession.setPositionState({ duration:d, position:Math.min(tt, d), playbackRate:E.vel || 1 }); } catch (e) {} }
+}
 
 // Barra de progreso arrastrable
 let arrastrando = false;
 function posBarra(e){ const r = $("bar").getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); }
-$("bar").addEventListener("pointerdown", e => { if (!A.duration) return; arrastrando = true; $("bar").setPointerCapture(e.pointerId); const x = posBarra(e); $("fill").style.width = x * 100 + "%"; $("knob").style.left = x * 100 + "%"; });
-$("bar").addEventListener("pointermove", e => { if (!arrastrando) return; const x = posBarra(e); $("fill").style.width = x * 100 + "%"; $("knob").style.left = x * 100 + "%"; $("cur").textContent = fmt(x * A.duration); });
-$("bar").addEventListener("pointerup", e => { if (!arrastrando) return; arrastrando = false; A.currentTime = posBarra(e) * A.duration; });
+$("bar").addEventListener("pointerdown", e => { if (!durAhora()) return; arrastrando = true; $("bar").setPointerCapture(e.pointerId); const x = posBarra(e); $("fill").style.width = x * 100 + "%"; $("knob").style.left = x * 100 + "%"; });
+$("bar").addEventListener("pointermove", e => { if (!arrastrando) return; const x = posBarra(e); $("fill").style.width = x * 100 + "%"; $("knob").style.left = x * 100 + "%"; $("cur").textContent = fmt(x * durAhora()); });
+$("bar").addEventListener("pointerup", e => { if (!arrastrando) return; arrastrando = false; irA(posBarra(e) * durAhora()); });
 
 // Controles de la pantalla bloqueada y auriculares
 if ("mediaSession" in navigator) {
   const ms = navigator.mediaSession;
-  ms.setActionHandler("play", () => A.play());
-  ms.setActionHandler("pause", () => A.pause());
+  ms.setActionHandler("play", () => tocarYa());
+  ms.setActionHandler("pause", () => pausar());
   ms.setActionHandler("seekbackward", () => saltar(-15));
   ms.setActionHandler("seekforward", () => saltar(30));
-  try { ms.setActionHandler("previoustrack", () => irPista(-1)); ms.setActionHandler("nexttrack", () => irPista(1)); ms.setActionHandler("seekto", e => { A.currentTime = e.seekTime; }); } catch (e) {}
+  try { ms.setActionHandler("previoustrack", () => irPista(-1)); ms.setActionHandler("nexttrack", () => irPista(1)); ms.setActionHandler("seekto", e => irA(e.seekTime)); } catch (e) {}
 }
 
 // Temporizador para dormir
@@ -943,7 +955,7 @@ function pintarSueno(min){ $("sueno-t").textContent = min === "fin" ? t("finCap"
 $("sueno").onclick = () => hoja(t("apagarEn"), [[t("desactivado"), 0], [t("min15"), 15], [t("min30"), 30], [t("min45"), 45], [t("hora1"), 60], [t("alTerminar"), "fin"]], v => {
   clearTimeout(sueñoT); finCapitulo = false; sueñoMin = v;
   if (v === "fin") finCapitulo = true;
-  else if (v) sueñoT = setTimeout(() => { A.pause(); sueñoMin = 0; pintarSueno(0); }, v * 60000);
+  else if (v) sueñoT = setTimeout(() => { pausar(); sueñoMin = 0; pintarSueno(0); }, v * 60000);
   pintarSueno(v);
 }, sueñoMin);
 
@@ -1032,7 +1044,78 @@ if (volOk) {
 // En la app compilada se suma el plugin nativo de Google Cast (PLUG.GoogleCast) si está.
 const CAST = { disponible:false, conectado:false };
 function pintarCast(){
-  document.querySelectorAll("[data-cast], #f-cast").forEach(b => { b.hidden = !CAST.disponible; b.classList.toggle("on", CAST.conectado); });
+  const disp = CAST.disponible || CAST.cc;
+  document.querySelectorAll("[data-cast], #f-cast").forEach(b => { b.hidden = !disp; b.classList.toggle("on", CAST.conectado); });
+}
+
+// Chromecast con el kit oficial de Google (Chrome en Android y en la compu).
+// Manda a la tele la portada, el título y el autor, así se ve la imagen y no solo el audio.
+const ES_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+if (!NATIVO && !ES_IOS && /Chrome\//.test(navigator.userAgent)) {
+  window.__onGCastApiAvailable = ok => { if (ok) try { iniciarCast(); } catch (e) {} };
+  const sc = document.createElement("script");
+  sc.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"; sc.async = true;
+  document.head.appendChild(sc);
+}
+function iniciarCast(){
+  const cf = cast.framework, ctx = cf.CastContext.getInstance();
+  ctx.setOptions({ receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID, autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED });
+  CS.player = new cf.RemotePlayer(); CS.ctrl = new cf.RemotePlayerController(CS.player); CS.listo = true;
+  const E2 = cf.RemotePlayerEventType;
+  ctx.addEventListener(cf.CastContextEventType.CAST_STATE_CHANGED, e => { CAST.cc = e.castState !== cf.CastState.NO_DEVICES_AVAILABLE; CAST.conectado = e.castState === cf.CastState.CONNECTED || (!!A.webkitCurrentPlaybackTargetIsWireless); pintarCast(); });
+  ctx.addEventListener(cf.CastContextEventType.SESSION_STATE_CHANGED, e => {
+    const S = cf.SessionState;
+    if (e.sessionState === S.SESSION_STARTED) { CS.activo = true; if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); }
+    else if (e.sessionState === S.SESSION_RESUMED) { CS.activo = true; seguirFin(ctx.getCurrentSession()); }
+    else if (e.sessionState === S.SESSION_ENDED) {
+      const tt = CS.ultimo; CS.activo = false; CS.cargando = false;
+      if (tt && A.src) { try { A.currentTime = tt; } catch (er) {} }
+      pintarPlay(); guardarProgreso();
+    }
+  });
+  CS.ctrl.addEventListener(E2.CURRENT_TIME_CHANGED, () => {
+    if (!CS.activo) return;
+    if (CS.player.currentTime) CS.ultimo = CS.player.currentTime;
+    pintarTiempo(CS.player.currentTime || 0, CS.player.duration);
+    if (Date.now() - ultGuardado > 5000) { ultGuardado = Date.now(); guardarProgreso(); }
+  });
+  CS.ctrl.addEventListener(E2.IS_PAUSED_CHANGED, () => { if (CS.activo) { pintarPlay(); guardarProgreso(); } });
+  CS.ctrl.addEventListener(E2.PLAYER_STATE_CHANGED, () => { if (!CS.activo) return; if (CS.player.playerState === "PLAYING" || CS.player.playerState === "PAUSED") CS.cargando = false; pintarPlay(CS.player.playerState === "BUFFERING"); });
+}
+const tipoAudio = u => /\.m4a|\.mp4|\.aac/i.test(u) ? "audio/mp4" : /\.ogg|\.opus/i.test(u) ? "audio/ogg" : /\.wav/i.test(u) ? "audio/wav" : "audio/mpeg";
+function mandarACast(desde){
+  const s = cast.framework.CastContext.getInstance().getCurrentSession(), p = P.pistas[P.i], x = P.item;
+  if (!s || !p) return;
+  const url = pistaUrl(p); // siempre la de internet: la tele no puede leer lo descargado en el teléfono
+  const mi = new chrome.cast.media.MediaInfo(url, tipoAudio(url));
+  mi.streamType = chrome.cast.media.StreamType.BUFFERED;
+  const md = new chrome.cast.media.MusicTrackMediaMetadata();
+  md.title = $("f-t").textContent;
+  md.artist = x.tipo === "podcast" ? x.titulo : (x.autor || "");
+  md.albumName = x.tipo === "podcast" ? (x.autor || "") : p.titulo;
+  const img = abs(p.portada || x.portada);
+  if (img) md.images = [new chrome.cast.Image(img)];
+  mi.metadata = md;
+  const req = new chrome.cast.media.LoadRequest(mi);
+  req.currentTime = desde || 0; req.autoplay = true; req.playbackRate = E.vel || 1;
+  A.pause();
+  CS.fin = false; CS.cargando = true; CS.ultimo = desde || 0; pintarPlay(true);
+  s.loadMedia(req).then(() => { CS.cargando = false; seguirFin(s); pintarPlay(); $("full").classList.remove("cargando"); },
+    () => { CS.cargando = false; pintarPlay(); $("full").classList.remove("cargando"); toast(t("noAudio")); });
+}
+// Cuando la tele termina el capítulo, pasamos al siguiente como en el teléfono.
+function seguirFin(s){
+  const m = s && s.getMediaSession(); if (!m) return;
+  const id = ++CS.carga;
+  m.addUpdateListener(() => {
+    if (id !== CS.carga || !CS.activo) return;
+    if (m.playerState === chrome.cast.media.PlayerState.IDLE && m.idleReason === chrome.cast.media.IdleReason.FINISHED) { CS.carga++; CS.fin = true; alTerminar(); }
+  });
+}
+function velCast(){
+  if (!CS.activo) return;
+  const s = cast.framework.CastContext.getInstance().getCurrentSession(), m = s && s.getMediaSession();
+  if (m) s.sendMessage("urn:x-cast:com.google.cast.media", { type:"SET_PLAYBACK_RATE", playbackRate:E.vel, mediaSessionId:m.mediaSessionId, requestId:Date.now() % 1e9 }).catch(() => {});
 }
 if (window.WebKitPlaybackTargetAvailabilityEvent) {
   A.addEventListener("webkitplaybacktargetavailabilitychanged", e => { CAST.disponible = e.availability === "available"; pintarCast(); });
@@ -1048,6 +1131,7 @@ function transmitir(){
     const p = P.pistas[P.i] || {};
     return PLUG.GoogleCast.requestSession().then(() => PLUG.GoogleCast.loadMedia({ url:A.currentSrc || A.src, title:$("f-t").textContent, subtitle:$("f-s").textContent, image:abs(p.portada || P.item.portada), currentTime:A.currentTime })).catch(() => {});
   }
+  if (CS.listo && (CAST.cc || CS.activo)) return cast.framework.CastContext.getInstance().requestSession().catch(() => {});
   if (A.webkitShowPlaybackTargetPicker) return A.webkitShowPlaybackTargetPicker();
   if (A.remote && A.remote.prompt) return A.remote.prompt().catch(e => { if (e && e.name !== "AbortError") toast(t("castNo")); });
   toast(t("castNo"));
