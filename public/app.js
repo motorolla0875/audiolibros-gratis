@@ -1019,26 +1019,6 @@ function resaltar(tt){
   if (!A.paused && $("full").classList.contains("on")) { const r = s.getBoundingClientRect(); if (r.top < 60 || r.bottom > innerHeight - 40) s.scrollIntoView({ behavior:"smooth", block:"center" }); }
 }
 
-// ================= Volumen =================
-// En iPhone el navegador no deja cambiar el volumen desde la página (solo con los botones del teléfono),
-// así que la barra se muestra únicamente donde funciona.
-const volOk = (() => { try { const a = new Audio(); a.volume = 0.5; return Math.abs(a.volume - 0.5) < 0.01; } catch (e) { return false; } })();
-if (E.volumen == null) E.volumen = 1;
-let volAntes = E.volumen || 1;
-function aplicarVolumen(v){
-  E.volumen = Math.max(0, Math.min(1, v));
-  A.volume = E.volumen; RES.forEach(a => a.volume = E.volumen);
-  $("vol").value = E.volumen; $("vol").style.setProperty("--v", E.volumen * 100 + "%");
-  $("vol-ondas").style.opacity = E.volumen > 0 ? 1 : 0;
-  guardar();
-}
-if (volOk) {
-  $("volumen").hidden = false;
-  aplicarVolumen(E.volumen);
-  $("vol").oninput = e => aplicarVolumen(+e.target.value);
-  $("vol-mute").onclick = () => { if (E.volumen > 0) { volAntes = E.volumen; aplicarVolumen(0); } else aplicarVolumen(volAntes || 1); };
-}
-
 // ================= Transmitir a la tele (Chromecast / AirPlay) =================
 // En el navegador: AirPlay en iPhone/Mac (Safari) y Chromecast donde Chrome lo permita.
 // En la app compilada se suma el plugin nativo de Google Cast (PLUG.GoogleCast) si está.
