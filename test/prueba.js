@@ -138,6 +138,12 @@ falso.listen(0, '127.0.0.1', async () => {
       r = await api('/api/inicio?pais=mx');
       assert.ok(r.body.filas.find(f => f.id === 'top-pods').titulo.includes('México'));
 
+      r = await api('/api/clips');
+      assert.equal(r.status, 200);
+      assert.ok(r.body.clips.length >= 1, 'hay clips');
+      const c = r.body.clips.find(x => x.item.tipo === 'podcast');
+      assert.ok(c && c.pista.url && c.inicio > 0 && c.inicio < c.pista.duracion, 'el clip arranca adelantado: ' + JSON.stringify(c && [c.inicio, c.pista.duracion]));
+
       r = await api('/api/categorias?idioma=pt');
       assert.deepEqual(r.body.paises.map(p => p.id), ['br', 'pt', 'mundo']);
       assert.equal(r.body.libros[0].nombre, 'Contos');

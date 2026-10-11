@@ -238,6 +238,41 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .row .cv .gen,.mini .cv .gen,.seg-it .cv .gen{padding:8%}
 .row .cv .gen .t,.mini .cv .gen .t{font-size:8px}
 .row .cv .gen .a,.mini .cv .gen .a,.row .cv .gen::after,.mini .cv .gen::after{display:none}
+
+/* Clips (estilo reels) */
+body.en-clips{overflow:hidden}
+body.en-clips .mini{display:none!important}
+body.en-clips .vista{padding:0}
+.clips{position:fixed;left:50%;transform:translateX(-50%);top:0;width:100%;max-width:520px;bottom:calc(58px + var(--safe-b));overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;background:#000}
+.clips::-webkit-scrollbar{display:none}
+.clip{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.clip .fondo{position:absolute;inset:-40px;background:center/cover no-repeat;filter:blur(34px) brightness(.5) saturate(1.3);transform:scale(1.2)}
+.clip .tapa{position:absolute;left:50%;top:calc(46% - 20px);transform:translate(-50%,-50%);width:min(68vw,300px);aspect-ratio:1;border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.9)}
+.clip .tapa .cv{width:100%;border-radius:0}
+.clip.sonando .tapa{animation:latido 2.4s ease-in-out infinite}
+@keyframes latido{50%{transform:translate(-50%,-50%) scale(1.025)}}
+.clip .info{position:relative;padding:0 76px 22px 18px;z-index:2}
+.clip .info small{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.14);padding:3px 8px;border-radius:6px;margin-bottom:8px}
+.clip .info b{display:block;font-size:17px;line-height:1.25}
+.clip .info p{margin:4px 0 0;color:#D8D0C6;font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.clip .lado{position:absolute;right:10px;bottom:24px;z-index:3;display:flex;flex-direction:column;gap:16px;align-items:center}
+.clip .lado button{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;font:700 11px var(--sans);width:60px}
+.clip .lado button span.c{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.clip .lado button.prin span.c{background:var(--accent)}
+.clip .lado svg{width:24px;height:24px}
+.clip .lado button.on span.c{background:#fff;color:#000}
+.clip .barra{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18);z-index:3}
+.clip .barra i{display:block;height:100%;width:0;background:#fff}
+.clip .pausa{position:absolute;left:50%;top:calc(46% - 20px);transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:3;color:#fff}
+.clip .pausa svg{width:34px;height:34px}
+.clip.pausado .pausa{display:grid}
+.clips-top{position:fixed;left:50%;transform:translateX(-50%);top:0;width:100%;max-width:520px;z-index:5;padding:calc(12px + var(--safe-t)) 16px 0;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.clips-top b{font:700 20px var(--serif);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.empezar{position:fixed;inset:0 0 calc(58px + var(--safe-b)) 0;z-index:6;display:grid;place-items:center;background:rgba(0,0,0,.45);border:0;color:#fff;width:100%}
+.empezar span{display:flex;flex-direction:column;align-items:center;gap:12px;font:700 17px var(--sans)}
+.empezar span i{width:84px;height:84px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.empezar svg{width:38px;height:38px}
+.clip-carga{height:100%;display:grid;place-items:center;color:var(--muted);scroll-snap-align:start}
 .toast{position:fixed;left:50%;bottom:calc(140px + var(--safe-b));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:60;width:max-content;max-width:calc(100% - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -255,6 +290,7 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 
 <nav class="tabs" id="tabs">
   <a href="#/" data-tab="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg><span data-t="tabInicio">Inicio</span></a>
+  <a href="#/clips" data-tab="clips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg><span data-t="tabClips">Clips</span></a>
   <a href="#/explorar" data-tab="explorar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span data-t="tabBuscar">Buscar</span></a>
   <a href="#/podcasts" data-tab="podcasts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg><span data-t="tabPodcasts">Podcasts</span></a>
   <a href="#/biblioteca" data-tab="biblioteca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3.5-1 2.5 15-3.5 1z"/></svg><span data-t="tabBiblioteca">Biblioteca</span></a>
@@ -293,6 +329,6 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=6"></script>
+<script src="/app.js?v=7"></script>
 </body>
 </html>

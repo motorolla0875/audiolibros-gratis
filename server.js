@@ -552,6 +552,55 @@ app.get('/api/podcasts', ruta(async req => {
 
 app.get('/api/podcast/:id', ruta(req => podcast(req.params.id)));
 
+// ---------- Clips: previas de 30 segundos para deslizar ----------
+// Mezcla el top del país, varios temas y algunos audiolibros. Cambia el orden cada día.
+function mezclar(arr, semilla) {
+  const a = arr.slice(); let s = semilla || 1;
+  for (let i = a.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; const j = Math.floor(s / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+async function poolClips(L, pais) {
+  return conCache('clips:' + L + pais, 6 * 3600, async () => {
+    const temas = ['humor', 'historia', 'ciencia', 'terror', 'cuentos', 'bienestar', 'negocios', 'aprender', 'deportes'];
+    const [top, ...porTema] = await Promise.all([seguro(topPodcasts(L, 40, pais)), ...temas.map(k => seguro(podcastsDeTema(L, k, 20)))]);
+    const sel = seleccion(L);
+    const libros = sel ? await seguro(buscarLibros({ ids: sel, filas: 60 })) : await seguro(buscarLibros({ idioma: L, filas: 40 }));
+    const vistos = new Set(), pods = [];
+    const sumar = x => { if (x && !vistos.has(x.id)) { vistos.add(x.id); pods.push(x); } };
+    (top || []).slice(0, 25).forEach(sumar);
+    for (let k = 0; k < 8; k++) porTema.forEach(l => sumar((l || [])[k]));
+    const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5);
+    const ps = mezclar(pods, dia + 7), ls = mezclar(((libros && libros.libros) || []), dia + 3);
+    // Un audiolibro cada 5 clips.
+    const salida = [];
+    for (let i = 0, j = 0; i < ps.length; i++) { salida.push(ps[i]); if (i % 5 === 4 && ls[j]) salida.push(ls[j++]); }
+    return salida;
+  });
+}
+// Elige el episodio (o capítulo) y el segundo donde arranca la previa.
+async function armarClip(x, semilla) {
+  const inicioDe = dur => dur > 240 ? Math.floor(dur * (0.28 + (semilla % 10) / 100)) : dur > 90 ? Math.floor(dur * 0.2) : 0;
+  if (x.tipo === 'libro') {
+    const b = await libro(x.id);
+    if (!b.capitulos.length) return null;
+    const i = semilla % Math.min(3, b.capitulos.length), c = b.capitulos[i];
+    return { item: { id: b.id, tipo: 'libro', titulo: b.titulo, autor: b.autor, portada: b.portada }, pista: { titulo: c.titulo, url: c.url, duracion: c.duracion }, indice: i, inicio: inicioDe(c.duracion) };
+  }
+  const p = await podcast(x.id);
+  const eps = p.episodios.filter(e => !e.duracion || e.duracion > 300);
+  if (!eps.length) return null;
+  const i = semilla % Math.min(3, eps.length), e = eps[i];
+  return { item: { id: p.id, tipo: 'podcast', titulo: p.titulo, autor: p.autor, portada: p.portada }, pista: { titulo: e.titulo, url: e.url, duracion: e.duracion, portada: e.portada, fecha: e.fecha }, indice: p.episodios.indexOf(e), inicio: e.duracion ? inicioDe(e.duracion) : 120 };
+}
+app.get('/api/clips', ruta(async req => {
+  const L = idiomaDe(req), pais = paisDe(req, L);
+  const pagina = Math.max(0, Math.min(40, parseInt(req.query.pagina) || 0)), POR = 8;
+  const pool = await poolClips(L, pais);
+  const parte = pool.slice(pagina * POR, pagina * POR + POR);
+  const clips = (await Promise.all(parte.map((x, k) => seguro(armarClip(x, pagina * POR + k + 1))))).filter(Boolean);
+  return { clips, hayMas: pool.length > (pagina + 1) * POR };
+}));
+
 app.get('/api/buscar', ruta(async req => {
   const L = idiomaDe(req);
   const q = String(req.query.q || '').slice(0, 80).trim();
@@ -582,6 +631,11 @@ async function precargarTemas() {
   for (const L of Object.keys(IDIOMAS)) {
     for (const [p] of PAISES[L]) { await seguro(topDePais(p, 50)); await espera(1500); }
     await seguro(topPodcasts(L, 50, 'mundo'));
+  }
+  // Primeras páginas de clips del país principal de cada idioma (bajan los episodios de antemano).
+  for (const L of Object.keys(IDIOMAS)) {
+    const pool = await seguro(poolClips(L, IDIOMAS[L].pais)) || [];
+    for (const [k, x] of pool.slice(0, 24).entries()) { await seguro(armarClip(x, k + 1)); await espera(800); }
   }
   for (const L of Object.keys(IDIOMAS)) for (const clave of Object.keys(GENEROS_POD)) {
     for (const term of GENEROS_POD[clave].term[L]) { await seguro(buscarPodcasts(L, term, 50)); await espera(3500); }

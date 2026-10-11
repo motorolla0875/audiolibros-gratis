@@ -26,7 +26,7 @@ const ICO = {
 // ================= Textos en 3 idiomas =================
 const TX = {
   es: {
-    tabInicio:"Inicio", tabBuscar:"Buscar", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
+    tabInicio:"Inicio", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolibro", completo:"Completo", guardarClip:"Guardar", siguienteClip:"Siguiente", tocaEmpezar:"Tocá para empezar", deslizaTxt:"Deslizá para arriba para el siguiente", sinClips:"No hay clips por ahora. Probá en un rato.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
     escuchar:"Escuchar", seguirEsc:"Seguir escuchando", miLista:"Mi lista", enMiLista:"En mi lista", masInfo:"Más información", verTodo:"Ver todo",
     pie:"Audiolibros de dominio público grabados por voluntarios de LibriVox y alojados en archive.org.<br>Podcasts del directorio público de Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolibros por género", porTema:"Podcasts por tema",
@@ -59,7 +59,7 @@ const TX = {
     cancelar:"Cancelar", borrar:"Borrar"
   },
   en: {
-    tabInicio:"Home", tabBuscar:"Search", tabPodcasts:"Podcasts", tabBiblioteca:"Library",
+    tabInicio:"Home", tabClips:"Clips", tabBuscar:"Search", clipPodcast:"Podcast", clipLibro:"Audiobook", completo:"Full", guardarClip:"Save", siguienteClip:"Next", tocaEmpezar:"Tap to start", deslizaTxt:"Swipe up for the next one", sinClips:"No clips right now. Try again soon.", tabPodcasts:"Podcasts", tabBiblioteca:"Library",
     escuchar:"Listen", seguirEsc:"Continue listening", miLista:"My list", enMiLista:"In my list", masInfo:"More info", verTodo:"See all",
     pie:"Public domain audiobooks recorded by LibriVox volunteers and hosted on archive.org.<br>Podcasts from the public Apple Podcasts directory.",
     buscar:"Search", buscarPh:"Titles, authors, podcasts", porGenero:"Audiobooks by genre", porTema:"Podcasts by topic",
@@ -92,7 +92,7 @@ const TX = {
     cancelar:"Cancel", borrar:"Delete"
   },
   pt: {
-    tabInicio:"Início", tabBuscar:"Buscar", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
+    tabInicio:"Início", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolivro", completo:"Completo", guardarClip:"Salvar", siguienteClip:"Próximo", tocaEmpezar:"Toque para começar", deslizaTxt:"Deslize para cima para o próximo", sinClips:"Não há clips agora. Tente daqui a pouco.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
     escuchar:"Ouvir", seguirEsc:"Continuar ouvindo", miLista:"Minha lista", enMiLista:"Na minha lista", masInfo:"Mais informações", verTodo:"Ver tudo",
     pie:"Audiolivros de domínio público gravados por voluntários do LibriVox e hospedados no archive.org.<br>Podcasts do diretório público do Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolivros por gênero", porTema:"Podcasts por tema",
@@ -212,13 +212,17 @@ async function router(){
   const r = rutaActual();
   if (r === "/reproductor") { if (P.item) abrirFull(); else location.replace("#/"); return; }
   cerrarFull(true);
+  const enClips = r.split("/")[1] === "clips";
+  document.body.classList.toggle("en-clips", enClips);
+  if (!enClips) salirClips();
   if (rutaPrevia) scrolls[rutaPrevia] = scrollY;
   rutaPrevia = r;
   const p = r.split("/").filter(Boolean);
-  const tab = { explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
+  const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
   marcarTab(tab);
   try {
     if (!p.length) await vInicio();
+    else if (p[0] === "clips") await vClips();
     else if (p[0] === "explorar") vExplorar(decodeURIComponent(p[1] || ""));
     else if (p[0] === "cat") await vCategoria(p[1], p[2]);
     else if (p[0] === "podcasts") await vPodcasts();
@@ -301,6 +305,129 @@ function carrusel(n){
     if (Date.now() < pausa || document.hidden || $("full").classList.contains("on")) return;
     ir((actual() + 1) % n);
   }, 7000);
+}
+
+// ================= Clips (previas de 30 segundos para deslizar) =================
+const AC = new Audio(); AC.preload = "auto";
+const CL = { lista:[], pagina:0, hayMas:true, cargando:false, actual:-1, desbloqueado:false, obs:null, finT:null };
+const DUR_CLIP = 30;
+async function vClips(){
+  V.innerHTML = '<div class="clips-top"><b>' + t("tabClips") + '</b></div><div class="clips" id="clips"></div>' +
+    (CL.desbloqueado ? '' : '<button class="empezar" id="empezar"><span><i>' + ICO.play + '</i>' + t("tocaEmpezar") + '<small style="font-weight:500;opacity:.8">' + t("deslizaTxt") + '</small></span></button>');
+  const cont = $("clips");
+  CL.obs && CL.obs.disconnect();
+  CL.obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6) activarClip(+e.target.dataset.k); }), { root:cont, threshold:[.6] });
+  if ($("empezar")) $("empezar").onclick = () => {
+    CL.desbloqueado = true; $("empezar").remove();
+    AC.play().catch(() => {}); // el primer toque habilita el audio en el teléfono
+    if (CL.actual >= 0) tocarClip(true);
+  };
+  if (CL.lista.length) { cont.innerHTML = CL.lista.map(tarjetaClip).join(""); prepararTarjetas(); CL.saltarAuto = !A.paused; requestAnimationFrame(() => { const k = Math.max(0, CL.actual); cont.scrollTop = k * cont.clientHeight; CL.actual = -1; activarClip(k); }); }
+  else { cont.innerHTML = '<div class="clip-carga">' + ICO.carga.replace('<svg', '<svg width="34" height="34" style="animation:gira 1s linear infinite"') + '</div>'; await masClips(); }
+}
+async function masClips(){
+  if (CL.cargando || !CL.hayMas) return;
+  CL.cargando = true;
+  try {
+    const d = await api("/api/clips?pagina=" + CL.pagina);
+    CL.pagina++; CL.hayMas = d.hayMas;
+    const desde = CL.lista.length;
+    CL.lista = CL.lista.concat(d.clips);
+    const cont = $("clips"); if (!cont) return;
+    const carga = cont.querySelector(".clip-carga"); if (carga) carga.remove();
+    cont.insertAdjacentHTML("beforeend", d.clips.map((c, i) => tarjetaClip(c, desde + i)).join(""));
+    prepararTarjetas();
+    if (!CL.lista.length) cont.innerHTML = '<div class="clip-carga">' + t("sinClips") + '</div>';
+    else if (desde === 0) activarClip(0);
+  } catch (e) {
+    const cont = $("clips"); if (cont && !CL.lista.length) cont.innerHTML = '<div class="clip-carga" style="padding:20px;text-align:center">' + esc(e.message) + '</div>';
+  } finally { CL.cargando = false; }
+}
+function tarjetaClip(c, k){
+  const pod = c.item.tipo === "podcast";
+  const img = c.pista.portada || c.item.portada;
+  const guardado = pod ? suscripto(c.item.id) : enLista(c.item);
+  return '<div class="clip" data-k="' + k + '"><div class="fondo" style="background-image:url(\'' + esc(abs(img)) + '\')"></div>' +
+    '<div class="tapa">' + cover({ ...c.item, portada:img }) + '</div><div class="pausa">' + ICO.play + '</div>' +
+    '<div class="info"><small>' + (pod ? t("clipPodcast") : t("clipLibro")) + '</small><b>' + esc(c.item.titulo) + '</b><p>' + esc(c.pista.titulo) + '</p></div>' +
+    '<div class="lado">' +
+      '<button class="prin" data-acc="completo"><span class="c">' + ICO.play + '</span>' + t("completo") + '</button>' +
+      '<button data-acc="guardar"' + (guardado ? ' class="on"' : '') + '><span class="c">' + (guardado ? ICO.ok : ICO.mas) + '</span>' + (pod ? (guardado ? t("siguiendo") : t("seguir")) : t("guardarClip")) + '</button>' +
+      '<button data-acc="info"><span class="c">' + ICO.libro.replace('M4 5h6', 'M4 5h6') + '</span>' + t("verFicha") + '</button>' +
+    '</div><div class="barra"><i></i></div></div>';
+}
+function prepararTarjetas(){
+  document.querySelectorAll("#clips .clip:not([data-listo])").forEach(el => {
+    el.dataset.listo = "1"; CL.obs.observe(el);
+    el.onclick = e => {
+      const b = e.target.closest("[data-acc]"), k = +el.dataset.k, c = CL.lista[k];
+      if (!b) return tocarClip();
+      e.stopPropagation();
+      if (b.dataset.acc === "completo") return escucharClipCompleto(c);
+      if (b.dataset.acc === "info") { salirClips(); location.hash = ruta(c.item); return; }
+      if (c.item.tipo === "podcast") { const i = E.subs.findIndex(s => s.id === c.item.id); if (i >= 0) E.subs.splice(i, 1); else { E.subs.unshift(corto(c.item)); toast(t("ahoraSeguis", c.item.titulo)); } guardar(); }
+      else alternarLista(c.item);
+      const nueva = document.createElement("div"); nueva.innerHTML = tarjetaClip(c, k);
+      b.outerHTML = nueva.querySelector('[data-acc="guardar"]').outerHTML;
+    };
+  });
+}
+function activarClip(k){
+  if (k === CL.actual || !CL.lista[k]) return;
+  CL.actual = k;
+  const c = CL.lista[k];
+  document.querySelectorAll("#clips .clip").forEach(el => el.classList.remove("sonando", "pausado"));
+  AC.pause();
+  AC.src = c.pista.url;
+  AC.dataset.inicio = c.inicio || 0;
+  CL.base = null;
+  AC.addEventListener("loadedmetadata", () => {
+    const d = AC.duration || 0, ini = +AC.dataset.inicio;
+    try { AC.currentTime = d && ini > d - DUR_CLIP - 2 ? Math.max(0, d - DUR_CLIP - 2) : ini; } catch (e) {}
+  }, { once:true });
+  if (CL.desbloqueado && !CL.saltarAuto) tocarClip(true);
+  else if (CL.saltarAuto) { const el = document.querySelector('#clips .clip[data-k="' + k + '"]'); if (el) el.classList.add("pausado"); }
+  CL.saltarAuto = false;
+  if (k >= CL.lista.length - 3) masClips();
+}
+function tocarClip(forzar){
+  const el = document.querySelector('#clips .clip[data-k="' + CL.actual + '"]'); if (!el) return;
+  if (!CL.desbloqueado) return;
+  if (forzar || AC.paused) {
+    if (!A.paused) A.pause(); // pausa el reproductor principal
+    AC.play().then(() => { el.classList.add("sonando"); el.classList.remove("pausado"); }).catch(() => { el.classList.add("pausado"); });
+  } else { AC.pause(); el.classList.remove("sonando"); el.classList.add("pausado"); }
+}
+AC.ontimeupdate = () => {
+  const el = document.querySelector('#clips .clip[data-k="' + CL.actual + '"]'); if (!el) return;
+  if (CL.base == null) return;
+  const pct = Math.max(0, Math.min(1, (AC.currentTime - CL.base) / DUR_CLIP));
+  el.querySelector(".barra i").style.width = pct * 100 + "%";
+  if (pct >= 1 && !AC.paused) siguienteClip();
+};
+AC.onended = () => siguienteClip();
+// El conteo de 30 s arranca desde donde realmente empezó a sonar (por si el servidor no deja adelantar).
+AC.onplaying = () => { if (CL.base == null) CL.base = AC.currentTime; };
+AC.onseeked = () => { if (CL.base != null && Math.abs(AC.currentTime - CL.base) > 5 && AC.currentTime > CL.base) CL.base = AC.currentTime; };
+AC.onerror = () => { if (document.body.classList.contains("en-clips") && AC.src) setTimeout(siguienteClip, 800); };
+function siguienteClip(){
+  const cont = $("clips"); if (!cont) return;
+  const k = CL.actual + 1;
+  if (!CL.lista[k]) { AC.pause(); return; }
+  cont.scrollTo({ top:k * cont.clientHeight, behavior:"smooth" });
+}
+function salirClips(){
+  if (!AC.paused) AC.pause();
+  if (CL.obs) CL.obs.disconnect();
+}
+async function escucharClipCompleto(c){
+  const desde = AC.currentTime || c.inicio || 0;
+  salirClips();
+  try {
+    if (c.item.tipo === "podcast") reproducir(c.item, [c.pista], 0, false, desde);
+    else { const b = await traerLibro(c.item.id); reproducir(b, b.capitulos, c.indice || 0, true, desde); }
+    location.hash = "#/reproductor";
+  } catch (e) { toast(e.message); }
 }
 
 // ================= Buscar / Explorar =================
@@ -415,10 +542,10 @@ function vAjustes(){
   if (!cats) api("/api/categorias").then(c => { cats = c; if (rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
   if ($("aj-borrar")) $("aj-borrar").onclick = () => confirmar(t("borrarTodasQ"), async () => { for (const u of Object.keys(E.desc)) await DL.borrar(u); vAjustes(); });
 }
-function elegirPais(p){ if (p === E.pais) return; E.pais = p; guardar(); cacheInicio = null; }
+function elegirPais(p){ if (p === E.pais) return; E.pais = p; guardar(); cacheInicio = null; CL.lista = []; CL.pagina = 0; CL.hayMas = true; }
 function cambiarIdioma(id){
   if (id === L) return;
-  L = E.idioma = id; E.pais = paisInicial(id); guardar();
+  L = E.idioma = id; E.pais = paisInicial(id); guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true;
   cacheInicio = null; cats = null; cacheTop = null; for (const k in fichas) delete fichas[k];
   CONFIG = { afiliado:null }; api("/api/config").then(c => CONFIG = c).catch(() => {});
   traducirFijos(); pintarSueno(sueñoMin); if (P.item) pintarFicha();
