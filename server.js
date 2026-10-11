@@ -282,10 +282,28 @@ const PAISES = {
 const MUNDO = { es: 'Mundo hispano', en: 'Worldwide', pt: 'Mundo lusófono' };
 const paisDe = (req, L) => req.query.pais === 'mundo' ? 'mundo' : (PAISES[L].some(p => p[0] === req.query.pais) ? req.query.pais : IDIOMAS[L].pais);
 
+// Primero el ranking nuevo de Apple; si falla o viene vacío, el ranking viejo de iTunes.
 async function topDePais(pais, n) {
   return conCache('top:' + pais + n, 6 * 3600, async () => {
-    const r = await traer(`${APPLE_RSS}/api/v2/${pais}/podcasts/top/${n}/podcasts.json`);
-    return ((r.feed && r.feed.results) || []).filter(x => !esExplicito(x)).map(aPodCorto);
+    try {
+      const r = await traer(`${APPLE_RSS}/api/v2/${pais}/podcasts/top/${n}/podcasts.json`);
+      const l = ((r.feed && r.feed.results) || []).filter(x => !esExplicito(x)).map(aPodCorto);
+      if (l.length) return l;
+      throw new Error('ranking vacío ' + pais);
+    } catch (e) {
+      console.error('Ranking nuevo falló (' + pais + '): ' + e.message + ' — uso el de iTunes');
+      const r = await traer(`${ITUNES}/${pais}/rss/toppodcasts/limit=${Math.min(n, 100)}/explicit=false/json`);
+      const l = lista(r.feed && r.feed.entry).map(x => ({
+        id: String(x.id && x.id.attributes && x.id.attributes['im:id']),
+        tipo: 'podcast',
+        titulo: x['im:name'] && x['im:name'].label,
+        autor: x['im:artist'] && x['im:artist'].label,
+        portada: grande(lista(x['im:image']).slice(-1)[0] && lista(x['im:image']).slice(-1)[0].label),
+        genero: (x.category && x.category.attributes && x.category.attributes.label) || ''
+      })).filter(x => x.id && x.id !== 'undefined' && x.titulo);
+      if (!l.length) throw new Error('Sin ranking para ' + pais);
+      return l;
+    }
   });
 }
 async function topPodcasts(idioma, n = 25, pais = IDIOMAS[idioma].pais) {
@@ -564,3 +582,4 @@ if (require.main === module) {
   setInterval(precargarTemas, 12 * 3600e3);
 }
 module.exports = app;
+module.exports._topDePais = topDePais;

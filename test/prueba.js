@@ -44,9 +44,11 @@ const falso = http.createServer((req, res) => {
         { name: 'cover.jpg', format: 'JPEG' }
       ] });
   }
-  if (/^\/api\/v2\/[a-z]{2}\/podcasts\/top\/\d+\/podcasts.json$/.test(u.pathname)) {
+  if (/^\/api\/v2\/(?!zz)[a-z]{2}\/podcasts\/top\/\d+\/podcasts.json$/.test(u.pathname)) {
     return json({ feed: { results: [{ id: '111', name: 'Pod Uno', artistName: 'Radio X', artworkUrl100: 'https://img/a/100x100bb.jpg', genres: [{ name: 'Historia' }] }, { id: '999', name: 'Adultos', contentAdvisoryRating: 'Explicit' }] } });
   }
+  if (/^\/api\/v2\/zz\//.test(u.pathname)) { res.statusCode = 404; return res.end('{}'); }
+  if (u.pathname === '/zz/rss/toppodcasts/limit=50/explicit=false/json') return json({ feed: { entry: [{ id: { attributes: { 'im:id': '555' } }, 'im:name': { label: 'Viejo' }, 'im:artist': { label: 'X' }, 'im:image': [{ label: 'https://i/55x55bb.png' }, { label: 'https://i/170x170bb.png' }] }] } });
   if (u.pathname === '/search') {
     return json({ results: [
       { collectionId: 222, collectionName: 'Pod Dos', artistName: 'Ana', artworkUrl600: 'https://img/b/600x600bb.jpg', feedUrl: 'http://127.0.0.1:' + falso.address().port + '/feed.xml', primaryGenreName: 'Ciencia' },
@@ -127,6 +129,9 @@ falso.listen(0, '127.0.0.1', async () => {
 
       r = await api('/api/podcasts');
       assert.ok(!r.body.podcasts.some(x => x.id === '999'), 'oculta explícitos del ranking');
+
+      const viejo = await app._topDePais('zz', 50);
+      assert.deepEqual(viejo.map(x => [x.id, x.titulo, x.portada]), [['555', 'Viejo', 'https://i/600x600bb.jpg']], 'respaldo con el ranking viejo de iTunes');
 
       r = await api('/api/podcasts?pais=mundo');
       assert.equal(r.body.podcasts[0].id, '111', 'ranking mundial');
