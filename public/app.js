@@ -1021,7 +1021,7 @@ function resaltar(tt){
 
 // ================= Transmitir a la tele (Chromecast / AirPlay) =================
 // En el navegador: AirPlay en iPhone/Mac (Safari) y Chromecast donde Chrome lo permita.
-// En la app compilada se suma el plugin nativo de Google Cast (PLUG.GoogleCast) si está.
+// En la app compilada: Chromecast con el plugin nativo (PLUG.Chromecast) y AirPlay del sistema.
 const CAST = { disponible:false, conectado:false };
 function pintarCast(){
   const disp = CAST.disponible || CAST.cc;
@@ -1040,7 +1040,7 @@ if (!NATIVO && !ES_IOS && /Chrome\//.test(navigator.userAgent)) {
 function iniciarCast(){
   const cf = cast.framework, ctx = cf.CastContext.getInstance();
   ctx.setOptions({ receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID, autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED });
-  CS.player = new cf.RemotePlayer(); CS.ctrl = new cf.RemotePlayerController(CS.player); CS.listo = true;
+  CS.player = new cf.RemotePlayer(); CS.ctrl = new cf.RemotePlayerController(CS.player); CS.listo = true; CS.modo = "web";
   const E2 = cf.RemotePlayerEventType;
   ctx.addEventListener(cf.CastContextEventType.CAST_STATE_CHANGED, e => { CAST.cc = e.castState !== cf.CastState.NO_DEVICES_AVAILABLE; CAST.conectado = e.castState === cf.CastState.CONNECTED || (!!A.webkitCurrentPlaybackTargetIsWireless); pintarCast(); });
   ctx.addEventListener(cf.CastContextEventType.SESSION_STATE_CHANGED, e => {
@@ -1064,6 +1064,7 @@ function iniciarCast(){
 }
 const tipoAudio = u => /\.m4a|\.mp4|\.aac/i.test(u) ? "audio/mp4" : /\.ogg|\.opus/i.test(u) ? "audio/ogg" : /\.wav/i.test(u) ? "audio/wav" : "audio/mpeg";
 function mandarACast(desde){
+  if (CS.modo === "nat") return mandarANativo(desde);
   const s = cast.framework.CastContext.getInstance().getCurrentSession(), p = P.pistas[P.i], x = P.item;
   if (!s || !p) return;
   const url = pistaUrl(p); // siempre la de internet: la tele no puede leer lo descargado en el teléfono
@@ -1093,9 +1094,68 @@ function seguirFin(s){
   });
 }
 function velCast(){
-  if (!CS.activo) return;
+  if (!CS.activo || CS.modo !== "web") return;
   const s = cast.framework.CastContext.getInstance().getCurrentSession(), m = s && s.getMediaSession();
   if (m) s.sendMessage("urn:x-cast:com.google.cast.media", { type:"SET_PLAYBACK_RATE", playbackRate:E.vel, mediaSessionId:m.mediaSessionId, requestId:Date.now() % 1e9 }).catch(() => {});
+}
+
+// Chromecast en la app del iPhone / Android (plugin nativo de Google Cast).
+// El plugin avisa los cambios de estado; el segundo a segundo lo calculamos acá.
+if (NATIVO && PLUG.Chromecast) {
+  const CC = PLUG.Chromecast, est = { t:0, en:0, jugando:false };
+  CS.modo = "nat"; CS.listo = true;
+  CS.player = { currentTime:0, duration:0, isPaused:true, playerState:"IDLE" };
+  CS.ctrl = {
+    playOrPause(){ (CS.player.isPaused ? CC.mediaPlay() : CC.mediaPause()); CS.player.isPaused = !CS.player.isPaused; est.jugando = !CS.player.isPaused; est.t = CS.player.currentTime; est.en = Date.now(); pintarPlay(); },
+    seek(){ est.t = CS.player.currentTime; est.en = Date.now(); CC.mediaSeek({ currentTime:CS.player.currentTime }); }
+  };
+  const actualizar = m => {
+    if (!m) return;
+    if (typeof m.currentTime === "number") { est.t = m.currentTime; est.en = Date.now(); CS.player.currentTime = m.currentTime; }
+    if (m.media && m.media.duration) CS.player.duration = m.media.duration;
+    if (m.playerState) {
+      CS.player.playerState = m.playerState;
+      est.jugando = m.playerState === "PLAYING";
+      CS.player.isPaused = m.playerState !== "PLAYING" && m.playerState !== "BUFFERING";
+      if (m.playerState === "PLAYING" || m.playerState === "PAUSED") CS.cargando = false;
+    }
+    if (CS.activo) { pintarPlay(m.playerState === "BUFFERING"); guardarProgreso(); }
+    if (CS.activo && m.playerState === "IDLE" && m.idleReason === "FINISHED" && CS.carga > 0) { CS.carga = 0; CS.fin = true; alTerminar(); }
+  };
+  const empezo = () => { CS.activo = true; CAST.conectado = true; pintarCast(); if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); };
+  const termino = () => {
+    if (!CS.activo) return;
+    const tt = CS.ultimo; CS.activo = false; CS.cargando = false; CAST.conectado = false; pintarCast();
+    if (tt && A.src) { try { A.currentTime = tt; } catch (er) {} }
+    pintarPlay(); guardarProgreso();
+  };
+  CC.addListener("RECEIVER_LISTENER", e => { CAST.cc = !!(e && (e.available || e.isAvailable)); pintarCast(); });
+  CC.addListener("SESSION_STARTED", empezo);
+  CC.addListener("SESSION_RESUMED", () => { CS.activo = true; CAST.conectado = true; pintarCast(); });
+  CC.addListener("SESSION_ENDED", termino);
+  CC.addListener("MEDIA_UPDATE", actualizar);
+  CC.addListener("MEDIA_LOAD", actualizar);
+  setInterval(() => {
+    if (!CS.activo || CS.modo !== "nat") return;
+    if (est.jugando) CS.player.currentTime = est.t + (Date.now() - est.en) / 1000 * (E.vel || 1);
+    if (CS.player.currentTime) CS.ultimo = CS.player.currentTime;
+    pintarTiempo(CS.player.currentTime, CS.player.duration);
+  }, 1000);
+  Promise.resolve(CC.initialize({ appId:"CC1AD845" })).catch(() => {});
+}
+function mandarANativo(desde){
+  const p = P.pistas[P.i], x = P.item; if (!p) return;
+  const url = pistaUrl(p), img = abs(p.portada || x.portada);
+  A.pause();
+  CS.fin = false; CS.cargando = true; CS.ultimo = desde || 0; CS.carga = 1;
+  CS.player.currentTime = desde || 0; CS.player.duration = A.duration || p.duracion || 0;
+  pintarPlay(true);
+  PLUG.Chromecast.loadMedia({
+    contentId:url, contentType:tipoAudio(url), streamType:"buffered", autoPlay:true, currentTime:desde || 0,
+    duration:CS.player.duration || 0,
+    metadata:{ metadataType:0, title:$("f-t").textContent, subtitle:x.tipo === "podcast" ? x.titulo : (x.autor || p.titulo || ""), images: img ? [{ url:img }] : [] }
+  }).then(m => { CS.cargando = false; $("full").classList.remove("cargando"); if (m && m.media && m.media.duration) CS.player.duration = m.media.duration; pintarPlay(); },
+    () => { CS.cargando = false; $("full").classList.remove("cargando"); pintarPlay(); toast(t("noAudio")); });
 }
 if (window.WebKitPlaybackTargetAvailabilityEvent) {
   A.addEventListener("webkitplaybacktargetavailabilitychanged", e => { CAST.disponible = e.availability === "available"; pintarCast(); });
@@ -1104,14 +1164,16 @@ if (window.WebKitPlaybackTargetAvailabilityEvent) {
   A.remote.watchAvailability(d => { CAST.disponible = d; pintarCast(); }).catch(() => { CAST.disponible = false; pintarCast(); });
   ["connecting", "connect", "disconnect"].forEach(ev => A.remote.addEventListener(ev, () => { CAST.conectado = A.remote.state !== "disconnected"; pintarCast(); }));
 }
-if (NATIVO && PLUG.GoogleCast) { CAST.disponible = true; }
 function transmitir(){
   if (!A.src) { toast(t("castPrimero")); return; }
-  if (NATIVO && PLUG.GoogleCast && PLUG.GoogleCast.requestSession) {
-    const p = P.pistas[P.i] || {};
-    return PLUG.GoogleCast.requestSession().then(() => PLUG.GoogleCast.loadMedia({ url:A.currentSrc || A.src, title:$("f-t").textContent, subtitle:$("f-s").textContent, image:abs(p.portada || P.item.portada), currentTime:A.currentTime })).catch(() => {});
+  if (CS.modo === "nat") {
+    const cc = () => PLUG.Chromecast.requestSession().catch(() => {});
+    // Si hay Chromecast y también teles con AirPlay, que elija.
+    if (!CS.activo && CAST.cc && CAST.disponible && A.webkitShowPlaybackTargetPicker)
+      return hoja(t("transmitir"), [["Chromecast", "cc"], ["AirPlay", "ap"]], v => v === "cc" ? cc() : A.webkitShowPlaybackTargetPicker());
+    if (CS.activo || CAST.cc) return cc();
   }
-  if (CS.listo && (CAST.cc || CS.activo)) return cast.framework.CastContext.getInstance().requestSession().catch(() => {});
+  if (CS.modo === "web" && (CAST.cc || CS.activo)) return cast.framework.CastContext.getInstance().requestSession().catch(() => {});
   if (A.webkitShowPlaybackTargetPicker) return A.webkitShowPlaybackTargetPicker();
   if (A.remote && A.remote.prompt) return A.remote.prompt().catch(e => { if (e && e.name !== "AbortError") toast(t("castNo")); });
   toast(t("castNo"));

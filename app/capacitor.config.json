@@ -10,5 +10,11 @@
   "android": {
     "backgroundColor": "#0E0C0A",
     "allowMixedContent": false
+  },
+  "plugins": {
+    "Chromecast": {
+      "appId": "CC1AD845",
+      "autoInitialize": true
+    }
   }
 }
