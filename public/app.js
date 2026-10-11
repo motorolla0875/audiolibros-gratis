@@ -295,8 +295,9 @@ function carrusel(n){
   const pista = $("h-pista"), puntos = $("h-puntos");
   if (!pista || n < 2) return;
   let pausa = 0;
-  const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
-  const ir = k => pista.scrollTo({ left:k * pista.clientWidth, behavior:"smooth" });
+  const paso = () => { const s = pista.children; return s.length > 1 ? s[1].offsetLeft - s[0].offsetLeft : pista.clientWidth; };
+  const actual = () => Math.round(pista.scrollLeft / paso());
+  const ir = k => pista.scrollTo({ left:k * paso(), behavior:"smooth" });
   pista.addEventListener("scroll", () => { const k = actual(); puntos.querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i === k)); }, { passive:true });
   ["pointerdown", "touchstart", "wheel"].forEach(ev => pista.addEventListener(ev, () => { pausa = Date.now() + 12000; }, { passive:true }));
   puntos.querySelectorAll("button").forEach(b => b.onclick = () => { pausa = Date.now() + 12000; ir(+b.dataset.punto); });
