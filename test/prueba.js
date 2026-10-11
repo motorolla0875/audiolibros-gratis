@@ -44,7 +44,7 @@ const falso = http.createServer((req, res) => {
         { name: 'cover.jpg', format: 'JPEG' }
       ] });
   }
-  if (/^\/api\/v2\/(ar|us|br)\/podcasts\/top\/\d+\/podcasts.json$/.test(u.pathname)) {
+  if (/^\/api\/v2\/[a-z]{2}\/podcasts\/top\/\d+\/podcasts.json$/.test(u.pathname)) {
     return json({ feed: { results: [{ id: '111', name: 'Pod Uno', artistName: 'Radio X', artworkUrl100: 'https://img/a/100x100bb.jpg', genres: [{ name: 'Historia' }] }, { id: '999', name: 'Adultos', contentAdvisoryRating: 'Explicit' }] } });
   }
   if (u.pathname === '/search') {
@@ -128,7 +128,13 @@ falso.listen(0, '127.0.0.1', async () => {
       r = await api('/api/podcasts');
       assert.ok(!r.body.podcasts.some(x => x.id === '999'), 'oculta explícitos del ranking');
 
+      r = await api('/api/podcasts?pais=mundo');
+      assert.equal(r.body.podcasts[0].id, '111', 'ranking mundial');
+      r = await api('/api/inicio?pais=mx');
+      assert.ok(r.body.filas.find(f => f.id === 'top-pods').titulo.includes('México'));
+
       r = await api('/api/categorias?idioma=pt');
+      assert.deepEqual(r.body.paises.map(p => p.id), ['br', 'pt', 'mundo']);
       assert.equal(r.body.libros[0].nombre, 'Contos');
 
       r = await api('/api/config');

@@ -273,11 +273,34 @@ function aPodCorto(r) {
   };
 }
 
-async function topPodcasts(idioma, n = 25) {
-  const pais = IDIOMAS[idioma].pais;
+// Rankings por país (Apple Podcasts). "mundo" junta los rankings de todos los países del idioma.
+const PAISES = {
+  es: [['ar', 'Argentina'], ['mx', 'México'], ['es', 'España'], ['co', 'Colombia'], ['cl', 'Chile'], ['pe', 'Perú'], ['uy', 'Uruguay'], ['ec', 'Ecuador'], ['ve', 'Venezuela']],
+  en: [['us', 'United States'], ['gb', 'United Kingdom'], ['ca', 'Canada'], ['au', 'Australia'], ['ie', 'Ireland'], ['nz', 'New Zealand']],
+  pt: [['br', 'Brasil'], ['pt', 'Portugal']]
+};
+const MUNDO = { es: 'Mundo hispano', en: 'Worldwide', pt: 'Mundo lusófono' };
+const paisDe = (req, L) => req.query.pais === 'mundo' ? 'mundo' : (PAISES[L].some(p => p[0] === req.query.pais) ? req.query.pais : IDIOMAS[L].pais);
+
+async function topDePais(pais, n) {
   return conCache('top:' + pais + n, 6 * 3600, async () => {
     const r = await traer(`${APPLE_RSS}/api/v2/${pais}/podcasts/top/${n}/podcasts.json`);
     return ((r.feed && r.feed.results) || []).filter(x => !esExplicito(x)).map(aPodCorto);
+  });
+}
+async function topPodcasts(idioma, n = 25, pais = IDIOMAS[idioma].pais) {
+  if (pais !== 'mundo') return enIdioma(await topDePais(pais, Math.max(n, 50)), idioma).slice(0, n);
+  return conCache('topmundo:' + idioma + n, 6 * 3600, async () => {
+    const listas = await Promise.all(PAISES[idioma].map(([p]) => seguro(topDePais(p, 50))));
+    const puntos = new Map();
+    for (const l of listas) (l || []).forEach((x, k) => {
+      const a = puntos.get(x.id) || { x, p: 0, paises: 0 };
+      a.p += 50 - k; a.paises++; puntos.set(x.id, a);
+    });
+    // Suben los que están arriba en varios países a la vez.
+    const orden = [...puntos.values()].sort((a, b) => (b.p * (1 + b.paises * .25)) - (a.p * (1 + a.paises * .25)));
+    if (!orden.length) throw new Error('Sin rankings');
+    return enIdioma(orden.map(a => a.x), idioma).slice(0, n);
   });
 }
 
@@ -420,7 +443,7 @@ app.get('/api/inicio', ruta(async req => {
   const L = idiomaDe(req), g = k => GENEROS_POD[k].term[L];
   const sel = seleccion(L);
   const [top, populares, elegidos, cuentos, poesia, infantil, misterio, podHistoria, podCuentos] = await Promise.all([
-    seguro(topPodcasts(L, 25)),
+    seguro(topPodcasts(L, 25, paisDe(req, L))),
     seguro(buscarLibros({ idioma: L, filas: 30 })),
     sel ? seguro(buscarLibros({ ids: sel.slice(0, 60), filas: 60 })) : null,
     seguro(buscarLibros({ idioma: L, cat: 'cuentos', filas: 20 })),
@@ -436,7 +459,8 @@ app.get('/api/inicio', ruta(async req => {
   if (L === 'es' && PROPIOS_ACTIVOS) fila('propios', T.propios, PROPIOS.libros.map(sinCapitulos));
   fila('seleccion', T.seleccion, elegidos ? elegidos.libros : pop.slice(10, 30));
   fila('top-libros', T.topLibros, pop.slice(0, 10), { estilo: 'top10' });
-  fila('top-pods', T.topPods, top);
+  const nomPais = (PAISES[L].find(p => p[0] === paisDe(req, L)) || [, MUNDO[L]])[1];
+  fila('top-pods', { [L]: T.topPods[L] + ' · ' + nomPais }, top);
   fila('cuentos', CATEGORIAS.cuentos.nombre, cuentos && cuentos.libros, { cat: 'cuentos' });
   fila('pod-historia', T.podHistoria, podHistoria, { genero: 'historia' });
   fila('poesia', CATEGORIAS.poesia.nombre, poesia && poesia.libros, { cat: 'poesia' });
@@ -465,7 +489,8 @@ app.get('/api/categorias', ruta(async req => {
   const L = idiomaDe(req);
   return {
     libros: Object.entries(CATEGORIAS).map(([id, c]) => ({ id, nombre: c.nombre[L] })),
-    podcasts: Object.entries(GENEROS_POD).map(([id, c]) => ({ id, nombre: c.nombre[L] }))
+    podcasts: Object.entries(GENEROS_POD).map(([id, c]) => ({ id, nombre: c.nombre[L] })),
+    paises: PAISES[L].map(([id, nombre]) => ({ id, nombre })).concat([{ id: 'mundo', nombre: MUNDO[L] }])
   };
 }));
 
@@ -495,7 +520,7 @@ app.get('/api/podcasts', ruta(async req => {
   const q = String(req.query.q || '').slice(0, 80).trim();
   if (q) return { podcasts: await buscarPodcasts(L, q, 30) };
   if (g) return { podcasts: await podcastsDeTema(L, req.query.genero, 60) };
-  return { podcasts: await topPodcasts(L, 50) };
+  return { podcasts: await topPodcasts(L, 50, paisDe(req, L)) };
 }));
 
 app.get('/api/podcast/:id', ruta(req => podcast(req.params.id)));

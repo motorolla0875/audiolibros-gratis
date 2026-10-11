@@ -33,7 +33,7 @@ const TX = {
     sinRes:"Sin resultados", sinResTxt:'No encontramos nada con "{0}". Probá con el autor o con otra palabra.',
     audiolibros:"Audiolibros", podcasts:"Podcasts", audiolibrosGratis:"Audiolibros gratis", masEscuchados:"Más escuchados",
     nadaAca:"Nada por acá todavía", otroGenero:"Probá con otro género.", cargarMas:"Cargar más",
-    tusPods:"Tus podcasts", temas:"Temas", losMas:"Los más escuchados",
+    tusPods:"Tus podcasts", temas:"Temas", losMas:"Los más escuchados", top50:"Top 50", paisRanking:"País de los rankings",
     biblioteca:"Biblioteca", escuchando:"Escuchando", descargas:"Descargas",
     vacioEsc:"Todavía no escuchaste nada", vacioEscTxt:"Lo que empieces a escuchar aparece acá para seguir donde lo dejaste.",
     vacioLista:"Tu lista está vacía", vacioListaTxt:'Tocá "+ Mi lista" en cualquier libro para guardarlo.',
@@ -66,7 +66,7 @@ const TX = {
     sinRes:"No results", sinResTxt:'We found nothing for "{0}". Try the author or another word.',
     audiolibros:"Audiobooks", podcasts:"Podcasts", audiolibrosGratis:"Free audiobooks", masEscuchados:"Most listened",
     nadaAca:"Nothing here yet", otroGenero:"Try another genre.", cargarMas:"Load more",
-    tusPods:"Your podcasts", temas:"Topics", losMas:"Top podcasts",
+    tusPods:"Your podcasts", temas:"Topics", losMas:"Top podcasts", top50:"Top 50", paisRanking:"Chart country",
     biblioteca:"Library", escuchando:"Listening", descargas:"Downloads",
     vacioEsc:"You haven't listened to anything yet", vacioEscTxt:"Whatever you start shows up here so you can pick up where you left off.",
     vacioLista:"Your list is empty", vacioListaTxt:'Tap "+ My list" on any book to save it.',
@@ -99,7 +99,7 @@ const TX = {
     sinRes:"Nenhum resultado", sinResTxt:'Não encontramos nada para "{0}". Tente o autor ou outra palavra.',
     audiolibros:"Audiolivros", podcasts:"Podcasts", audiolibrosGratis:"Audiolivros grátis", masEscuchados:"Mais ouvidos",
     nadaAca:"Nada por aqui ainda", otroGenero:"Tente outro gênero.", cargarMas:"Carregar mais",
-    tusPods:"Seus podcasts", temas:"Temas", losMas:"Os mais ouvidos",
+    tusPods:"Seus podcasts", temas:"Temas", losMas:"Os mais ouvidos", top50:"Top 50", paisRanking:"País dos rankings",
     biblioteca:"Biblioteca", escuchando:"Ouvindo", descargas:"Downloads",
     vacioEsc:"Você ainda não ouviu nada", vacioEscTxt:"O que você começar a ouvir aparece aqui para continuar de onde parou.",
     vacioLista:"Sua lista está vazia", vacioListaTxt:'Toque em "+ Minha lista" em qualquer livro para salvá-lo.',
@@ -132,6 +132,13 @@ const CLAVE = "ag:v1";
 let E = { progreso:{}, recientes:[], lista:[], subs:[], desc:{}, voz:"ef_dora", vel:1, idioma:null };
 try { Object.assign(E, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
 if (!E.idioma || !TX[E.idioma]) { const n = (navigator.language || "es").slice(0, 2).toLowerCase(); E.idioma = TX[n] ? n : "es"; }
+// País del ranking de podcasts: sale de la configuración del teléfono (es-AR → Argentina).
+const PAISES_IDIOMA = { es:["ar","mx","es","co","cl","pe","uy","ec","ve"], en:["us","gb","ca","au","ie","nz"], pt:["br","pt"] };
+function paisInicial(lang){
+  for (const l of (navigator.languages || [navigator.language || ""])) { const r = (String(l).split("-")[1] || "").toLowerCase(); if (PAISES_IDIOMA[lang].includes(r)) return r; }
+  return PAISES_IDIOMA[lang][0];
+}
+if (!E.pais || (E.pais !== "mundo" && !PAISES_IDIOMA[E.idioma].includes(E.pais))) E.pais = paisInicial(E.idioma);
 let L = E.idioma;
 const t = (k, ...a) => String((TX[L] && TX[L][k]) || TX.es[k] || k).replace(/\{(\d)\}/g, (_, i) => a[i]);
 let guardarT = null;
@@ -147,7 +154,7 @@ function traducirFijos(){
 async function api(ruta){
   const sep = ruta.includes("?") ? "&" : "?";
   let r;
-  try { r = await fetch(API + ruta + sep + "idioma=" + L); }
+  try { r = await fetch(API + ruta + sep + "idioma=" + L + "&pais=" + E.pais); }
   catch (e) { throw new Error(navigator.onLine === false ? t("sinInternet") : t("noCargo")); }
   const d = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(d.error || t("noCargo"));
@@ -355,10 +362,14 @@ async function vPodcasts(){
   let h = '<h1>' + t("podcasts") + '</h1>';
   if (E.subs.length) h += '<div class="fila-tit"><h2>' + t("tusPods") + '</h2></div><div class="carr">' + E.subs.map(item).join("") + '</div>';
   if (cats) h += '<div class="fila-tit"><h2>' + t("temas") + '</h2></div><div class="chips">' + cats.podcasts.map(c => '<a class="chip" href="#/cat/podcasts/' + c.id + '" style="color:inherit;text-decoration:none">' + esc(c.nombre) + '</a>').join("") + '</div>';
-  h += '<div class="fila-tit"><h2>' + t("losMas") + '</h2></div><div class="lista" id="top">' + (cacheTop ? "" : skLista()) + '</div>';
+  h += '<div class="fila-tit"><h2>' + t("top50") + '</h2></div>';
+  if (cats && cats.paises) h += '<div class="chips" style="margin-bottom:6px">' + cats.paises.map(c => '<button class="chip" data-pais="' + c.id + '" aria-pressed="' + (c.id === E.pais) + '">' + esc(c.nombre) + '</button>').join("") + '</div>';
+  h += '<div class="lista" id="top">' + (cacheTop && cacheTop.pais === E.pais ? "" : skLista()) + '</div>';
   V.innerHTML = h;
-  if (!cacheTop) cacheTop = (await api("/api/podcasts")).podcasts;
-  if ($("top")) $("top").innerHTML = cacheTop.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");
+  V.querySelectorAll("[data-pais]").forEach(b => b.onclick = () => { elegirPais(b.dataset.pais); vPodcasts(); });
+  const on = V.querySelector('[data-pais][aria-pressed="true"]'); if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
+  if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; if (pais !== E.pais) return; }
+  if ($("top")) $("top").innerHTML = cacheTop.lista.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");
 }
 
 // ================= Biblioteca =================
@@ -391,6 +402,7 @@ function vAjustes(){
   const total = Object.values(E.desc).reduce((a, d) => a + (d.bytes || 0), 0), n = Object.keys(E.desc).length;
   V.innerHTML = barraVolver() + '<h1>' + t("ajustes") + '</h1>' +
     '<p class="lbl">' + t("idioma") + '</p><div class="grupo">' + IDIOMAS.map(([id, nom]) => '<button class="op' + (id === L ? " on" : "") + '" data-idioma="' + id + '"><span>' + nom + '</span>' + (id === L ? "✓" : "") + '</button>').join("") + '</div><p class="aviso" style="text-align:left">' + t("idiomaTxt") + '</p>' +
+    (cats && cats.paises ? '<p class="lbl">' + t("paisRanking") + '</p><div class="grupo">' + cats.paises.map(c => '<button class="op' + (c.id === E.pais ? " on" : "") + '" data-paisaj="' + c.id + '"><span>' + esc(c.nombre) + '</span>' + (c.id === E.pais ? "✓" : "") + '</button>').join("") + '</div>' : '') +
     '<p class="lbl">' + t("descargas") + '</p><div class="grupo"><div class="op"><span>' + t("espacio") + '</span><small>' + (n ? megas(total) + " (" + n + ")" : "0 MB") + '</small></div>' + (n ? '<button class="op peligro" id="aj-borrar">' + t("borrarTodas") + '</button>' : '') + '</div>' +
     '<p class="lbl">' + t("acerca") + '</p><div class="grupo">' +
       '<a class="op" href="' + abs("/privacidad?l=" + L) + '" target="_blank" rel="noopener">' + t("privacidad") + '<small>↗</small></a>' +
@@ -399,11 +411,14 @@ function vAjustes(){
       '<div class="op"><span>' + t("version") + '</span><small>' + VERSION + '</small></div></div>' +
     '<p class="lbl">' + t("creditos") + '</p><p class="sub" style="line-height:1.6">' + t("creditosTxt") + '</p>';
   V.querySelectorAll("[data-idioma]").forEach(b => b.onclick = () => cambiarIdioma(b.dataset.idioma));
+  V.querySelectorAll("[data-paisaj]").forEach(b => b.onclick = () => { elegirPais(b.dataset.paisaj); vAjustes(); });
+  if (!cats) api("/api/categorias").then(c => { cats = c; if (rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
   if ($("aj-borrar")) $("aj-borrar").onclick = () => confirmar(t("borrarTodasQ"), async () => { for (const u of Object.keys(E.desc)) await DL.borrar(u); vAjustes(); });
 }
+function elegirPais(p){ if (p === E.pais) return; E.pais = p; guardar(); cacheInicio = null; }
 function cambiarIdioma(id){
   if (id === L) return;
-  L = E.idioma = id; guardar();
+  L = E.idioma = id; E.pais = paisInicial(id); guardar();
   cacheInicio = null; cats = null; cacheTop = null; for (const k in fichas) delete fichas[k];
   CONFIG = { afiliado:null }; api("/api/config").then(c => CONFIG = c).catch(() => {});
   traducirFijos(); pintarSueno(sueñoMin); if (P.item) pintarFicha();
