@@ -20,6 +20,7 @@ const ICO = {
   bajar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>',
   bajado:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   ajustes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  cast:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 16a5 5 0 0 1 5 5M2 12a9 9 0 0 1 9 9M2 8.1A13 13 0 0 1 15 21"/><path d="M2 5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-4"/></svg>',
   libro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/></svg>'
 };
 
@@ -27,7 +28,7 @@ const ICO = {
 const TX = {
   es: {
     tabInicio:"Inicio", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolibro", completo:"Completo", guardarClip:"Guardar", siguienteClip:"Siguiente", tocaEmpezar:"Tocá para empezar", reiniciarGustos:"Empezar de cero las recomendaciones", gustosTxt:"Clips aprende qué temas te gustan según lo que escuchás y lo que pasás. Se guarda solo en tu teléfono.", gustosOk:"Listo, Clips vuelve a empezar.", deslizaTxt:"Deslizá para arriba para el siguiente", sinClips:"No hay clips por ahora. Probá en un rato.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
-    escuchar:"Escuchar", seguirEsc:"Seguir escuchando", miLista:"Mi lista", enMiLista:"En mi lista", masInfo:"Más información", verTodo:"Ver todo",
+    escuchar:"Escuchar", transmitir:"Transmitir a la tele", castPrimero:"Poné algo para escuchar y después tocá transmitir.", castNo:"No encontramos una tele o parlante cerca. Fijate que estén en la misma red Wi-Fi.", seguirEsc:"Seguir escuchando", miLista:"Mi lista", enMiLista:"En mi lista", masInfo:"Más información", verTodo:"Ver todo",
     pie:"Audiolibros de dominio público grabados por voluntarios de LibriVox y alojados en archive.org.<br>Podcasts del directorio público de Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolibros por género", porTema:"Podcasts por tema",
     sinRes:"Sin resultados", sinResTxt:'No encontramos nada con "{0}". Probá con el autor o con otra palabra.',
@@ -60,7 +61,7 @@ const TX = {
   },
   en: {
     tabInicio:"Home", tabClips:"Clips", tabBuscar:"Search", clipPodcast:"Podcast", clipLibro:"Audiobook", completo:"Full", guardarClip:"Save", siguienteClip:"Next", tocaEmpezar:"Tap to start", reiniciarGustos:"Reset recommendations", gustosTxt:"Clips learns which topics you like from what you listen to and skip. It's stored only on your phone.", gustosOk:"Done, Clips starts fresh.", deslizaTxt:"Swipe up for the next one", sinClips:"No clips right now. Try again soon.", tabPodcasts:"Podcasts", tabBiblioteca:"Library",
-    escuchar:"Listen", seguirEsc:"Continue listening", miLista:"My list", enMiLista:"In my list", masInfo:"More info", verTodo:"See all",
+    escuchar:"Listen", transmitir:"Cast to TV", castPrimero:"Start playing something, then tap cast.", castNo:"No TV or speaker found nearby. Make sure they\'re on the same Wi-Fi.", seguirEsc:"Continue listening", miLista:"My list", enMiLista:"In my list", masInfo:"More info", verTodo:"See all",
     pie:"Public domain audiobooks recorded by LibriVox volunteers and hosted on archive.org.<br>Podcasts from the public Apple Podcasts directory.",
     buscar:"Search", buscarPh:"Titles, authors, podcasts", porGenero:"Audiobooks by genre", porTema:"Podcasts by topic",
     sinRes:"No results", sinResTxt:'We found nothing for "{0}". Try the author or another word.',
@@ -93,7 +94,7 @@ const TX = {
   },
   pt: {
     tabInicio:"Início", tabClips:"Clips", tabBuscar:"Buscar", clipPodcast:"Podcast", clipLibro:"Audiolivro", completo:"Completo", guardarClip:"Salvar", siguienteClip:"Próximo", tocaEmpezar:"Toque para começar", reiniciarGustos:"Recomeçar as recomendações", gustosTxt:"Clips aprende quais temas você gosta pelo que ouve e pula. Fica salvo só no seu celular.", gustosOk:"Pronto, Clips recomeça.", deslizaTxt:"Deslize para cima para o próximo", sinClips:"Não há clips agora. Tente daqui a pouco.", tabPodcasts:"Podcasts", tabBiblioteca:"Biblioteca",
-    escuchar:"Ouvir", seguirEsc:"Continuar ouvindo", miLista:"Minha lista", enMiLista:"Na minha lista", masInfo:"Mais informações", verTodo:"Ver tudo",
+    escuchar:"Ouvir", transmitir:"Transmitir para a TV", castPrimero:"Coloque algo para ouvir e depois toque em transmitir.", castNo:"Não encontramos uma TV ou caixa de som por perto. Verifique se estão na mesma rede Wi-Fi.", seguirEsc:"Continuar ouvindo", miLista:"Minha lista", enMiLista:"Na minha lista", masInfo:"Mais informações", verTodo:"Ver tudo",
     pie:"Audiolivros de domínio público gravados por voluntários do LibriVox e hospedados no archive.org.<br>Podcasts do diretório público do Apple Podcasts.",
     buscar:"Buscar", buscarPh:"Títulos, autores, podcasts", porGenero:"Audiolivros por gênero", porTema:"Podcasts por tema",
     sinRes:"Nenhum resultado", sinResTxt:'Não encontramos nada para "{0}". Tente o autor ou outra palavra.',
@@ -247,7 +248,7 @@ async function vInicio(){
   }
   const d = cacheInicio;
   const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
-  const hd = '<div class="hd"><span class="logo">' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></div>';
+  const hd = '<div class="hd"><span class="logo">' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {
@@ -1005,6 +1006,34 @@ function resaltar(tt){
   s.classList.add("on"); ultimaFr = s;
   if (!A.paused && $("full").classList.contains("on")) { const r = s.getBoundingClientRect(); if (r.top < 60 || r.bottom > innerHeight - 40) s.scrollIntoView({ behavior:"smooth", block:"center" }); }
 }
+
+// ================= Transmitir a la tele (Chromecast / AirPlay) =================
+// En el navegador: AirPlay en iPhone/Mac (Safari) y Chromecast donde Chrome lo permita.
+// En la app compilada se suma el plugin nativo de Google Cast (PLUG.GoogleCast) si está.
+const CAST = { disponible:false, conectado:false };
+function pintarCast(){
+  document.querySelectorAll("[data-cast], #f-cast").forEach(b => { b.hidden = !CAST.disponible; b.classList.toggle("on", CAST.conectado); });
+}
+if (window.WebKitPlaybackTargetAvailabilityEvent) {
+  A.addEventListener("webkitplaybacktargetavailabilitychanged", e => { CAST.disponible = e.availability === "available"; pintarCast(); });
+  A.addEventListener("webkitcurrentplaybacktargetiswirelesschanged", () => { CAST.conectado = !!A.webkitCurrentPlaybackTargetIsWireless; pintarCast(); });
+} else if (A.remote && A.remote.watchAvailability) {
+  A.remote.watchAvailability(d => { CAST.disponible = d; pintarCast(); }).catch(() => { CAST.disponible = false; pintarCast(); });
+  ["connecting", "connect", "disconnect"].forEach(ev => A.remote.addEventListener(ev, () => { CAST.conectado = A.remote.state !== "disconnected"; pintarCast(); }));
+}
+if (NATIVO && PLUG.GoogleCast) { CAST.disponible = true; }
+function transmitir(){
+  if (!A.src) { toast(t("castPrimero")); return; }
+  if (NATIVO && PLUG.GoogleCast && PLUG.GoogleCast.requestSession) {
+    const p = P.pistas[P.i] || {};
+    return PLUG.GoogleCast.requestSession().then(() => PLUG.GoogleCast.loadMedia({ url:A.currentSrc || A.src, title:$("f-t").textContent, subtitle:$("f-s").textContent, image:abs(p.portada || P.item.portada), currentTime:A.currentTime })).catch(() => {});
+  }
+  if (A.webkitShowPlaybackTargetPicker) return A.webkitShowPlaybackTargetPicker();
+  if (A.remote && A.remote.prompt) return A.remote.prompt().catch(e => { if (e && e.name !== "AbortError") toast(t("castNo")); });
+  toast(t("castNo"));
+}
+document.addEventListener("click", e => { if (e.target.closest("[data-cast], #f-cast")) transmitir(); });
+new MutationObserver(() => pintarCast()).observe(V, { childList:true });
 
 // ================= Varios =================
 let toastT = null;

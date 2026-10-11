@@ -201,6 +201,8 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 /* Ajustes */
 .hd-btn{border:0;background:rgba(0,0,0,.35);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#F4EEE6}
 .hd-btn svg{width:22px;height:22px}
+.hd-der{display:flex;gap:8px}
+.cast-btn.on{color:var(--accent)}
 .tit-fila{display:flex;justify-content:space-between;align-items:center}
 .tit-fila .hd-btn{background:var(--card)}
 .grupo{background:var(--card);border-radius:14px;margin-top:10px;overflow:hidden}
@@ -305,7 +307,8 @@ body.en-clips .vista{padding:0}
     <div class="tp">
       <button class="ib" id="f-cerrar" aria-label="Cerrar reproductor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <small id="f-tipo">Reproduciendo</small>
-      <button class="ib" id="f-caps" aria-label="Capítulos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+      <span style="display:flex"><button class="ib cast-btn" id="f-cast" aria-label="Transmitir" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 16a5 5 0 0 1 5 5M2 12a9 9 0 0 1 9 9M2 8.1A13 13 0 0 1 15 21"/><path d="M2 5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-4"/></svg></button>
+      <button class="ib" id="f-caps" aria-label="Capítulos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button></span>
     </div>
     <div class="cv" id="f-cv"></div>
     <div class="tt"><h2 id="f-t"></h2><p id="f-s"></p></div>
@@ -333,6 +336,6 @@ body.en-clips .vista{padding:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=10"></script>
+<script src="/app.js?v=11"></script>
 </body>
 </html>
