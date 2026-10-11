@@ -1,0 +1,23 @@
+{
+  "name": "audiolibros-gratis-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App de iPhone y Android de Audiolibros Gratis (Capacitor). La web está en ../public.",
+  "scripts": {
+    "build": "node tools/armar.js",
+    "sync": "node tools/armar.js && npx cap sync"
+  },
+  "dependencies": {
+    "@capacitor/app": "8.1.2",
+    "@capacitor/browser": "8.0.5",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/file-transfer": "2.0.6",
+    "@capacitor/filesystem": "8.1.4",
+    "@capacitor/ios": "8.5.2",
+    "@capacitor/android": "8.5.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "3.0.5",
+    "@capacitor/cli": "8.5.2"
+  }
+}

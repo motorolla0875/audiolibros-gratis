@@ -1,0 +1,14 @@
+{
+  "appId": "com.dmithbuilds.audiolibros",
+  "appName": "Audiolibros Gratis",
+  "webDir": "www",
+  "backgroundColor": "#0E0C0A",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0E0C0A"
+  },
+  "android": {
+    "backgroundColor": "#0E0C0A",
+    "allowMixedContent": false
+  }
+}
