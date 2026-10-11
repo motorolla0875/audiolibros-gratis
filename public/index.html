@@ -43,7 +43,7 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 /* Hero */
 .hero{position:relative;margin:calc(-14px - var(--safe-t)) -16px 0;height:min(120vw,580px);overflow:hidden;display:flex;align-items:flex-end;background:#2A1630 center/cover no-repeat}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,12,10,.6) 0%,rgba(14,12,10,0) 22%,rgba(14,12,10,0) 42%,var(--bg) 97%)}
-.hero .hd,.hero-car .hd{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + var(--safe-t)) 16px 14px}
+.hero .hd{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + var(--safe-t)) 16px 14px}
 .logo{font:700 19px var(--serif);letter-spacing:-.01em}.logo i{color:var(--accent);font-style:normal}
 .hero .cnt{position:relative;z-index:2;width:100%;text-align:center;padding:0 16px 4px}
 .kick{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
@@ -217,7 +217,10 @@ h2{font:700 17px/1.25 var(--sans);margin:0}
 .hero.poster h1{font-size:36px}
 @keyframes zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
 .hero-car{position:relative;margin:calc(-14px - var(--safe-t)) -16px 0}
-.hero-car .hd{z-index:4}
+.hero-car .hd{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + var(--safe-t)) 16px 12px;background:var(--bg)}
+.hero-car .hd .hd-btn{background:var(--card)}
+.hero-car .hero.poster{height:min(118vw,560px)}
+.hero-car .hero.poster::after{background:linear-gradient(180deg,rgba(14,12,10,0) 0%,rgba(14,12,10,0) 45%,rgba(14,12,10,.75) 72%,var(--bg) 98%)}
 .pista{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
 .pista::-webkit-scrollbar{display:none}
 .hero.slide{flex:0 0 100%;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
