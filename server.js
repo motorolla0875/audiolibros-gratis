@@ -108,7 +108,7 @@ function aLibroCorto(d) {
 }
 
 async function buscarLibros({ q = '', cat = '', pagina = 1, filas = 30, orden = 'downloads desc' }) {
-  let consulta = `collection:(librivoxaudio) AND ${IDIOMA} AND mediatype:(audio)`;
+  let consulta = `collection:(librivoxaudio) AND ${IDIOMA} AND mediatype:(audio) AND NOT title:(Bible OR "Reina Valera")`;
   if (cat && CATEGORIAS[cat]) consulta += ' AND ' + CATEGORIAS[cat].q;
   if (q) {
     const t = q.replace(/[^\p{L}\p{N}\s'-]/gu, ' ').trim();
