@@ -1365,7 +1365,9 @@ function resaltar(tt){
 const CAST = { disponible:false, conectado:false };
 function pintarCast(){
   const disp = CAST.disponible || CAST.cc;
-  document.querySelectorAll("[data-cast], #f-cast").forEach(b => { b.hidden = !disp; b.classList.toggle("on", CAST.conectado); });
+  // En el iPhone el botón del reproductor está siempre: abre el selector de Apple (Bluetooth, AirPlay y más).
+  const salidas = NATIVO && !!A.webkitShowPlaybackTargetPicker;
+  document.querySelectorAll("[data-cast], #f-cast").forEach(b => { b.hidden = !(disp || (salidas && b.id === "f-cast")); b.classList.toggle("on", CAST.conectado); });
 }
 
 // Chromecast con el kit oficial de Google (Chrome en Android y en la compu).
