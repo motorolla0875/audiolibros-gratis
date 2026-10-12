@@ -46,6 +46,11 @@ jobs:
           # Barra de arriba con letras blancas (la app es oscura)
           /usr/libexec/PlistBuddy -c "Add :UIStatusBarStyle string UIStatusBarStyleLightContent" "$PLIST" || /usr/libexec/PlistBuddy -c "Set :UIStatusBarStyle UIStatusBarStyleLightContent" "$PLIST"
           /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" "$PLIST" || /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" "$PLIST"
+          # Solo vertical, aunque se gire el teléfono
+          /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations array" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations:0 string UIInterfaceOrientationPortrait" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations~ipad" "$PLIST" || true
           # Chromecast: permiso para buscar teles en la red Wi-Fi de la casa
           /usr/libexec/PlistBuddy -c "Add :NSLocalNetworkUsageDescription string Para encontrar tu Chromecast o tele en la red Wi-Fi y transmitir lo que escuchás." "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :NSBonjourServices array" "$PLIST" || true
