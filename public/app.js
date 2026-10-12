@@ -138,7 +138,7 @@ Object.assign(TX.es, {
   muroTele:"Se terminaron tus usos gratis de transmitir", muroTeleTxt:"Mirá un video para ganar un uso más, o hacete Premium y mandá a la tele siempre.",
   muroCandado:"Este capítulo está guardado con candado", muroCandadoTxt:"Sin internet podés escuchar {0} minutos de lo que guardaste. Mirá un video para destrabar 20 minutos más por hoy, o hacete Premium.",
   verVideo20:"Ver video y sumar 20 minutos", verVideo1:"Ver video y ganar 1 uso", quedanVideos:"Te quedan {0} videos hoy", sinVideosHoy:"Ya viste los 3 videos de hoy. Mañana podés ver más.",
-  ganaste20:"¡Listo! Sumaste 20 minutos para hoy", ganaste1:"¡Listo! Ganaste 1 uso más", anuncioCortado:"Hay que ver el video entero para ganar el premio", sinVideoRegalo:"Ahora no hay videos para mostrar: te lo regalamos",
+  ganaste20:"¡Listo! Sumaste 20 minutos para hoy", ganaste1:"¡Listo! Ganaste 1 uso más", anuncioCortado:"Hay que ver el video entero para ganar el premio", sinVideoRegalo:"Ahora no hay videos para mostrar: te lo regalamos", pruebasTF:"Pruebas (solo TestFlight)", comoGratis:"Probar como usuario gratis", comoGratisTxt:"Usa la app como si no fueras Premium, para ver los anuncios. No cancela tu suscripción.",
   usosQuedan:"Te quedan {0} usos gratis", espacioUsado:"Sin internet: {0} de {1} min", espacioPremium:"Sin internet: sin límite (Premium)",
   bloqueado:"Con candado: sin internet se destraba con un video o con Premium",
   anuncio:"Publicidad", anuncioPrueba:"ANUNCIO DE PRUEBA", anuncioPruebaTxt:"Acá va a ir el video de publicidad de verdad.", cerrar:"Cerrar", seCierraEn:"Se puede cerrar en {0}",
@@ -156,7 +156,7 @@ Object.assign(TX.en, {
   muroTele:"You're out of free casts", muroTeleTxt:"Watch a video to earn one more use, or go Premium and cast anytime.",
   muroCandado:"This chapter is locked", muroCandadoTxt:"Offline you can play {0} minutes of what you saved. Watch a video to unlock 20 more minutes for today, or go Premium.",
   verVideo20:"Watch a video for 20 more minutes", verVideo1:"Watch a video for 1 more use", quedanVideos:"{0} videos left today", sinVideosHoy:"You've watched today's 3 videos. Come back tomorrow.",
-  ganaste20:"Done! You got 20 more minutes for today", ganaste1:"Done! You got 1 more use", anuncioCortado:"Watch the whole video to get the reward", sinVideoRegalo:"No videos available right now, so it's on us",
+  ganaste20:"Done! You got 20 more minutes for today", ganaste1:"Done! You got 1 more use", anuncioCortado:"Watch the whole video to get the reward", sinVideoRegalo:"No videos available right now, so it's on us", pruebasTF:"Testing (TestFlight only)", comoGratis:"Try as a free user", comoGratisTxt:"Use the app as if you weren't Premium, to see the ads. It doesn't cancel your subscription.",
   usosQuedan:"{0} free uses left", espacioUsado:"Offline: {0} of {1} min", espacioPremium:"Offline: unlimited (Premium)",
   bloqueado:"Locked: unlock offline with a video or Premium",
   anuncio:"Ad", anuncioPrueba:"TEST AD", anuncioPruebaTxt:"The real video ad will go here.", cerrar:"Close", seCierraEn:"You can close in {0}",
@@ -174,7 +174,7 @@ Object.assign(TX.pt, {
   muroTele:"Acabaram seus usos grátis de transmitir", muroTeleTxt:"Assista a um vídeo para ganhar mais um uso, ou seja Premium e transmita sempre.",
   muroCandado:"Este capítulo está com cadeado", muroCandadoTxt:"Offline você pode ouvir {0} minutos do que salvou. Assista a um vídeo para liberar mais 20 minutos hoje, ou seja Premium.",
   verVideo20:"Ver vídeo e somar 20 minutos", verVideo1:"Ver vídeo e ganhar 1 uso", quedanVideos:"Restam {0} vídeos hoje", sinVideosHoy:"Você já viu os 3 vídeos de hoje. Amanhã tem mais.",
-  ganaste20:"Pronto! Você somou 20 minutos para hoje", ganaste1:"Pronto! Você ganhou mais 1 uso", anuncioCortado:"Assista ao vídeo inteiro para ganhar o prêmio", sinVideoRegalo:"Agora não há vídeos para mostrar: é por nossa conta",
+  ganaste20:"Pronto! Você somou 20 minutos para hoje", ganaste1:"Pronto! Você ganhou mais 1 uso", anuncioCortado:"Assista ao vídeo inteiro para ganhar o prêmio", sinVideoRegalo:"Agora não há vídeos para mostrar: é por nossa conta", pruebasTF:"Testes (só TestFlight)", comoGratis:"Testar como usuário grátis", comoGratisTxt:"Usa o app como se você não fosse Premium, para ver os anúncios. Não cancela sua assinatura.",
   usosQuedan:"Restam {0} usos grátis", espacioUsado:"Offline: {0} de {1} min", espacioPremium:"Offline: sem limite (Premium)",
   bloqueado:"Com cadeado: offline libera com um vídeo ou Premium",
   anuncio:"Anúncio", anuncioPrueba:"ANÚNCIO DE TESTE", anuncioPruebaTxt:"Aqui vai entrar o vídeo de anúncio de verdade.", cerrar:"Fechar", seCierraEn:"Pode fechar em {0}",
@@ -929,6 +929,7 @@ function vAjustes(){
       '<button class="op" id="aj-restaurar">' + t("restaurar") + '</button>' +
       (PRUEBA_PAGOS ? (esPremium() ? '<button class="op peligro" id="aj-quitar">' + t("quitarPremium") + '</button>' : '') + '<button class="op" id="aj-reinicio">' + t("reiniciarPrueba") + '</button>' : '') +
     '</div>' + (PRUEBA_PAGOS ? '<p class="aviso" style="text-align:left">' + t("modoPrueba") + '</p>' : '') +
+    (ADS.testFlight ? '<p class="lbl">' + t("pruebasTF") + '</p><div class="grupo"><button class="op" id="aj-comogratis"><span>' + t("comoGratis") + '</span><small>' + (E.comoGratis ? "✓" : "—") + '</small></button></div><p class="aviso" style="text-align:left">' + t("comoGratisTxt") + '</p>' : '') +
     (NATIVO && PLUG.LocalNotifications ? '<p class="lbl">' + t("notifs") + '</p><div class="grupo"><button class="op" id="aj-avisos"><span>' + t("notifRecord") + '</span><small>' + (E.avisos ? "✓" : "—") + '</small></button></div><p class="aviso" style="text-align:left">' + t("notifRecordTxt") + '</p>' : '') +
     '<p class="lbl">' + t("idioma") + '</p><div class="grupo">' + IDIOMAS.map(([id, nom]) => '<button class="op' + (id === L ? " on" : "") + '" data-idioma="' + id + '"><span>' + nom + '</span>' + (id === L ? "✓" : "") + '</button>').join("") + '</div><p class="aviso" style="text-align:left">' + t("idiomaTxt") + '</p>' +
     (cats && cats.paises ? '<p class="lbl">' + t("paisRanking") + '</p><div class="grupo">' + cats.paises.map(c => '<button class="op' + (c.id === E.pais ? " on" : "") + '" data-paisaj="' + c.id + '"><span>' + esc(c.nombre) + '</span>' + (c.id === E.pais ? "✓" : "") + '</button>').join("") + '</div>' : '') +
@@ -946,6 +947,7 @@ function vAjustes(){
   if ($("aj-premium")) $("aj-premium").onclick = () => muro("ajustes");
   if ($("aj-restaurar")) $("aj-restaurar").onclick = () => restaurarCompras();
   if ($("aj-gestionar")) $("aj-gestionar").onclick = () => gestionarSuscripcion();
+  if ($("aj-comogratis")) $("aj-comogratis").onclick = () => { E.comoGratis = !E.comoGratis; guardar(); if (!esPremium()) iniciarAnuncios(); vAjustes(); };
   if ($("aj-avisos")) $("aj-avisos").onclick = async () => { if (E.avisos) await AVISOS.apagar(); else await AVISOS.activar(); vAjustes(); };
   if ($("aj-quitar")) $("aj-quitar").onclick = () => { E.premium = false; guardar(); toast(t("premiumQuitado")); vAjustes(); };
   if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; E.ultAnuncio = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
@@ -1166,7 +1168,9 @@ const ANUNCIOS = {
   android: { juego:"800396260", premio:"BP_Rewarded_Android", corte:"BP_Interstitial_Android" }
 };
 const PRUEBA_ANUNCIOS = !(NATIVO && PLUG.UnityAds && ANUNCIOS[plataforma()]);
-const ADS = { listo:false, arrancando:null };
+const ADS = { listo:false, arrancando:null, testFlight:false };
+// En TestFlight aparece en Ajustes "Probar como usuario gratis" (en el App Store no existe).
+if (!PRUEBA_ANUNCIOS && PLUG.UnityAds.entorno) PLUG.UnityAds.entorno().then(r => { ADS.testFlight = !!(r && r.testFlight); if (ADS.testFlight && rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
 // Arranca el SDK (en iPhone primero aparece la pregunta de Apple sobre seguimiento). A los Premium no se les pregunta.
 function iniciarAnuncios(){
   if (PRUEBA_ANUNCIOS) return Promise.resolve(false);
@@ -1202,7 +1206,7 @@ function textoAhorro(){
   return t("ahorro");
 }
 if (!E.creditos) E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele };
-const esPremium = () => !!E.premium;
+const esPremium = () => !!E.premium && !(ADS.testFlight && E.comoGratis);
 const hoyStr = () => { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
 function extraHoy(){ if (!E.extra || E.extra.dia !== hoyStr()) E.extra = { dia:hoyStr(), min:0, videos:0 }; return E.extra; }
 const limiteMin = () => esPremium() ? Infinity : PREMIUM.base + extraHoy().min;

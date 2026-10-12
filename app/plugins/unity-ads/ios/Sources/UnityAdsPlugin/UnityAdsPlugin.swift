@@ -16,7 +16,8 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "initialize", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "preload", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "show", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "show", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "entorno", returnType: CAPPluginReturnPromise)
     ]
 
     private var iniciado = false
@@ -27,6 +28,11 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
 
     private var esTestFlight: Bool {
         Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+    }
+
+    // Dice si la app viene de TestFlight (para mostrar opciones de prueba que en el App Store no existen).
+    @objc func entorno(_ call: CAPPluginCall) {
+        call.resolve(["testFlight": esTestFlight])
     }
 
     @objc func initialize(_ call: CAPPluginCall) {

@@ -31,6 +31,12 @@ public class UnityAdsPlugin extends Plugin {
         return (getContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
     }
 
+    // En Android, "de prueba" = compilación debug (las de Play Store no lo son).
+    @PluginMethod
+    public void entorno(PluginCall call) {
+        JSObject r = new JSObject(); r.put("testFlight", esDebug()); call.resolve(r);
+    }
+
     @PluginMethod
     public void initialize(PluginCall call) {
         String gameId = call.getString("gameId");
