@@ -23,6 +23,7 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
     private var iniciando: [CAPPluginCall] = []
     private var cargados: [String: AnyObject] = [:]   // placementId -> UADSRewardedAd / UADSInterstitialAd
     private var mostrando: Mostrador?
+    private var anuncioEnPantalla: AnyObject?          // hay que retenerlo mientras se ve, si no queda en negro
 
     private var esTestFlight: Bool {
         Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
@@ -86,13 +87,19 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
         if premio {
             UADSRewardedAd.load(cfg) { [weak self] ad, error in
                 DispatchQueue.main.async {
-                    if let ad = ad { self?.cargados[id] = ad; listo(true, nil) } else { listo(false, error?.message) }
+                    if let ad = ad {
+                        ad.onAdExpired = { [weak self] _ in DispatchQueue.main.async { self?.cargados[id] = nil } }
+                        self?.cargados[id] = ad; listo(true, nil)
+                    } else { listo(false, error?.message) }
                 }
             }
         } else {
             UADSInterstitialAd.load(cfg) { [weak self] ad, error in
                 DispatchQueue.main.async {
-                    if let ad = ad { self?.cargados[id] = ad; listo(true, nil) } else { listo(false, error?.message) }
+                    if let ad = ad {
+                        ad.onAdExpired = { [weak self] _ in DispatchQueue.main.async { self?.cargados[id] = nil } }
+                        self?.cargados[id] = ad; listo(true, nil)
+                    } else { listo(false, error?.message) }
                 }
             }
         }
@@ -109,15 +116,25 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
             let fin: ([String: Any]) -> Void = { [weak self] res in
                 call.resolve(res)
                 self?.mostrando = nil
+                self?.anuncioEnPantalla = nil
                 self?.cargar(id, premio: premio) { _, _ in }   // deja el siguiente listo
             }
             let cfg = UADSShowConfigurationBuilder().with(viewController: vc).build()
+            self.anuncioEnPantalla = ad
+            let m: Mostrador
             if let r = ad as? UADSRewardedAd {
-                let m = MostradorPremio(fin); self.mostrando = m; r.show(cfg, delegate: m)
+                let mp = MostradorPremio(fin); m = mp; self.mostrando = mp; r.show(cfg, delegate: mp)
             } else if let i = ad as? UADSInterstitialAd {
-                let m = MostradorCorte(fin); self.mostrando = m; i.show(cfg, delegate: m)
+                let mc = MostradorCorte(fin); m = mc; self.mostrando = mc; i.show(cfg, delegate: mc)
             } else {
+                self.anuncioEnPantalla = nil
                 call.resolve(["shown": false, "completed": false, "rewarded": false])
+                return
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12) { [weak vc, weak m] in
+                guard let m = m, !m.empezo, !m.terminado else { return }
+                if let presentado = vc?.presentedViewController { presentado.dismiss(animated: false) }
+                m.terminar(false, false, false)
             }
         }
     }
@@ -127,14 +144,14 @@ public class UnityAdsPlugin: CAPPlugin, CAPBridgedPlugin {
 // protocolos usan los mismos nombres de método y no pueden convivir en la misma clase).
 class Mostrador: NSObject {
     private let fin: ([String: Any]) -> Void
-    private var listo = false
+    private(set) var terminado = false
     var empezo = false, premio = false
     init(_ fin: @escaping ([String: Any]) -> Void) { self.fin = fin }
 
     func terminar(_ shown: Bool, _ completed: Bool, _ rewarded: Bool) {
         DispatchQueue.main.async {
-            if self.listo { return }
-            self.listo = true
+            if self.terminado { return }
+            self.terminado = true
             self.fin(["shown": shown, "completed": completed, "rewarded": rewarded])
         }
     }
