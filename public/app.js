@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -310,7 +310,7 @@ function slidePremium(d){
   if (portadas.length < 6) for (const f of d.filas || []) for (const x of f.items || []) { if (portadas.length >= 6) break; if (x.portada && !vistas.has(x.portada)) { vistas.add(x.portada); portadas.push(abs(x.portada)); } }
   const col = portadas.slice(0, 6).map((u, i) => '<span class="pc pc' + i + '" style="background-image:url(\'' + esc(u) + '\')"></span>').join("");
   return '<div class="hero slide prem"><div class="pr-col">' + col + '</div><div class="cnt"><div class="kick">' + t("premium") + '</div><h1>' + t("premTit") + '</h1><p class="pr-sub">' + t("premSub") + '</p>' +
-    '<div class="bts"><button class="hb w" id="h-prem">' + t("hacetePremium") + '</button></div><p class="pr-nota">' + t("planMes") + ' · ' + t("premNota") + '</p></div></div>';
+    '<div class="bts"><button class="hb w" id="h-prem">' + t("hacetePremium") + '</button></div><p class="pr-nota">' + esc(textoPlan("mensual")) + ' · ' + t("premNota") + '</p></div></div>';
 }
 async function vInicio(){
   if (!cacheInicio) {
@@ -710,7 +710,7 @@ function vAjustes(){
   const total = Object.values(E.desc).reduce((a, d) => a + (d.bytes || 0), 0), n = Object.keys(E.desc).length;
   V.innerHTML = barraVolver() + '<h1>' + t("ajustes") + '</h1>' +
     '<p class="lbl">' + t("premium") + '</p><div class="grupo">' +
-      (esPremium() ? '<div class="op"><span>' + t("sosPremium") + '</span><small>✓</small></div>' : '<button class="op" id="aj-premium" style="color:var(--accent);font-weight:700"><span>' + t("hacetePremium") + '</span><small>›</small></button>') +
+      (esPremium() ? '<div class="op"><span>' + t("sosPremium") + '</span><small>✓</small></div>' + (PRUEBA_PAGOS ? '' : '<button class="op" id="aj-gestionar">' + t("gestionar") + '<small>↗</small></button>') : '<button class="op" id="aj-premium" style="color:var(--accent);font-weight:700"><span>' + t("hacetePremium") + '</span><small>›</small></button>') +
       '<div class="op"><span>' + (esPremium() ? t("espacioPremium") : t("espacioUsado", Math.round(minGuardados()), limiteMin())) + '</span></div>' +
       (esPremium() ? '' : '<div class="op"><span>' + t("creditosDormir", E.creditos.dormir) + '</span></div><div class="op"><span>' + t("creditosTele", E.creditos.tele) + '</span></div>') +
       '<button class="op" id="aj-restaurar">' + t("restaurar") + '</button>' +
@@ -731,6 +731,7 @@ function vAjustes(){
   if (!cats) api("/api/categorias").then(c => { cats = c; if (rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
   if ($("aj-premium")) $("aj-premium").onclick = () => muro("ajustes");
   if ($("aj-restaurar")) $("aj-restaurar").onclick = () => restaurarCompras();
+  if ($("aj-gestionar")) $("aj-gestionar").onclick = () => gestionarSuscripcion();
   if ($("aj-quitar")) $("aj-quitar").onclick = () => { E.premium = false; guardar(); toast(t("premiumQuitado")); vAjustes(); };
   if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
   if ($("aj-gustos")) $("aj-gustos").onclick = () => { E.gustos = {}; guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true; toast(t("gustosOk")); };
@@ -939,6 +940,32 @@ function tocarDL(item, p){
 // Mientras no estén RevenueCat (PLUG.Purchases) ni AppLovin (PLUG.AppLovin), compras y anuncios son de prueba.
 const PREMIUM = { base:60, porVideo:20, videosDia:3, cadaClips:8, dormir:5, tele:3 };
 const PRUEBA_PAGOS = !(NATIVO && PLUG.Purchases), PRUEBA_ANUNCIOS = !(NATIVO && PLUG.AppLovin);
+// RevenueCat (cobro de Apple). La clave pública va en la app; el permiso se llama "premium".
+const RC_CLAVES = { ios:"appl_gMditIuteGhENUwgxPZyVBKdmyO" }, RC_PERMISO = "premium";
+const PAGOS = { listo:false, pkgs:{}, ocupado:false };
+const plataforma = () => { try { return window.Capacitor.getPlatform(); } catch (e) { return "web"; } };
+async function iniciarPagos(){
+  if (PRUEBA_PAGOS) return;
+  const clave = RC_CLAVES[plataforma()]; if (!clave) return;
+  try {
+    if (!PAGOS.listo) await PLUG.Purchases.configure({ apiKey:clave });
+    PAGOS.listo = true;
+    try { const r = await PLUG.Purchases.getCustomerInfo(); activarSiCorresponde(r && r.customerInfo, true); } catch (e) {}
+    try {
+      const o = await PLUG.Purchases.getOfferings(), l = (o && o.current && o.current.availablePackages) || [];
+      PAGOS.pkgs = { mensual:l.find(p => p.packageType === "MONTHLY") || null, anual:l.find(p => p.packageType === "ANNUAL") || null };
+    } catch (e) {}
+    if (!PAGOS.escucha) { PAGOS.escucha = true; try { PLUG.Purchases.addCustomerInfoUpdateListener(info => activarSiCorresponde(info, true)); } catch (e) {} }
+  } catch (e) { PAGOS.listo = false; }
+}
+// Precio que muestra la tienda en cada país (si todavía no cargó, el de referencia en dólares).
+const precioPlan = plan => { const p = PAGOS.pkgs[plan]; return p && p.product && p.product.priceString; };
+const textoPlan = plan => precioPlan(plan) ? t(plan === "anual" ? "porAnio" : "porMes", precioPlan(plan)) : t(plan === "anual" ? "planAnio" : "planMes");
+function textoAhorro(){
+  const m = PAGOS.pkgs.mensual, a = PAGOS.pkgs.anual;
+  if (m && a && m.product.price && a.product.price) { const pct = Math.round((1 - a.product.price / (m.product.price * 12)) * 100); return pct > 0 ? t("ahorroPct", pct) : ""; }
+  return t("ahorro");
+}
 if (!E.creditos) E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele };
 const esPremium = () => !!E.premium;
 const hoyStr = () => { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
@@ -996,8 +1023,8 @@ function muro(motivo, alGanar){
     '<div class="mu-logo">' + ICO.auris + '</div>' +
     (tit ? '<h2>' + t(tit) + '</h2><p class="mu-txt">' + t(tit + "Txt", PREMIUM.base + ex.min) + '</p>' : '<h2>' + t("hacetePremium") + '</h2>') +
     '<ul class="mu-ben">' + ["benSinPubli", "benSinLimite", "benDormir", "benTele"].map(k => '<li>' + ICO.ok + t(k) + '</li>').join("") + '</ul>' +
-    '<button class="btn mu-plan" data-plan="anual"><span>' + t("planAnio") + '</span><small>' + t("ahorro") + '</small></button>' +
-    '<button class="btn sec mu-plan" data-plan="mensual"><span>' + t("planMes") + '</span></button>' +
+    '<button class="btn mu-plan" data-plan="anual"><span>' + esc(textoPlan("anual")) + '</span>' + (textoAhorro() ? '<small>' + esc(textoAhorro()) + '</small>' : '') + '</button>' +
+    '<button class="btn sec mu-plan" data-plan="mensual"><span>' + esc(textoPlan("mensual")) + '</span></button>' +
     (conVideo === "20" ? '<button class="mu-video" data-video="20">▶ ' + t("verVideo20") + '<small>' + t("quedanVideos", quedan) + '</small></button>' : '') +
     (conVideo === "no" ? '<p class="mu-nota">' + t("sinVideosHoy") + '</p>' : '') +
     (conVideo === "1" ? '<button class="mu-video" data-video="1">▶ ' + t("verVideo1") + '</button>' : '') +
@@ -1023,13 +1050,15 @@ function muro(motivo, alGanar){
 }
 function comprar(plan){
   if (!PRUEBA_PAGOS) {
-    // RevenueCat: paquetes "$rc_monthly" y "$rc_annual" de la oferta actual.
-    const RC = PLUG.Purchases;
-    return RC.getOfferings().then(o => {
-      const pk = o.current && o.current.availablePackages.find(p => p.packageType === (plan === "anual" ? "ANNUAL" : "MONTHLY"));
-      if (!pk) throw new Error("sin paquete");
-      return RC.purchasePackage({ aPackage:pk });
-    }).then(r => activarSiCorresponde(r && r.customerInfo)).catch(() => false);
+    // RevenueCat: paquetes "$rc_monthly" y "$rc_annual" de la oferta "default".
+    const pk = PAGOS.pkgs[plan];
+    if (!PAGOS.listo || !pk) { toast(t("sinProductos")); iniciarPagos(); return Promise.resolve(false); }
+    if (PAGOS.ocupado) return Promise.resolve(false);
+    PAGOS.ocupado = true;
+    return PLUG.Purchases.purchasePackage({ aPackage:pk })
+      .then(r => activarSiCorresponde(r && r.customerInfo))
+      .catch(e => { if (!(e && (e.userCancelled || e.code === "1" || e.code === 1))) toast(t("compraFallo")); return false; })
+      .finally(() => { PAGOS.ocupado = false; });
   }
   return new Promise(ok => {
     const h = $("hoja");
@@ -1039,15 +1068,21 @@ function comprar(plan){
     $("h-no").onclick = () => { cerrarHoja(); ok(false); };
   });
 }
-function activarSiCorresponde(info){
-  const activo = !!(info && info.entitlements && info.entitlements.active && info.entitlements.active.premium);
-  E.premium = activo; guardar(); refrescarPremium();
-  if (activo) toast(t("premiumOk"));
+function activarSiCorresponde(info, callado){
+  const activo = !!(info && info.entitlements && info.entitlements.active && info.entitlements.active[RC_PERMISO]);
+  const antes = !!E.premium;
+  E.premium = activo; guardar();
+  if (antes !== activo) { refrescarPremium(); if (rutaActual() === "/" || rutaActual() === "") { if (cacheInicio) vInicio(); } }
+  if (activo && !callado) toast(t("premiumOk"));
   return activo;
 }
 function restaurarCompras(){
   if (PRUEBA_PAGOS) { toast(t("modoPrueba")); return Promise.resolve(false); }
-  return PLUG.Purchases.restorePurchases().then(r => activarSiCorresponde(r && r.customerInfo)).catch(() => false);
+  if (!PAGOS.listo) { toast(t("sinProductos")); return Promise.resolve(false); }
+  return PLUG.Purchases.restorePurchases().then(r => { const ok = activarSiCorresponde(r && r.customerInfo, true); toast(t(ok ? "restaurado" : "nadaRestaurar")); return ok; }).catch(() => { toast(t("compraFallo")); return false; });
+}
+function gestionarSuscripcion(){
+  abrirAfuera(plataforma() === "android" ? "https://play.google.com/store/account/subscriptions?package=com.dmithbuilds.audiolibros" : "https://apps.apple.com/account/subscriptions");
 }
 // Repinta lo que depende de Premium en la pantalla actual.
 function refrescarPremium(){
@@ -1487,3 +1522,6 @@ if (NATIVO && PLUG.App) PLUG.App.addListener("backButton", () => {
 traducirFijos();
 pintarPlay();
 router();
+// Cobro de Apple: al abrir la app y cada vez que vuelve al frente (por si renovó o canceló).
+iniciarPagos();
+if (NATIVO && PLUG.App) PLUG.App.addListener("resume", () => { if (PAGOS.listo) iniciarPagos(); });
