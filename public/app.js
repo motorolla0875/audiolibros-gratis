@@ -19,6 +19,7 @@ const ICO = {
   playC:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg>',
   bajar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>',
   bajado:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  campana:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
   ajustes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
   auris:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 15v-3a8 8 0 0 1 16 0v3" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/><rect x="2.5" y="13.5" width="5" height="8" rx="2" fill="currentColor"/><rect x="16.5" y="13.5" width="5" height="8" rx="2" fill="currentColor"/></svg>',
   cast:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 16a5 5 0 0 1 5 5M2 12a9 9 0 0 1 9 9M2 8.1A13 13 0 0 1 15 21"/><path d="M2 5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-4"/></svg>',
@@ -144,7 +145,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", chipRadios:"Radios", paisRadio:"País", todosPaises:"Todos los países", verMas:"Ver más", mundoRadios:"Todo el mundo", radiosVivo:"Radios en vivo", enVivo:"EN VIVO", guardarRadio:"Guardar radio", enFavoritas:"En tus radios", radiosFav:"Tus radios", buscarRadioPh:"Buscar una radio", masEscuchadasR:"Más escuchadas", sinRadios:"No encontramos radios acá.", radioGuardada:"Guardaste {0} en tus radios", radioSacada:"Sacaste {0} de tus radios", radioNoAnda:"Esta radio no responde ahora. Probá otra.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", novedades:"Novedades", sinNovedades:"No hay novedades por ahora", sinNovedadesTxt:"Seguí podcasts y guardá radios: acá te vamos a avisar cuando haya algo nuevo.", nuevoEp:"Nuevo episodio de {0}", radioTeEspera:"Tu radio favorita te espera", seguiEscuchando:"Seguí escuchando", teQuedaste:"Te quedaste en {0}", activarAvisos:"Activá los avisos", activarAvisosTxt:"Te avisamos de tus radios y de lo que dejaste a medias. Como mucho uno por día.", activar:"Activar", avisosOn:"Listo, te vamos a avisar", avisosNo:"Para recibir avisos, permitilos en los ajustes del teléfono.", notifs:"Notificaciones", notifRecord:"Recordatorios", notifRecordTxt:"Tu radio favorita y lo que dejaste a medias (como mucho uno por día).", notifRadioTit:"📻 {0} te espera", notifRadioTxt:"Está sonando en vivo. Tocá para escuchar.", notifSeguirTit:"🎧 Seguí escuchando", notifSeguirTxt:"Te quedaste en {0} · {1}", chipRadios:"Radios", paisRadio:"País", todosPaises:"Todos los países", verMas:"Ver más", mundoRadios:"Todo el mundo", radiosVivo:"Radios en vivo", enVivo:"EN VIVO", guardarRadio:"Guardar radio", enFavoritas:"En tus radios", radiosFav:"Tus radios", buscarRadioPh:"Buscar una radio", masEscuchadasR:"Más escuchadas", sinRadios:"No encontramos radios acá.", radioGuardada:"Guardaste {0} en tus radios", radioSacada:"Sacaste {0} de tus radios", radioNoAnda:"Esta radio no responde ahora. Probá otra.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +163,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", chipRadios:"Radio", paisRadio:"Country", todosPaises:"All countries", verMas:"See more", mundoRadios:"Whole world", radiosVivo:"Live radio", enVivo:"LIVE", guardarRadio:"Save station", enFavoritas:"In your stations", radiosFav:"Your stations", buscarRadioPh:"Search a station", masEscuchadasR:"Most listened", sinRadios:"No stations found here.", radioGuardada:"{0} saved to your stations", radioSacada:"{0} removed from your stations", radioNoAnda:"This station is not responding. Try another one.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", novedades:"Updates", sinNovedades:"Nothing new for now", sinNovedadesTxt:"Follow podcasts and save stations: we will let you know here when there is something new.", nuevoEp:"New episode of {0}", radioTeEspera:"Your favorite station is waiting", seguiEscuchando:"Continue listening", teQuedaste:"You stopped at {0}", activarAvisos:"Turn on notifications", activarAvisosTxt:"We will remind you about your stations and what you left halfway. At most one a day.", activar:"Turn on", avisosOn:"Done, we will let you know", avisosNo:"To get notifications, allow them in your phone settings.", notifs:"Notifications", notifRecord:"Reminders", notifRecordTxt:"Your favorite station and what you left halfway (at most one a day).", notifRadioTit:"📻 {0} is waiting", notifRadioTxt:"It is live now. Tap to listen.", notifSeguirTit:"🎧 Continue listening", notifSeguirTxt:"You stopped at {0} · {1}", chipRadios:"Radio", paisRadio:"Country", todosPaises:"All countries", verMas:"See more", mundoRadios:"Whole world", radiosVivo:"Live radio", enVivo:"LIVE", guardarRadio:"Save station", enFavoritas:"In your stations", radiosFav:"Your stations", buscarRadioPh:"Search a station", masEscuchadasR:"Most listened", sinRadios:"No stations found here.", radioGuardada:"{0} saved to your stations", radioSacada:"{0} removed from your stations", radioNoAnda:"This station is not responding. Try another one.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +181,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", chipRadios:"Rádios", paisRadio:"País", todosPaises:"Todos os países", verMas:"Ver mais", mundoRadios:"Mundo todo", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", novedades:"Novidades", sinNovedades:"Nenhuma novidade por enquanto", sinNovedadesTxt:"Siga podcasts e salve rádios: vamos avisar aqui quando houver algo novo.", nuevoEp:"Novo episódio de {0}", radioTeEspera:"Sua rádio favorita está esperando", seguiEscuchando:"Continuar ouvindo", teQuedaste:"Você parou em {0}", activarAvisos:"Ative os avisos", activarAvisosTxt:"Avisamos sobre suas rádios e o que você deixou pela metade. No máximo um por dia.", activar:"Ativar", avisosOn:"Pronto, vamos avisar você", avisosNo:"Para receber avisos, permita nos ajustes do celular.", notifs:"Notificações", notifRecord:"Lembretes", notifRecordTxt:"Sua rádio favorita e o que você deixou pela metade (no máximo um por dia).", notifRadioTit:"📻 {0} está esperando", notifRadioTxt:"Está ao vivo agora. Toque para ouvir.", notifSeguirTit:"🎧 Continuar ouvindo", notifSeguirTxt:"Você parou em {0} · {1}", chipRadios:"Rádios", paisRadio:"País", todosPaises:"Todos os países", verMas:"Ver mais", mundoRadios:"Mundo todo", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -315,6 +316,7 @@ async function router(){
     else if (p[0] === "podcasts") await vPodcasts(p[1] === "top");
     else if (p[0] === "nuevos") await vNuevos();
     else if (p[0] === "radios") await vRadios(decodeURIComponent(p[1] || ""));
+    else if (p[0] === "novedades") vNovedades();
     else if (p[0] === "biblioteca") vBiblioteca(p[1] || "escuchando");
     else if (p[0] === "ajustes") vAjustes();
     else if (p[0] === "libro") await vLibro(decodeURIComponent(p[1]));
@@ -356,7 +358,7 @@ async function vInicio(){
   }
   const d = cacheInicio;
   const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
-  const hd = '<div class="hd"><span class="logo">' + ICO.auris + '<span>' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span></span><span class="hd-der"><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
+  const hd = '<div class="hd"><span class="logo">' + ICO.auris + '<span>' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span></span><span class="hd-der"><a class="hd-btn campana" href="#/novedades" aria-label="' + t("novedades") + '">' + ICO.campana + '<i class="badge" id="badge"' + (nNovedades() ? '' : ' hidden') + '>' + nNovedades() + '</i></a><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {
@@ -701,6 +703,93 @@ async function vPodcasts(irTop){
   if ($("top")) $("top").innerHTML = cacheTop.lista.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");
 }
 
+// ================= Novedades (campanita) y avisos =================
+// Se arman en el teléfono al abrir la app: episodios nuevos de los podcasts que seguís,
+// tu radio favorita y lo que dejaste a medias. No hace falta servidor ni cuenta.
+const nNovedades = () => (E.novedades || []).filter(n => !n.leida).length;
+function pintarBadge(){ const b = $("badge"); if (!b) return; const n = nNovedades(); b.hidden = !n; b.textContent = n > 9 ? "9+" : n; }
+async function buscarNovedades(){
+  if (Date.now() - (E.novRevisado || 0) < 20 * 60000) return;
+  E.novRevisado = Date.now();
+  const lista = (E.novedades || []).filter(n => n.tipo === "ep" && Date.now() - n.ts < 14 * 864e5);
+  E.vistoPod = E.vistoPod || {};
+  const subs = (E.subs || []).slice(0, 15);
+  const fichasP = await Promise.all(subs.map(x => (fichas["p:" + x.id] ? Promise.resolve(fichas["p:" + x.id]) : api("/api/podcast/" + x.id).then(p => fichas["p:" + x.id] = p)).catch(() => null)));
+  fichasP.forEach((p, i) => {
+    if (!p || !p.episodios || !p.episodios.length) return;
+    const e = p.episodios[0], f = new Date(e.fecha || 0).getTime(), ult = E.vistoPod[subs[i].id];
+    // La primera vez que lo vemos solo avisamos si salió en los últimos 3 días.
+    const nuevo = ult == null ? Date.now() - f < 3 * 864e5 : f > ult;
+    if (nuevo && f && !lista.some(n => n.url === e.url))
+      lista.unshift({ tipo:"ep", id:p.id, url:e.url, titulo:e.titulo, sub:t("nuevoEp", p.titulo), portada:e.portada || p.portada, fecha:e.fecha, ts:Date.now(), leida:false,
+        pod:{ id:p.id, tipo:"podcast", titulo:p.titulo, autor:p.autor, portada:p.portada }, pista:{ titulo:e.titulo, url:e.url, duracion:e.duracion, portada:e.portada, fecha:e.fecha, tamano:e.tamano } });
+    E.vistoPod[subs[i].id] = Math.max(f || 0, ult || 0);
+  });
+  E.novedades = lista.slice(0, 30); guardar(); pintarBadge();
+}
+// Lo que dejaste a medias (un libro o episodio entre el 5% y el 95%).
+function aMedias(){
+  return (E.recientes || []).find(r => { const p = r.pista && E.progreso[r.pista.url]; return p && p.dur && p.t / p.dur > .05 && p.t / p.dur < .95 && !(r.pistas[r.i] || {}).envivo; });
+}
+function vNovedades(){
+  const nov = E.novedades || [], radio = (E.radios || [])[0], medias = aMedias();
+  let h = barraVolver() + '<h1>' + t("novedades") + '</h1>';
+  if (NATIVO && PLUG.LocalNotifications && !E.avisos) h += '<div class="aviso-on"><b>' + t("activarAvisos") + '</b><p>' + t("activarAvisosTxt") + '</p><button class="hb w" id="nov-act">' + ICO.campana + t("activar") + '</button></div>';
+  h += '<div class="lista" style="margin-top:12px">';
+  if (medias) h += '<button class="row" id="nov-medias">' + cover(medias.item) + '<div class="info"><small>' + t("seguiEscuchando") + '</small><b>' + esc(medias.item.titulo) + '</b><small>' + esc(t("teQuedaste", medias.pista.titulo)) + '</small></div><span class="ic">' + ICO.playC + '</span></button>';
+  if (radio) { RADIOS[radio.id] = radio; h += '<button class="row" data-radio="' + esc(radio.id) + '">' + cover(radio) + '<div class="info"><small>' + t("radioTeEspera") + '</small><b>' + esc(radio.titulo) + '</b><small><span class="vivo-tag">' + t("enVivo") + '</span></small></div><span class="ic">' + ICO.playC + '</span></button>'; }
+  h += nov.map((n, i) => '<button class="row' + (n.leida ? '' : ' nueva') + '" data-nov="' + i + '">' + cover({ tipo:"podcast", titulo:n.pod.titulo, portada:n.portada }) + '<div class="info"><small>' + esc(fecha(n.fecha)) + ' · ' + esc(n.sub) + '</small><b>' + esc(n.titulo) + '</b></div><span class="ic">' + ICO.playC + '</span></button>').join("");
+  h += '</div>';
+  if (!nov.length && !radio && !medias) h += '<div class="vacio"><b>' + t("sinNovedades") + '</b>' + t("sinNovedadesTxt") + '</div>';
+  V.innerHTML = h;
+  V.querySelectorAll("[data-nov]").forEach(b => b.onclick = () => { const n = nov[+b.dataset.nov]; reproducir(n.pod, [n.pista], 0, false); });
+  if ($("nov-medias")) $("nov-medias").onclick = () => continuar(medias);
+  if ($("nov-act")) $("nov-act").onclick = async () => { if (await AVISOS.activar()) vNovedades(); };
+  // Al abrir la campanita se marcan como vistas.
+  if (nNovedades()) { nov.forEach(n => n.leida = true); guardar(); pintarBadge(); }
+}
+// Avisos en el teléfono que programa la app misma (sin servidor). Cada vez que se abre la app
+// se vuelven a programar, así solo suenan si pasaron días sin entrar. Como mucho uno por día.
+const AVISOS = {
+  N(){ return NATIVO && PLUG.LocalNotifications ? PLUG.LocalNotifications : null; },
+  async activar(){
+    const N = this.N(); if (!N) return false;
+    try {
+      let p = await N.checkPermissions();
+      if (p.display !== "granted") p = await N.requestPermissions();
+      if (p.display !== "granted") { E.avisos = false; guardar(); toast(t("avisosNo")); return false; }
+      E.avisos = true; guardar(); toast(t("avisosOn")); await this.programar(); return true;
+    } catch (e) { return false; }
+  },
+  async apagar(){ E.avisos = false; guardar(); await this.limpiar(); },
+  async limpiar(){ const N = this.N(); if (!N) return; try { await N.cancel({ notifications:[{ id:201 }, { id:202 }] }); } catch (e) {} },
+  async programar(){
+    const N = this.N(); if (!N) return;
+    await this.limpiar();
+    if (!E.avisos) return;
+    try { const p = await N.checkPermissions(); if (p.display !== "granted") return; } catch (e) { return; }
+    try { await N.createChannel({ id:"avisos", name:t("notifs"), importance:3, visibility:1 }); } catch (e) {}
+    const ahora = new Date(), lista = [], medias = aMedias(), radio = (E.radios || [])[0];
+    const dia = (d, hh, mm) => new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + d, hh, mm, 0);
+    // Mañana a la noche: lo que dejaste a medias.
+    if (medias) lista.push({ id:201, title:t("notifSeguirTit"), body:t("notifSeguirTxt", medias.pista.titulo, medias.item.titulo), schedule:{ at:dia(1, 21, 30), allowWhileIdle:true }, channelId:"avisos", extra:{ ir:"seguir" } });
+    // En dos días a la mañana: tu radio favorita (otro día distinto, así nunca hay dos el mismo día).
+    if (radio) lista.push({ id:202, title:t("notifRadioTit", radio.titulo), body:t("notifRadioTxt"), schedule:{ at:dia(medias ? 2 : 1, 8, 30), allowWhileIdle:true }, channelId:"avisos", extra:{ ir:"radio", radio:radio.id } });
+    try { if (lista.length) await N.schedule({ notifications:lista }); } catch (e) {}
+  },
+  iniciar(){
+    const N = this.N(); if (!N) return;
+    try {
+      N.addListener("localNotificationActionPerformed", a => {
+        const x = (a && a.notification && a.notification.extra) || {};
+        if (x.ir === "radio") { const r = (E.radios || []).find(z => z.id === x.radio); if (r) tocarRadio(r); }
+        else if (x.ir === "seguir") { const m = aMedias(); if (m) continuar(m); }
+      });
+    } catch (e) {}
+    this.programar();
+  }
+};
+
 // ================= Radios en vivo =================
 let tBusqR = null, paisesRadio = null;
 // Nombre del país en el idioma de la app (sale del teléfono, no hace falta traducir a mano).
@@ -808,6 +897,7 @@ function vAjustes(){
       '<button class="op" id="aj-restaurar">' + t("restaurar") + '</button>' +
       (PRUEBA_PAGOS ? (esPremium() ? '<button class="op peligro" id="aj-quitar">' + t("quitarPremium") + '</button>' : '') + '<button class="op" id="aj-reinicio">' + t("reiniciarPrueba") + '</button>' : '') +
     '</div>' + (PRUEBA_PAGOS ? '<p class="aviso" style="text-align:left">' + t("modoPrueba") + '</p>' : '') +
+    (NATIVO && PLUG.LocalNotifications ? '<p class="lbl">' + t("notifs") + '</p><div class="grupo"><button class="op" id="aj-avisos"><span>' + t("notifRecord") + '</span><small>' + (E.avisos ? "✓" : "—") + '</small></button></div><p class="aviso" style="text-align:left">' + t("notifRecordTxt") + '</p>' : '') +
     '<p class="lbl">' + t("idioma") + '</p><div class="grupo">' + IDIOMAS.map(([id, nom]) => '<button class="op' + (id === L ? " on" : "") + '" data-idioma="' + id + '"><span>' + nom + '</span>' + (id === L ? "✓" : "") + '</button>').join("") + '</div><p class="aviso" style="text-align:left">' + t("idiomaTxt") + '</p>' +
     (cats && cats.paises ? '<p class="lbl">' + t("paisRanking") + '</p><div class="grupo">' + cats.paises.map(c => '<button class="op' + (c.id === E.pais ? " on" : "") + '" data-paisaj="' + c.id + '"><span>' + esc(c.nombre) + '</span>' + (c.id === E.pais ? "✓" : "") + '</button>').join("") + '</div>' : '') +
     '<p class="lbl">' + t("descargas") + '</p><div class="grupo"><div class="op"><span>' + t("espacio") + '</span><small>' + (n ? megas(total) + " (" + n + ")" : "0 MB") + '</small></div>' + (n ? '<button class="op peligro" id="aj-borrar">' + t("borrarTodas") + '</button>' : '') + '</div>' +
@@ -824,6 +914,7 @@ function vAjustes(){
   if ($("aj-premium")) $("aj-premium").onclick = () => muro("ajustes");
   if ($("aj-restaurar")) $("aj-restaurar").onclick = () => restaurarCompras();
   if ($("aj-gestionar")) $("aj-gestionar").onclick = () => gestionarSuscripcion();
+  if ($("aj-avisos")) $("aj-avisos").onclick = async () => { if (E.avisos) await AVISOS.apagar(); else await AVISOS.activar(); vAjustes(); };
   if ($("aj-quitar")) $("aj-quitar").onclick = () => { E.premium = false; guardar(); toast(t("premiumQuitado")); vAjustes(); };
   if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; E.ultAnuncio = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
   if ($("aj-gustos")) $("aj-gustos").onclick = () => { E.gustos = {}; guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true; toast(t("gustosOk")); };
@@ -1632,6 +1723,10 @@ pintarPlay();
 router();
 // En la web: guarda la app para que abra sin internet (en el teléfono ya viene adentro).
 if (!NATIVO && "serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js").catch(() => {});
+// Novedades y avisos: al abrir y cada vez que la app vuelve al frente.
+setTimeout(() => { buscarNovedades().catch(() => {}); }, 2500);
+AVISOS.iniciar();
+document.addEventListener("visibilitychange", () => { if (document.hidden) AVISOS.programar(); else buscarNovedades().catch(() => {}); });
 // Cobro de Apple: al abrir la app y cada vez que vuelve al frente (por si renovó o canceló).
 iniciarPagos();
 if (NATIVO && PLUG.App) PLUG.App.addListener("resume", () => { if (PAGOS.listo) iniciarPagos(); });
