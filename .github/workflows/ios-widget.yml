@@ -1,4 +1,4 @@
-name: iPhone con widgets (prueba)
+name: iPhone con widgets (TestFlight)
 
 on:
   workflow_dispatch:
@@ -102,7 +102,7 @@ jobs:
           fi
 
       # Se compila sin firmar y Apple la firma en la nube al exportarla, con la clave de App Store Connect.
-      - name: Firmar y empaquetar (sin subir)
+      - name: Subir a TestFlight
         shell: bash
         run: |
           set +e
@@ -112,7 +112,7 @@ jobs:
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
             <key>method</key><string>app-store-connect</string>
-            <key>destination</key><string>export</string>
+            <key>destination</key><string>upload</string>
             <key>teamID</key><string>${TEAM_ID}</string>
             <key>signingStyle</key><string>automatic</string>
           </dict></plist>
@@ -128,10 +128,3 @@ jobs:
             exit $code
           fi
 
-      - name: Revisar que el widget quedó adentro y con el grupo compartido
-        shell: bash
-        run: |
-          cd $RUNNER_TEMP/export && unzip -q -o *.ipa -d ipa
-          ls ipa/Payload/App.app/PlugIns/
-          codesign -d --entitlements :- ipa/Payload/App.app 2>/dev/null | grep -A2 application-groups
-          codesign -d --entitlements :- ipa/Payload/App.app/PlugIns/AudiolibrosWidget.appex 2>/dev/null | grep -A2 application-groups
