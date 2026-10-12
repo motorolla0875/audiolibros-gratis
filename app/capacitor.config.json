@@ -15,6 +15,10 @@
     "Chromecast": {
       "appId": "CC1AD845",
       "autoInitialize": true
+    },
+    "SystemBars": {
+      "style": "DARK",
+      "insetsHandling": "css"
     }
   }
 }

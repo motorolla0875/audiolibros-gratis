@@ -1,0 +1,93 @@
+name: Android (Play Store)
+
+# Genera el .aab firmado para subir a Google Play (prueba interna, cerrada o producción).
+on:
+  workflow_dispatch:
+
+jobs:
+  aab:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Revisar la clave de firma
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Faltan los secretos ANDROID_KEYSTORE_B64 y ANDROID_KEYSTORE_PASSWORD en GitHub (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Armar la app web
+        run: node tools/armar.js
+
+      - name: Crear proyecto Android
+        run: |
+          npx cap add android > $RUNNER_TEMP/c.log 2>&1 || { tail -20 $RUNNER_TEMP/c.log | sed 's/^/::error::cap: /'; exit 1; }
+          npx capacitor-assets generate --android \
+            --iconBackgroundColor '#0E0C0A' --iconBackgroundColorDark '#0E0C0A' \
+            --splashBackgroundColor '#0E0C0A' --splashBackgroundColorDark '#0E0C0A'
+          npx cap sync android
+          python3 native/android/patch_manifest.py android/app/src/main/AndroidManifest.xml
+
+      - name: Preparar la firma
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > android/app/upload.jks
+          cat >> android/app/build.gradle <<GRADLE
+
+          android {
+              defaultConfig {
+                  versionCode ${{ github.run_number }}
+                  versionName "1.0.0"
+              }
+              signingConfigs {
+                  release {
+                      storeFile file("upload.jks")
+                      storePassword "$KEYSTORE_PASSWORD"
+                      keyAlias "upload"
+                      keyPassword "$KEYSTORE_PASSWORD"
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+          GRADLE
+
+      - name: Compilar AAB firmado
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon > $RUNNER_TEMP/gradle.log 2>&1 || {
+            grep -E "error:|FAILURE|What went wrong|e: " -A4 $RUNNER_TEMP/gradle.log | head -60 | sed 's/^/::error::/'
+            exit 1; }
+          ls -lh app/build/outputs/bundle/release/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audiolibros-play-store-${{ github.run_number }}
+          path: app/android/app/build/outputs/bundle/release/app-release.aab

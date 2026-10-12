@@ -14,7 +14,7 @@
   --bg:#0E0C0A; --card:#1B1815; --card2:#24201C; --ink:#F4EEE6; --muted:#9F958A; --line:rgba(244,238,230,.10);
   --accent:#EB4345; --accent-ink:#FFFFFF; --hl:rgba(235,67,69,.22); --track:rgba(244,238,230,.16); --shade:rgba(244,238,230,.07);
   --serif:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,-apple-system,sans-serif;
-  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)); --safe-t:var(--safe-area-inset-top,env(safe-area-inset-top,0px));
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -504,6 +504,6 @@ body.en-clips .vista{padding:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=33"></script>
+<script src="/app.js?v=34"></script>
 </body>
 </html>

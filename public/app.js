@@ -1473,10 +1473,24 @@ $("ant").onclick = () => (ahora() > 5 && P.item.tipo === "libro") ? irA(0) : irP
 $("sig").onclick = () => irPista(1);
 $("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; A.playbackRate = E.vel; velCast(); guardar(); pintarFicha(); };
 
-A.onplay = () => pintarPlay();
-A.onplaying = () => { $("full").classList.remove("cargando"); pintarPlay(); };
+// Android: notificación del reproductor (servicio en primer plano) para que siga sonando con la pantalla apagada.
+// Si queda en pausa 10 minutos, se saca la notificación.
+const FONDO = { quitarT:null };
+function avisarFondo(sonando){
+  if (!(NATIVO && PLUG.Fondo)) return;
+  clearTimeout(FONDO.quitarT);
+  const m = ("mediaSession" in navigator) && navigator.mediaSession.metadata;
+  PLUG.Fondo.mostrar({ titulo:(m && m.title) || "Audiolibros", autor:(m && m.artist) || "", sonando }).catch(() => {});
+  if (!sonando) FONDO.quitarT = setTimeout(() => PLUG.Fondo.quitar().catch(() => {}), 10 * 60000);
+}
+if (NATIVO && PLUG.Fondo) PLUG.Fondo.addListener("accion", e => {
+  const a = e && e.accion;
+  if (a === "play") tocarYa(); else if (a === "pause") pausar(); else if (a === "atras") saltar(-15); else if (a === "adelante") saltar(30);
+});
+A.onplay = () => { pintarPlay(); avisarFondo(true); };
+A.onplaying = () => { $("full").classList.remove("cargando"); pintarPlay(); avisarFondo(true); };
 A.onwaiting = () => pintarPlay(true);
-A.onpause = () => { pintarPlay(); guardarProgreso(); };
+A.onpause = () => { pintarPlay(); guardarProgreso(); avisarFondo(false); };
 A.onerror = () => { $("full").classList.remove("cargando"); pintarPlay(); if (A.src) toast(navigator.onLine === false ? t("sinInternet") : (P.pistas[P.i] || {}).envivo ? t("radioNoAnda") : t("noAudio")); };
 A.onended = () => alTerminar();
 function alTerminar(){

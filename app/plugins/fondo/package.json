@@ -1,0 +1,9 @@
+{
+  "name": "capacitor-fondo-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plugin propio de Audiolibros: en Android mantiene el audio sonando con la pantalla apagada (servicio de reproducción con notificación y controles).",
+  "main": "index.js",
+  "files": ["index.js", "android/src/main", "android/build.gradle"],
+  "capacitor": { "android": { "src": "android" } }
+}
