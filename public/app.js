@@ -143,7 +143,8 @@ Object.assign(TX.es, {
   anuncio:"Publicidad", anuncioPrueba:"ANUNCIO DE PRUEBA", anuncioPruebaTxt:"Acá va a ir el video de publicidad de verdad.", cerrar:"Cerrar", seCierraEn:"Se puede cerrar en {0}",
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
-  creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados"
+  creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
+  premTit:"Escuchá sin límites", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -160,7 +161,8 @@ Object.assign(TX.en, {
   anuncio:"Ad", anuncioPrueba:"TEST AD", anuncioPruebaTxt:"The real video ad will go here.", cerrar:"Close", seCierraEn:"You can close in {0}",
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
-  creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset"
+  creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
+  premTit:"Listen without limits", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -177,7 +179,8 @@ Object.assign(TX.pt, {
   anuncio:"Anúncio", anuncioPrueba:"ANÚNCIO DE TESTE", anuncioPruebaTxt:"Aqui vai entrar o vídeo de anúncio de verdade.", cerrar:"Fechar", seCierraEn:"Pode fechar em {0}",
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
-  creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados"
+  creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
+  premTit:"Ouça sem limites", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -294,6 +297,20 @@ function barraVolver(){ return '<div class="top-bar"><button class="volver" oncl
 
 // ================= Inicio =================
 let cacheInicio = null;
+let nSlides = 0;
+// Tarjeta de Premium para el carrusel (estilo collage de portadas). No se muestra a quien ya es Premium.
+function slidePremium(d){
+  if (esPremium()) return "";
+  const vistas = new Set(), portadas = [];
+  for (const f of d.filas || []) for (const x of f.items || []) {
+    if (x.tipo !== "podcast" || !x.portada || vistas.has(x.portada)) continue;
+    vistas.add(x.portada); portadas.push(abs(x.portada));
+  }
+  if (portadas.length < 6) for (const f of d.filas || []) for (const x of f.items || []) { if (portadas.length >= 6) break; if (x.portada && !vistas.has(x.portada)) { vistas.add(x.portada); portadas.push(abs(x.portada)); } }
+  const col = portadas.slice(0, 6).map((u, i) => '<span class="pc pc' + i + '" style="background-image:url(\'' + esc(u) + '\')"></span>').join("");
+  return '<div class="hero slide prem"><div class="pr-col">' + col + '</div><div class="cnt"><div class="kick">' + t("premium") + '</div><h1>' + t("premTit") + '</h1><p class="pr-sub">' + t("premSub") + '</p>' +
+    '<div class="bts"><button class="hb w" id="h-prem">' + t("hacetePremium") + '</button></div><p class="pr-nota">' + t("planMes") + ' · ' + t("premNota") + '</p></div></div>';
+}
 async function vInicio(){
   if (!cacheInicio) {
     V.innerHTML = '<div class="hero"></div><div class="fila-tit"><div class="sk" style="height:16px;width:50%"></div></div>' + skFila() + '<div class="fila-tit"><div class="sk" style="height:16px;width:40%"></div></div>' + skFila();
@@ -305,12 +322,16 @@ async function vInicio(){
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {
-    html = '<div class="hero-car">' + hd + '<div class="pista" id="h-pista">' + hs.map((h, k) => {
+    const slides = hs.map((h, k) => {
       const bts = '<div class="bts"><button class="hb w" data-hplay="' + k + '">' + ICO.play + t("escuchar") + '</button><button class="hb g" data-hlista="' + k + '"></button><a class="hb g" href="#/libro/' + encodeURIComponent(h.id) + '" aria-label="' + t("masInfo") + '">' + info + '</a></div>';
       const cnt = '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1><div class="gens">' + (h.generos || []).map(g => '<span>' + esc(g) + '</span>').join("") + '</div>' + bts + '</div>';
       if (h.imagen) return '<div class="hero slide" style="background-image:url(\'' + esc(abs(h.imagen)) + '\')">' + cnt + '</div>';
       return '<div class="hero poster slide"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="arte" style="background-image:url(\'' + esc(abs(h.poster || h.portada)) + '\'),url(\'' + esc(abs(h.portada)) + '\')"></div>' + cnt + '</div>';
-    }).join("") + '</div>' + (hs.length > 1 ? '<div class="puntos" id="h-puntos">' + hs.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
+    });
+    const prem = slidePremium(d);
+    if (prem) slides.splice(Math.min(1, slides.length), 0, prem);
+    nSlides = slides.length;
+    html = '<div class="hero-car">' + hd + '<div class="pista" id="h-pista">' + slides.join("") + '</div>' + (slides.length > 1 ? '<div class="puntos" id="h-puntos">' + slides.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
   const rec = E.recientes.slice(0, 12);
@@ -338,7 +359,8 @@ async function vInicio(){
     pintarL(); hl.onclick = () => { alternarLista(x); pintarL(); };
     V.querySelector('[data-hplay="' + k + '"]').onclick = () => escucharLibro(h.id);
   });
-  carrusel(hs.length);
+  carrusel(nSlides);
+  if ($("h-prem")) $("h-prem").onclick = () => muro("ajustes", () => { cacheInicio && vInicio(); });
   V.querySelectorAll("[data-rec]").forEach(b => b.onclick = () => continuar(E.recientes[+b.dataset.rec]));
 }
 
@@ -349,8 +371,9 @@ function carrusel(n){
   const pista = $("h-pista"), puntos = $("h-puntos");
   if (!pista || n < 2) return;
   let pausa = 0;
-  const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
-  const ir = k => pista.scrollTo({ left:k * pista.clientWidth, behavior:"smooth" });
+  const paso = () => { const a = pista.children[0], b = pista.children[1]; return a && b ? b.offsetLeft - a.offsetLeft : pista.clientWidth; };
+  const actual = () => Math.round(pista.scrollLeft / paso());
+  const ir = k => pista.scrollTo({ left:k * paso(), behavior:"smooth" });
   pista.addEventListener("scroll", () => { const k = actual(); puntos.querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i === k)); }, { passive:true });
   ["pointerdown", "touchstart", "wheel"].forEach(ev => pista.addEventListener(ev, () => { pausa = Date.now() + 12000; }, { passive:true }));
   puntos.querySelectorAll("button").forEach(b => b.onclick = () => { pausa = Date.now() + 12000; ir(+b.dataset.punto); });
