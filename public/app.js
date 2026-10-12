@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -211,8 +211,10 @@ function traducirFijos(){
 async function api(ruta){
   const sep = ruta.includes("?") ? "&" : "?";
   let r;
-  try { r = await fetch(API + ruta + sep + "idioma=" + L + "&pais=" + E.pais); }
-  catch (e) { throw new Error(navigator.onLine === false ? t("sinInternet") : t("noCargo")); }
+  const ctrl = window.AbortController ? new AbortController() : null, tm = ctrl && setTimeout(() => ctrl.abort(), 20000);
+  try { r = await fetch(API + ruta + sep + "idioma=" + L + "&pais=" + E.pais, ctrl ? { signal:ctrl.signal } : {}); }
+  catch (e) { const er = new Error(navigator.onLine === false ? t("sinInternet") : t("noCargo")); er.red = true; throw er; }
+  finally { if (tm) clearTimeout(tm); }
   const d = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(d.error || t("noCargo"));
   return d;
@@ -278,6 +280,8 @@ async function router(){
   const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", nuevos:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
   marcarTab(tab);
   try {
+    // Sin internet: la app abre igual y va directo a lo que tenés guardado.
+    if (!p.length && navigator.onLine === false && !cacheInicio) { location.replace("#/biblioteca/descargas"); return; }
     if (!p.length) await vInicio();
     else if (p[0] === "clips") await vClips();
     else if (p[0] === "explorar") vExplorar(decodeURIComponent(p[1] || ""));
@@ -289,9 +293,15 @@ async function router(){
     else if (p[0] === "libro") await vLibro(decodeURIComponent(p[1]));
     else if (p[0] === "podcast") await vPodcast(p[1]);
     else await vInicio();
-  } catch (e) { V.innerHTML = barraVolver() + error(e.message, "router()"); }
+  } catch (e) {
+    if (e.red && !p.length && !cacheInicio && Object.keys(E.desc).length) { location.replace("#/biblioteca/descargas"); return; }
+    V.innerHTML = barraVolver() + error(e.message, "router()");
+  }
   requestAnimationFrame(() => scrollTo(0, scrolls[r] || 0));
+  if (window.introListo) { window.introListo(); window.introListo = null; }
 }
+// Cuando vuelve internet, si estaba en la pantalla de sin conexión, recarga el inicio.
+addEventListener("online", () => { if (rutaActual() === "/biblioteca/descargas" && !cacheInicio) toast(t("volvioInternet")); });
 addEventListener("hashchange", router);
 function volver(){ history.length > 1 ? history.back() : location.replace("#/"); }
 function barraVolver(){ return '<div class="top-bar"><button class="volver" onclick="volver()" aria-label="Volver">' + ICO.volver + '</button></div>'; }
@@ -694,6 +704,7 @@ function vBiblioteca(s){
     h += E.subs.length ? E.subs.map(x => row(x)).join("") : vacio("vacioPods");
   } else {
     const ds = Object.entries(E.desc).sort((a, b) => b[1].ts - a[1].ts), cand = conCandado();
+    if (navigator.onLine === false) h += '<div class="offline">' + t("sinInternet") + '</div>';
     h += '<div class="espacio-bar"><span>' + (esPremium() ? t("espacioPremium") : t("espacioUsado", Math.round(minGuardados()), limiteMin())) + '</span>' + (esPremium() ? '' : '<button class="link" id="esp-mas">' + t("hacetePremium") + '</button>') + '</div>';
     h += ds.length ? ds.map(([url, d]) => '<div class="row"><button class="row" style="border:0;padding:0" data-dl="' + esc(url) + '">' + cover(d.item) + '<div class="info"><b>' + (cand.has(url) ? "🔒 " : "") + esc(d.pista.titulo) + '</b><small>' + esc(d.item.titulo) + (d.bytes ? " · " + megas(d.bytes) : "") + (cand.has(url) ? " · " + t("bloqueado") : "") + '</small></div></button><button class="dl ok" data-borrar="' + esc(url) + '" aria-label="' + t("borrar") + '">' + ICO.bajado + '</button></div>').join("") : vacio("vacioDesc");
   }
@@ -1522,6 +1533,8 @@ if (NATIVO && PLUG.App) PLUG.App.addListener("backButton", () => {
 traducirFijos();
 pintarPlay();
 router();
+// En la web: guarda la app para que abra sin internet (en el teléfono ya viene adentro).
+if (!NATIVO && "serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js").catch(() => {});
 // Cobro de Apple: al abrir la app y cada vez que vuelve al frente (por si renovó o canceló).
 iniciarPagos();
 if (NATIVO && PLUG.App) PLUG.App.addListener("resume", () => { if (PAGOS.listo) iniciarPagos(); });
