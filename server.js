@@ -635,11 +635,15 @@ app.get('/api/clips', ruta(async req => {
   String(req.query.gustos || '').split(',').slice(0, 30).forEach(p => { const [k, v] = p.split(':'); if (/^[a-z]{2,15}$/.test(k) && isFinite(+v)) gustos[k] = +v; });
   const ya = new Set(String(req.query.ya || '').split(',').filter(x => /^(pi)?[\w.-]{1,80}$/.test(x)).slice(0, 300));
   const pool = await poolClips(L, pais);
-  const { elegidos, quedan } = elegirClips(pool, gustos, ya, POR);
+  // Pedimos algunos de más por si algún podcast no carga (feed lento o roto), así la tanda no viene corta.
+  const { elegidos, quedan } = elegirClips(pool, gustos, ya, POR + 4);
+  const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5);
   const vistosPag = new Set();
-  const clips = (await Promise.all(elegidos.map(x => seguro(armarClip(x, hashTxt(x.id) % 97 + 1).then(c => c && { ...c, tema: x.tema, clave: x.id })))))
+  // La semilla cambia cada día: otro episodio de los últimos y otro momento del audio.
+  const clips = (await Promise.all(elegidos.map(x => seguro(armarClip(x, hashTxt(x.id + ':' + dia) % 97 + 1).then(c => c && { ...c, tema: x.tema, clave: x.id })))))
     .filter(c => c && !ya.has(c.item.id) && !vistosPag.has(c.item.id) && vistosPag.add(c.item.id));
-  return { clips, hayMas: quedan > 0 };
+  const sobran = Math.max(0, clips.length - POR);
+  return { clips: clips.slice(0, POR), hayMas: quedan + sobran > 0 };
 }));
 
 app.get('/api/buscar', ruta(async req => {

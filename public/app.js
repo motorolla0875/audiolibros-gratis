@@ -424,9 +424,12 @@ async function vClips(){
   if (CL.lista.length) { cont.innerHTML = CL.lista.map(tarjetaClip).join(""); prepararTarjetas(); CL.saltarAuto = !A.paused; requestAnimationFrame(() => { const k = Math.max(0, CL.actual); cont.scrollTop = k * cont.clientHeight; CL.actual = -1; activarClip(k); }); }
   else { cont.innerHTML = '<div class="clip-carga">' + ICO.carga.replace('<svg', '<svg width="34" height="34" style="animation:gira 1s linear infinite"') + '</div>'; await masClips(); }
 }
-async function masClips(){
+async function masClips(intento = 0){
   if (CL.cargando || !CL.hayMas) return;
   CL.cargando = true;
+  let seguir = false;
+  const cont0 = $("clips");
+  if (cont0 && CL.lista.length && !cont0.querySelector(".clip-carga")) cont0.insertAdjacentHTML("beforeend", '<div class="clip-carga">' + ICO.carga.replace('<svg', '<svg width="34" height="34" style="animation:gira 1s linear infinite"') + '</div>');
   try {
     const ya = CL.lista.flatMap(c => [c.clave, c.item.id]).filter(Boolean).concat(E.subs.map(s => s.id)).slice(-300);
     const gustos = Object.entries(E.gustos || {}).map(([k, v]) => k + ":" + v.toFixed(2)).join(",");
@@ -438,11 +441,20 @@ async function masClips(){
     const carga = cont.querySelector(".clip-carga"); if (carga) carga.remove();
     cont.insertAdjacentHTML("beforeend", d.clips.map((c, i) => tarjetaClip(c, desde + i)).join(""));
     prepararTarjetas();
-    if (!CL.lista.length) cont.innerHTML = '<div class="clip-carga">' + t("sinClips") + '</div>';
-    else if (desde === 0) activarClip(0);
+    if (!CL.lista.length && !CL.hayMas) cont.innerHTML = '<div class="clip-carga">' + t("sinClips") + '</div>';
+    else if (desde === 0 && CL.lista.length) activarClip(0);
+    // Si la tanda vino vacía, o la persona ya está cerca del final, pedimos la siguiente enseguida.
+    if (CL.hayMas && (!d.clips.length ? intento < 3 : CL.actual >= CL.lista.length - 5)) seguir = true;
+    else if (!CL.hayMas && CL.lista.length) cont.insertAdjacentHTML("beforeend", '<div class="clip-carga" style="padding:20px;text-align:center">' + t("sinClips") + '</div>');
   } catch (e) {
-    const cont = $("clips"); if (cont && !CL.lista.length) cont.innerHTML = '<div class="clip-carga" style="padding:20px;text-align:center">' + esc(e.message) + '</div>';
+    const cont = $("clips");
+    if (cont) {
+      const c = cont.querySelector(".clip-carga"); if (c) c.remove();
+      cont.insertAdjacentHTML("beforeend", '<button class="clip-carga" id="clip-reint" style="padding:20px;text-align:center;border:0;background:none;color:inherit;width:100%">' + esc(e.message) + '<br><b style="color:var(--accent)">' + t("reintentar") + '</b></button>');
+      const b = $("clip-reint"); if (b) b.onclick = () => { b.remove(); masClips(); };
+    }
   } finally { CL.cargando = false; }
+  if (seguir) masClips(intento + 1);
 }
 function tarjetaClip(c, k){
   const pod = c.item.tipo === "podcast";
@@ -501,7 +513,7 @@ function activarClip(k){
   else if (CL.desbloqueado && !CL.saltarAuto) tocarClip(true);
   else if (CL.saltarAuto) { const el = document.querySelector('#clips .clip[data-k="' + k + '"]'); if (el) el.classList.add("pausado"); }
   CL.saltarAuto = false;
-  if (k >= CL.lista.length - 3) masClips();
+  if (k >= CL.lista.length - 5) masClips();
 }
 function tocarClip(forzar){
   const el = document.querySelector('#clips .clip[data-k="' + CL.actual + '"]'); if (!el) return;
