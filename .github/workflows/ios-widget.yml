@@ -40,7 +40,7 @@ jobs:
 
       - name: Crear proyecto iPhone
         run: |
-          npx cap add ios
+          npx cap add ios > $RUNNER_TEMP/c.log 2>&1 || { tail -20 $RUNNER_TEMP/c.log | sed 's/^/::error::cap: /'; exit 1; }
           npx capacitor-assets generate --ios \
             --iconBackgroundColor '#0E0C0A' --iconBackgroundColorDark '#0E0C0A' \
             --splashBackgroundColor '#0E0C0A' --splashBackgroundColorDark '#0E0C0A'
@@ -50,8 +50,9 @@ jobs:
           sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[45]\.0;/IPHONEOS_DEPLOYMENT_TARGET = 16.0;/g' ios/App/App.xcodeproj/project.pbxproj || true
           grep -n "iOS(" ios/App/CapApp-SPM/Package.swift || true
           # Widget: lo agrega al proyecto (target AudiolibrosWidget) con el grupo compartido
-          gem list -i xcodeproj >/dev/null || sudo gem install xcodeproj --no-document
-          ruby tools/agregar-widget.rb ios/App/App.xcodeproj "$TEAM_ID" 1.0.0 ${{ github.run_number }}
+          (gem list -i xcodeproj >/dev/null || sudo gem install xcodeproj --no-document) > $RUNNER_TEMP/w.log 2>&1 || { tail -15 $RUNNER_TEMP/w.log | sed 's/^/::error::gem: /'; exit 1; }
+          ruby tools/agregar-widget.rb ios/App/App.xcodeproj "$TEAM_ID" 1.0.0 ${{ github.run_number }} > $RUNNER_TEMP/w.log 2>&1 || { tail -25 $RUNNER_TEMP/w.log | sed 's/^/::error::widget: /'; exit 1; }
+          cat $RUNNER_TEMP/w.log
           PLIST=ios/App/App/Info.plist
           # Esquema audiolibros:// para que el widget abra la app
           /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" "$PLIST" || true
