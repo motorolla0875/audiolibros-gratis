@@ -498,7 +498,7 @@ app.get('/api/config', ruta(async () => ({ afiliado: AFILIADO_URL ? { url: AFILI
 app.get('/api/inicio', ruta(async req => {
   const L = idiomaDe(req), g = k => GENEROS_POD[k].term[L];
   const sel = seleccion(L);
-  const [top, populares, elegidos, cuentos, poesia, infantil, misterio, podHistoria, podCuentos] = await Promise.all([
+  const [top, populares, elegidos, cuentos, poesia, infantil, misterio, podHistoria, podCuentos, radiosPais] = await Promise.all([
     seguro(topPodcasts(L, 25, paisDe(req, L))),
     seguro(buscarLibros({ idioma: L, filas: 30 })),
     sel ? seguro(buscarLibros({ ids: sel.slice(0, 60), filas: 60 })) : null,
@@ -507,7 +507,8 @@ app.get('/api/inicio', ruta(async req => {
     seguro(buscarLibros({ idioma: L, cat: 'infantil', filas: 20 })),
     seguro(buscarLibros({ idioma: L, cat: 'misterio', filas: 20 })),
     seguro(podcastsDeTema(L, 'historia', 20)),
-    seguro(podcastsDeTema(L, 'cuentos', 20))
+    seguro(podcastsDeTema(L, 'cuentos', 20)),
+    seguro(radios(L, paisDe(req, L), '', 20))
   ]);
   const pop = (populares && populares.libros) || [];
   const filas = [];
@@ -517,6 +518,7 @@ app.get('/api/inicio', ruta(async req => {
   fila('top-libros', T.topLibros, pop.slice(0, 10), { estilo: 'top10' });
   const nomPais = (PAISES[L].find(p => p[0] === paisDe(req, L)) || [, MUNDO[L]])[1];
   fila('top-pods', { [L]: T.topPods[L] + ' · ' + nomPais }, top);
+  fila('radios', { [L]: T.radios[L] + ' · ' + nomPais }, radiosPais, { estilo: 'radio' });
   fila('cuentos', CATEGORIAS.cuentos.nombre, cuentos && cuentos.libros, { cat: 'cuentos' });
   fila('pod-historia', T.podHistoria, podHistoria, { genero: 'historia' });
   fila('poesia', CATEGORIAS.poesia.nombre, poesia && poesia.libros, { cat: 'poesia' });
@@ -548,6 +550,62 @@ app.get('/api/inicio', ruta(async req => {
   const destacado = destacados[0] || null;
   return { destacado, destacados, filas };
 }));
+
+// ---------- Radios en vivo (directorio público Radio Browser) ----------
+// Solo emisoras que el directorio marca como funcionando, con conexión segura (https) y en MP3/AAC.
+const RB = process.env.RADIO_BASE ? [process.env.RADIO_BASE] : ['https://de1.api.radio-browser.info', 'https://nl1.api.radio-browser.info', 'https://at1.api.radio-browser.info'];
+const IDIOMA_RB = { es: 'spanish', en: 'english', pt: 'portuguese' };
+const TEMAS_RADIO = {
+  noticias: { nombre: { es: 'Noticias', en: 'News', pt: 'Notícias' }, tags: ['news', 'noticias', 'talk', 'noticias y deportes', 'notícias'] },
+  musica: { nombre: { es: 'Música', en: 'Music', pt: 'Música' }, tags: ['pop', 'music', 'rock', 'latin', 'hits', 'musica'] },
+  deportes: { nombre: { es: 'Deportes', en: 'Sports', pt: 'Esportes' }, tags: ['sports', 'deportes', 'futbol', 'esportes', 'football'] }
+};
+T.radios = { es: 'Radios en vivo', en: 'Live radio', pt: 'Rádios ao vivo' };
+async function rb(ruta) {
+  let ultimo;
+  for (const base of RB) { try { return await traer(base + ruta, 'json', {}, 10000); } catch (e) { ultimo = e; } }
+  throw ultimo;
+}
+const aRadio = r => ({
+  id: 'r' + r.stationuuid, tipo: 'radio', titulo: String(r.name || '').trim().slice(0, 80),
+  autor: [r.state, String(r.tags || '').split(',')[0]].filter(Boolean).join(' · ').slice(0, 60),
+  portada: /^https:\/\//.test(r.favicon || '') ? r.favicon : '',
+  url: r.url_resolved || r.url, codec: r.codec || '', pais: (r.countrycode || '').toLowerCase()
+});
+const radioSirve = r => r && r.lastcheckok === 1 && !r.hls && /^https:\/\//.test(r.url_resolved || '') && /^(mp3|aac|aac\+)$/i.test(r.codec || '') && r.name;
+async function radios(L, pais, tema, n = 40) {
+  const filtro = pais && pais !== 'mundo' ? 'countrycode=' + pais.toUpperCase() : 'language=' + IDIOMA_RB[L];
+  return conCache('radios:' + L + ':' + pais + ':' + (tema || ''), 6 * 3600, async () => {
+    const base = '/json/stations/search?' + filtro + '&hidebroken=true&is_https=true&order=clickcount&reverse=true&limit=200';
+    const listas = tema && TEMAS_RADIO[tema]
+      ? await Promise.all(TEMAS_RADIO[tema].tags.map(tg => seguro(rb(base.replace('limit=200', 'limit=60') + '&tag=' + encodeURIComponent(tg)))))
+      : [await rb(base)];
+    const vistos = new Set(), salida = [];
+    listas.flat().filter(radioSirve).sort((a, b) => (b.clickcount || 0) - (a.clickcount || 0)).forEach(r => {
+      const clave = String(r.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (vistos.has(clave) || vistos.has(r.stationuuid)) return;
+      vistos.add(clave); vistos.add(r.stationuuid); salida.push(aRadio(r));
+    });
+    return salida.slice(0, 80);
+  }).then(l => l.slice(0, n));
+}
+app.get('/api/radios', ruta(async req => {
+  const L = idiomaDe(req), pais = paisDe(req, L);
+  const tema = TEMAS_RADIO[req.query.tema] ? req.query.tema : '';
+  const q = String(req.query.q || '').slice(0, 60).trim();
+  let lista;
+  if (q.length >= 2) {
+    const r = await rb('/json/stations/search?name=' + encodeURIComponent(q) + '&hidebroken=true&is_https=true&order=clickcount&reverse=true&limit=80');
+    lista = r.filter(radioSirve).map(aRadio).slice(0, 40);
+  } else lista = await radios(L, pais, tema, 60);
+  return { radios: lista, temas: Object.entries(TEMAS_RADIO).map(([id, c]) => ({ id, nombre: c.nombre[L] })) };
+}));
+// Al escuchar, le avisamos al directorio (así ordena por las más escuchadas). No esperamos la respuesta.
+app.post('/api/radio/:id/escuchar', (req, res) => {
+  const id = String(req.params.id || '').replace(/^r/, '');
+  if (/^[0-9a-f-]{36}$/i.test(id)) seguro(rb('/json/url/' + id));
+  res.json({ ok: true });
+});
 
 app.get('/api/categorias', ruta(async req => {
   const L = idiomaDe(req);

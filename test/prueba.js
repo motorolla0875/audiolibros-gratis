@@ -69,13 +69,21 @@ const falso = http.createServer((req, res) => {
       <item><title>Adulto</title><itunes:explicit>yes</itunes:explicit><enclosure url="${MP3}?x"/></item>
     </channel></rss>`);
   }
+  if (u.pathname === '/json/stations/search') {
+    const est = (n, extra) => Object.assign({ stationuuid: '9617a958-0601-11e8-ae97-52543be04c' + String(n).padStart(2, '0'), name: 'Radio ' + n, url_resolved: 'https://stream.example/' + n + '.mp3', favicon: 'https://logo/' + n + '.png', codec: 'MP3', lastcheckok: 1, hls: 0, clickcount: 100 - n, countrycode: 'AR', state: 'Buenos Aires', tags: 'news,talk' }, extra);
+    const tag = u.searchParams.get('tag'), nom = u.searchParams.get('name');
+    if (nom) return json([est(40, { name: 'Busqueda ' + nom })]);
+    if (tag && tag !== 'news') return json([]);
+    return json([est(1), est(2, { url_resolved: 'http://inseguro/2.mp3' }), est(3, { hls: 1 }), est(4, { lastcheckok: 0 }), est(5, { codec: 'OGG' }), est(6, { name: 'Radio 1' }), est(7, { favicon: 'http://logo-inseguro.png', codec: 'AAC' })]);
+  }
+  if (u.pathname.startsWith('/json/url/')) return json({ ok: 'true' });
   res.statusCode = 404; res.end('no');
 });
 
 falso.listen(0, '127.0.0.1', async () => {
   const base = 'http://127.0.0.1:' + falso.address().port;
   if (process.env.DEMO) MP3 = base + '/download/ep/a.mp3';
-  process.env.ARCHIVE_BASE = base; process.env.ITUNES_BASE = base; process.env.APPLE_RSS_BASE = base; process.env.PODCASTINDEX_BASE = base; process.env.PODCASTINDEX_KEY = 'k'; process.env.PODCASTINDEX_SECRET = 's';
+  process.env.ARCHIVE_BASE = base; process.env.ITUNES_BASE = base; process.env.APPLE_RSS_BASE = base; process.env.PODCASTINDEX_BASE = base; process.env.PODCASTINDEX_KEY = 'k'; process.env.PODCASTINDEX_SECRET = 's'; process.env.RADIO_BASE = base;
   const app = require('../server.js');
   if (process.env.DEMO) { app.listen(3050, '127.0.0.1', () => console.log('demo en 3050')); return; }
   const srv = app.listen(0, '127.0.0.1', async () => {
@@ -91,6 +99,17 @@ falso.listen(0, '127.0.0.1', async () => {
       assert.equal(ult.tipo, 'libro'); assert.equal(ult.etiqueta, 'Destacado');
       assert.equal(r.body.destacados.filter(d => d.tipo === 'libro').length, 1);
       const ids = r.body.filas.map(f => f.id);
+      // Radios: solo las que andan, con https, MP3/AAC, sin repetir nombre; logo solo si es https.
+      const fr = r.body.filas.find(f => f.id === 'radios');
+      assert.ok(fr && fr.estilo === 'radio', 'fila de radios');
+      assert.deepEqual(fr.items.map(x => x.titulo), ['Radio 1', 'Radio 7']);
+      assert.equal(fr.items[0].tipo, 'radio'); assert.equal(fr.items[0].portada, 'https://logo/1.png'); assert.equal(fr.items[1].portada, '');
+      let rr = await api('/api/radios?tema=noticias');
+      assert.equal(rr.body.radios.length, 2); assert.equal(rr.body.temas.length, 3);
+      rr = await api('/api/radios?q=rock');
+      assert.equal(rr.body.radios[0].titulo, 'Busqueda rock');
+      const pr = await fetch('http://127.0.0.1:' + srv.address().port + '/api/radio/' + fr.items[0].id + '/escuchar', { method: 'POST' });
+      assert.equal(pr.status, 200);
       assert.ok(!ids.includes('propios') && ids.includes('top-libros') && ids.includes('top-pods'), ids.join());
       assert.equal(r.body.filas.find(f => f.id === 'top-libros').items[0].autor, 'Horacio Quiroga');
 

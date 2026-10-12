@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", chipRadios:"Radios", radiosVivo:"Radios en vivo", enVivo:"EN VIVO", guardarRadio:"Guardar radio", enFavoritas:"En tus radios", radiosFav:"Tus radios", buscarRadioPh:"Buscar una radio", masEscuchadasR:"Más escuchadas", sinRadios:"No encontramos radios acá.", radioGuardada:"Guardaste {0} en tus radios", radioSacada:"Sacaste {0} de tus radios", radioNoAnda:"Esta radio no responde ahora. Probá otra.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", chipRadios:"Radio", radiosVivo:"Live radio", enVivo:"LIVE", guardarRadio:"Save station", enFavoritas:"In your stations", radiosFav:"Your stations", buscarRadioPh:"Search a station", masEscuchadasR:"Most listened", sinRadios:"No stations found here.", radioGuardada:"{0} saved to your stations", radioSacada:"{0} removed from your stations", radioNoAnda:"This station is not responding. Try another one.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", chipRadios:"Rádios", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -235,7 +235,7 @@ function hash(s){ let h = 0; for (const c of String(s)) h = (h * 31 + c.charCode
 function genCover(x){ const p = PALETA[hash(x.titulo) % PALETA.length];
   return '<div class="gen" style="background:linear-gradient(160deg,' + p[0] + ',' + p[1] + ')"><div class="a">' + esc(x.autor || "") + '</div><div class="t">' + esc(x.titulo) + '</div></div>'; }
 function cover(x, cls = "", tag = ""){
-  const pod = x.tipo === "podcast" ? " pod" : "";
+  const pod = x.tipo === "podcast" ? " pod" : x.tipo === "radio" ? " pod radio" : "";
   const img = x.portada ? '<img loading="lazy" decoding="async" alt="" src="' + esc(abs(x.portada)) + '" onerror="this.outerHTML=this.dataset.gen" data-gen="' + esc(genCover(x)) + '">' : genCover(x);
   return '<div class="cv' + pod + (cls ? " " + cls : "") + '">' + img + (tag ? '<span class="tag">' + tag + '</span>' : '') + '</div>';
 }
@@ -244,7 +244,33 @@ document.addEventListener("load", e => {
   const im = e.target; if (im.tagName === "IMG" && im.dataset.gen && im.naturalWidth && im.naturalWidth < 60) im.outerHTML = im.dataset.gen;
 }, true);
 
-const ruta = x => x.tipo === "podcast" ? "#/podcast/" + x.id : "#/libro/" + encodeURIComponent(x.id);
+const ruta = x => x.tipo === "radio" ? "#/radios" : x.tipo === "podcast" ? "#/podcast/" + x.id : "#/libro/" + encodeURIComponent(x.id);
+// ---- Radios en vivo ----
+const RADIOS = {};   // las que se mostraron, por id, para poder reproducirlas al tocar
+const esFav = id => (E.radios || []).some(r => r.id === id);
+function tarjetaRadio(x){ RADIOS[x.id] = x; return '<button class="it rd" data-radio="' + esc(x.id) + '">' + cover(x) + '<span class="vivo-tag">' + t("enVivo") + '</span><div class="n">' + esc(x.titulo) + '</div><div class="m">' + esc(x.autor || "") + '</div></button>'; }
+function filaRadio(x){
+  RADIOS[x.id] = x;
+  return '<div class="row" data-radio="' + esc(x.id) + '" style="cursor:pointer">' + cover(x) + '<div class="info"><b>' + esc(x.titulo) + '</b><small>' + esc(x.autor || t("radiosVivo")) + '</small></div><div class="acc"><button class="dl fav' + (esFav(x.id) ? " ok" : "") + '" data-fav="' + esc(x.id) + '" aria-label="' + t("guardarRadio") + '">' + (esFav(x.id) ? "★" : "☆") + '</button><span class="ic">' + ICO.playC + '</span></div></div>';
+}
+function tocarRadio(x){
+  if (!x || !x.url) return;
+  reproducir({ id:x.id, tipo:"radio", titulo:x.titulo, autor:x.autor, portada:x.portada }, [{ titulo:x.titulo, url:x.url, envivo:true, portada:x.portada, codec:x.codec }], 0, false);
+  try { fetch(API + "/api/radio/" + encodeURIComponent(x.id) + "/escuchar", { method:"POST" }).catch(() => {}); } catch (e) {}
+}
+function alternarFav(x){
+  E.radios = E.radios || [];
+  const i = E.radios.findIndex(r => r.id === x.id);
+  if (i >= 0) { E.radios.splice(i, 1); toast(t("radioSacada", x.titulo)); }
+  else { E.radios.unshift({ id:x.id, tipo:"radio", titulo:x.titulo, autor:x.autor, portada:x.portada, url:x.url, codec:x.codec }); toast(t("radioGuardada", x.titulo)); }
+  guardar();
+}
+document.addEventListener("click", e => {
+  const f = e.target.closest("[data-fav]");
+  if (f) { e.stopPropagation(); const x = RADIOS[f.dataset.fav] || (E.radios || []).find(r => r.id === f.dataset.fav); if (!x) return; alternarFav(x); const on = esFav(x.id); f.classList.toggle("ok", on); f.textContent = on ? "★" : "☆"; return; }
+  const r = e.target.closest("[data-radio]");
+  if (r) tocarRadio(RADIOS[r.dataset.radio] || (E.radios || []).find(x => x.id === r.dataset.radio));
+});
 function item(x){
   const m = x.tipo === "podcast" ? (x.autor || t("podcast")) : (x.autor || "");
   return '<a class="it" href="' + ruta(x) + '" style="text-decoration:none;color:inherit">' + cover(x, "", x.propio ? "NUEVO" : "") + '<div class="n">' + esc(x.titulo) + '</div><div class="m">' + esc(m) + '</div></a>';
@@ -277,7 +303,7 @@ async function router(){
   if (rutaPrevia) scrolls[rutaPrevia] = scrollY;
   rutaPrevia = r;
   const p = r.split("/").filter(Boolean);
-  const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", nuevos:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
+  const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", nuevos:"podcasts", radios:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
   marcarTab(tab);
   try {
     // Sin internet: la app abre igual y va directo a lo que tenés guardado.
@@ -288,6 +314,7 @@ async function router(){
     else if (p[0] === "cat") await vCategoria(p[1], p[2]);
     else if (p[0] === "podcasts") await vPodcasts(p[1] === "top");
     else if (p[0] === "nuevos") await vNuevos();
+    else if (p[0] === "radios") await vRadios(decodeURIComponent(p[1] || ""));
     else if (p[0] === "biblioteca") vBiblioteca(p[1] || "escuchando");
     else if (p[0] === "ajustes") vAjustes();
     else if (p[0] === "libro") await vLibro(decodeURIComponent(p[1]));
@@ -346,7 +373,7 @@ async function vInicio(){
     const prem = slidePremium(d);
     if (prem) slides.splice(Math.min(1, slides.length), 0, prem);
     nSlides = slides.length;
-    const chips = '<div class="hchips"><a href="#/podcasts/top">' + t("chipTop") + '</a><a href="#/nuevos">' + t("chipNuevos") + '</a><a href="#/cat/libros/todos">' + t("audiolibros") + '</a><a href="#/explorar">' + t("chipCats") + '</a></div>';
+    const chips = '<div class="hchips"><a href="#/podcasts/top">' + t("chipTop") + '</a><a href="#/nuevos">' + t("chipNuevos") + '</a><a href="#/radios">' + t("chipRadios") + '</a><a href="#/cat/libros/todos">' + t("audiolibros") + '</a><a href="#/explorar">' + t("chipCats") + '</a></div>';
     html = '<div class="hero-car">' + hd + chips + '<div class="pista" id="h-pista">' + slides.join("") + '</div>' + (slides.length > 1 ? '<div class="puntos" id="h-puntos">' + slides.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
@@ -358,12 +385,13 @@ async function vInicio(){
     }).join("") + '</div>';
   }
   for (const f of d.filas) {
-    const ver = f.cat !== undefined ? '<a href="#/cat/libros/' + (f.cat || "todos") + '">' + t("verTodo") + '</a>'
+    const ver = f.estilo === "radio" ? '<a href="#/radios">' + t("verTodo") + '</a>' : f.cat !== undefined ? '<a href="#/cat/libros/' + (f.cat || "todos") + '">' + t("verTodo") + '</a>'
       : f.id === "seleccion" ? '<a href="#/cat/libros/seleccion">' + t("verTodo") + '</a>'
       : f.genero ? '<a href="#/cat/podcasts/' + f.genero + '">' + t("verTodo") + '</a>'
       : f.id === "top-pods" ? '<a href="#/podcasts">' + t("verTodo") + '</a>' : "";
     html += '<div class="fila-tit"><h2>' + esc(f.titulo) + '</h2>' + ver + '</div><div class="carr">';
-    if (f.estilo === "top10") html += f.items.map((x, i) => '<a class="top10' + (i === 9 ? " diez" : "") + '" href="' + ruta(x) + '" aria-label="' + (i + 1) + ". " + esc(x.titulo) + '"><span class="nn">' + (i + 1) + '</span>' + cover(x) + '</a>').join("");
+    if (f.estilo === "radio") { const favs = (E.radios || []).filter(r => !f.items.some(x => x.id === r.id)); html += favs.concat(f.items).slice(0, 24).map(tarjetaRadio).join(""); }
+    else if (f.estilo === "top10") html += f.items.map((x, i) => '<a class="top10' + (i === 9 ? " diez" : "") + '" href="' + ruta(x) + '" aria-label="' + (i + 1) + ". " + esc(x.titulo) + '"><span class="nn">' + (i + 1) + '</span>' + cover(x) + '</a>').join("");
     else html += f.items.map(item).join("");
     html += '</div>';
   }
@@ -659,16 +687,41 @@ async function vPodcasts(irTop){
   if (!cats) cats = await api("/api/categorias").catch(() => null);
   let h = '<h1>' + t("podcasts") + '</h1>';
   if (E.subs.length) h += '<div class="fila-tit"><h2>' + t("tusPods") + '</h2></div><div class="carr">' + E.subs.map(item).join("") + '</div>';
+  h += '<div class="fila-tit"><h2>' + t("radiosVivo") + '</h2><a href="#/radios">' + t("verTodo") + '</a></div><div class="carr" id="pod-radios">' + ((E.radios || []).map(tarjetaRadio).join("") || skFila(4).replace(/^<div class="carr">|<\/div>$/g, "")) + '</div>';
   if (cats) h += '<div class="fila-tit"><h2>' + t("temas") + '</h2></div><div class="chips">' + cats.podcasts.map(c => '<a class="chip" href="#/cat/podcasts/' + c.id + '" style="color:inherit;text-decoration:none">' + esc(c.nombre) + '</a>').join("") + '</div>';
   h += '<div class="fila-tit"><h2>' + t("top50") + '</h2></div>';
   if (cats && cats.paises) h += '<div class="chips" style="margin-bottom:6px">' + cats.paises.map(c => '<button class="chip" data-pais="' + c.id + '" aria-pressed="' + (c.id === E.pais) + '">' + esc(c.nombre) + '</button>').join("") + '</div>';
   h += '<div class="lista" id="top">' + (cacheTop && cacheTop.pais === E.pais ? "" : skLista()) + '</div>';
   V.innerHTML = h;
   V.querySelectorAll("[data-pais]").forEach(b => b.onclick = () => { elegirPais(b.dataset.pais); vPodcasts(irTop); });
+  api("/api/radios").then(d => { const c = $("pod-radios"); if (!c) return; const favs = (E.radios || []).filter(r => !d.radios.some(x => x.id === r.id)); c.innerHTML = favs.concat(d.radios).slice(0, 20).map(tarjetaRadio).join(""); }).catch(() => { const c = $("pod-radios"); if (c && !(E.radios || []).length) c.parentNode && c.remove(); });
   if (irTop && $("top")) $("top").previousElementSibling.previousElementSibling.scrollIntoView({ block:"start" });
   const on = V.querySelector('[data-pais][aria-pressed="true"]'); if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
   if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; if (pais !== E.pais) return; }
   if ($("top")) $("top").innerHTML = cacheTop.lista.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");
+}
+
+// ================= Radios en vivo =================
+let tBusqR = null;
+async function vRadios(tema){
+  const favs = E.radios || [];
+  V.innerHTML = barraVolver() + '<h1>' + t("radiosVivo") + '</h1>' +
+    '<label class="buscar" style="margin-top:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="qr" type="search" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t("buscarRadioPh")) + '"></label>' +
+    (favs.length ? '<div class="fila-tit"><h2>' + t("radiosFav") + '</h2></div><div class="carr">' + favs.map(tarjetaRadio).join("") + '</div>' : '') +
+    '<div class="chips" id="r-temas" style="margin-top:18px"></div><div class="lista" id="r-lista" style="margin-top:8px">' + skLista(8) + '</div>';
+  const cargar = async (tm, q) => {
+    $("r-lista").innerHTML = skLista(8);
+    try {
+      const d = await api("/api/radios?" + (q ? "q=" + encodeURIComponent(q) : "tema=" + encodeURIComponent(tm || "")));
+      if (!$("r-lista")) return;
+      $("r-temas").innerHTML = '<button class="chip" data-tema="" aria-pressed="' + (!tm && !q) + '">' + t("masEscuchadasR") + '</button>' + d.temas.map(c => '<button class="chip" data-tema="' + c.id + '" aria-pressed="' + (c.id === tm && !q) + '">' + esc(c.nombre) + '</button>').join("");
+      $("r-temas").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { $("qr").value = ""; history.replaceState(null, "", "#/radios/" + b.dataset.tema); rutaPrevia = rutaActual(); cargar(b.dataset.tema); });
+      $("r-lista").innerHTML = d.radios.length ? d.radios.map(filaRadio).join("") : '<div class="vacio">' + t("sinRadios") + '</div>';
+    } catch (e) { if ($("r-lista")) $("r-lista").innerHTML = error(e.message, "vRadios('" + esc(tm || "") + "')"); }
+  };
+  $("qr").oninput = () => { clearTimeout(tBusqR); tBusqR = setTimeout(() => { const q = $("qr").value.trim(); cargar(tema, q.length >= 2 ? q : ""); }, 400); };
+  $("qr").onkeydown = e => { if (e.key === "Enter") $("qr").blur(); };
+  await cargar(tema);
 }
 
 // ================= Nuevos episodios =================
@@ -1155,8 +1208,9 @@ async function cargarPista(desde, tocar){
   registrarReciente();
   try { await ponerFuente(p); } catch (e) { $("full").classList.remove("cargando"); pintarPlay(); return; }
   if (P.pistas[P.i] !== p) return;
-  A.playbackRate = E.vel;
-  A.addEventListener("loadedmetadata", () => { if (t0) A.currentTime = Math.min(t0, (A.duration || t0 + 1) - 1); A.playbackRate = E.vel; }, { once:true });
+  const vel = p.envivo ? 1 : E.vel;   // la radio en vivo va siempre a velocidad normal
+  A.playbackRate = vel;
+  A.addEventListener("loadedmetadata", () => { if (t0 && !p.envivo) A.currentTime = Math.min(t0, (A.duration || t0 + 1) - 1); A.playbackRate = vel; }, { once:true });
   if (CS.activo) mandarACast(t0);
   else if (tocar) A.play().catch(() => { $("full").classList.remove("cargando"); pintarPlay(); });
   // Texto y voces (solo libros narrados por nosotros)
@@ -1188,7 +1242,11 @@ function pintarFicha(){
   $("mini-s").textContent = x.tipo === "podcast" ? x.titulo : p.titulo;
   $("f-t").textContent = x.tipo === "podcast" ? p.titulo : x.titulo;
   $("f-s").textContent = x.tipo === "podcast" ? x.titulo : (x.autor ? x.autor + " · " : "") + p.titulo;
-  $("f-tipo").textContent = x.tipo === "podcast" ? t("podcast") : t("capituloDe", P.i + 1, P.pistas.length);
+  const vivo = !!p.envivo;
+  $("full").classList.toggle("envivo", vivo); $("mini").classList.toggle("envivo", vivo);
+  if (vivo) { $("f-s").textContent = x.autor || t("radiosVivo"); $("mini-s").textContent = t("radiosVivo"); }
+  $("f-tipo").innerHTML = vivo ? '<span class="vivo-tag">' + t("enVivo") + '</span>' : esc(x.tipo === "podcast" ? t("podcast") : t("capituloDe", P.i + 1, P.pistas.length));
+  $("f-ir").textContent = vivo ? (esFav(x.id) ? "★ " + t("enFavoritas") : "☆ " + t("guardarRadio")) : t("verFicha");
   $("ant").disabled = P.i <= 0 && x.tipo === "libro";
   $("sig").disabled = P.i >= P.pistas.length - 1;
   $("vel").textContent = E.vel + "×";
@@ -1222,7 +1280,11 @@ function cerrarFull(silencioso){
 }
 $("mini").onclick = e => { if (!e.target.closest("#mini-play")) location.hash = "#/reproductor"; };
 $("f-cerrar").onclick = () => rutaActual() === "/reproductor" ? history.back() : cerrarFull(true);
-$("f-ir").onclick = () => { const r = ruta(P.item); cerrarFull(true); location.replace(r); };
+$("f-ir").onclick = () => {
+  const p = P.pistas[P.i] || {};
+  if (p.envivo) { alternarFav({ id:P.item.id, titulo:P.item.titulo, autor:P.item.autor, portada:P.item.portada, url:p.url, codec:p.codec }); pintarFicha(); return; }
+  const r = ruta(P.item); cerrarFull(true); location.replace(r);
+};
 
 const alternar = () => { if (!A.src) return; if (CS.activo) return CS.ctrl.playOrPause(); A.paused ? A.play().catch(() => {}) : A.pause(); };
 $("play").onclick = alternar; $("mini-play").onclick = alternar;
@@ -1238,7 +1300,7 @@ A.onplay = () => pintarPlay();
 A.onplaying = () => { $("full").classList.remove("cargando"); pintarPlay(); };
 A.onwaiting = () => pintarPlay(true);
 A.onpause = () => { pintarPlay(); guardarProgreso(); };
-A.onerror = () => { $("full").classList.remove("cargando"); pintarPlay(); if (A.src) toast(navigator.onLine === false ? t("sinInternet") : t("noAudio")); };
+A.onerror = () => { $("full").classList.remove("cargando"); pintarPlay(); if (A.src) toast(navigator.onLine === false ? t("sinInternet") : (P.pistas[P.i] || {}).envivo ? t("radioNoAnda") : t("noAudio")); };
 A.onended = () => alTerminar();
 function alTerminar(){
   guardarProgreso(true);
@@ -1257,6 +1319,7 @@ function guardarProgreso(fin){
 let ultimaFr = null;
 A.ontimeupdate = () => { if (!CS.activo) pintarTiempo(A.currentTime, A.duration); };
 function pintarTiempo(tt, d){
+  if ((P.pistas[P.i] || {}).envivo || d === Infinity) { $("cur").textContent = fmt(tt); return; }
   d = d || (P.pistas[P.i] || {}).duracion || 0;
   const pct = d ? Math.min(100, tt / d * 100) : 0;
   if (!arrastrando) { $("fill").style.width = pct + "%"; $("knob").style.left = pct + "%"; }
@@ -1404,14 +1467,15 @@ function iniciarCast(){
   CS.ctrl.addEventListener(E2.IS_PAUSED_CHANGED, () => { if (CS.activo) { pintarPlay(); guardarProgreso(); } });
   CS.ctrl.addEventListener(E2.PLAYER_STATE_CHANGED, () => { if (!CS.activo) return; if (CS.player.playerState === "PLAYING" || CS.player.playerState === "PAUSED") CS.cargando = false; pintarPlay(CS.player.playerState === "BUFFERING"); });
 }
+const tipoPista = (p, u) => p && p.codec ? (/aac/i.test(p.codec) ? "audio/aac" : "audio/mpeg") : tipoAudio(u);
 const tipoAudio = u => /\.m4a|\.mp4|\.aac/i.test(u) ? "audio/mp4" : /\.ogg|\.opus/i.test(u) ? "audio/ogg" : /\.wav/i.test(u) ? "audio/wav" : "audio/mpeg";
 function mandarACast(desde){
   if (CS.modo === "nat") return mandarANativo(desde);
   const s = cast.framework.CastContext.getInstance().getCurrentSession(), p = P.pistas[P.i], x = P.item;
   if (!s || !p) return;
   const url = pistaUrl(p); // siempre la de internet: la tele no puede leer lo descargado en el teléfono
-  const mi = new chrome.cast.media.MediaInfo(url, tipoAudio(url));
-  mi.streamType = chrome.cast.media.StreamType.BUFFERED;
+  const mi = new chrome.cast.media.MediaInfo(url, tipoPista(p, url));
+  mi.streamType = p.envivo ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED;
   const md = new chrome.cast.media.MusicTrackMediaMetadata();
   md.title = $("f-t").textContent;
   md.artist = x.tipo === "podcast" ? x.titulo : (x.autor || "");
@@ -1493,7 +1557,7 @@ function mandarANativo(desde){
   CS.player.currentTime = desde || 0; CS.player.duration = A.duration || p.duracion || 0;
   pintarPlay(true);
   PLUG.Chromecast.loadMedia({
-    contentId:url, contentType:tipoAudio(url), streamType:"buffered", autoPlay:true, currentTime:desde || 0,
+    contentId:url, contentType:tipoPista(p, url), streamType:p.envivo ? "live" : "buffered", autoPlay:true, currentTime:p.envivo ? 0 : (desde || 0),
     duration:CS.player.duration || 0,
     metadata:{ metadataType:0, title:$("f-t").textContent, subtitle:x.tipo === "podcast" ? x.titulo : (x.autor || p.titulo || ""), images: img ? [{ url:img }] : [] }
   }).then(m => { CS.cargando = false; $("full").classList.remove("cargando"); if (m && m.media && m.media.duration) CS.player.duration = m.media.duration; pintarPlay(); },

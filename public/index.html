@@ -374,6 +374,21 @@ body.en-clips .vista{padding:0}
 @keyframes inAparece{to{opacity:1}}
 @keyframes inGira{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){#intro *{animation-duration:.01s!important;animation-delay:0s!important}}
+
+/* Radios en vivo */
+.vivo-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.08em;color:#fff;background:var(--accent);padding:2px 7px 2px 6px;border-radius:5px;vertical-align:middle}
+.vivo-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:latido 1.4s ease-in-out infinite}
+@keyframes latido{50%{opacity:.25}}
+.it.rd{background:none;border:0;padding:0;text-align:left;position:relative;cursor:pointer;color:inherit}
+.it.rd .vivo-tag{position:absolute;top:6px;left:6px}
+.cv.radio{background:#F4EEE6}
+.cv.radio img{object-fit:contain;padding:14%;background:#F4EEE6}
+.row .dl.fav{font-size:19px;color:var(--muted)}
+.row .dl.fav.ok{color:var(--accent)}
+.full.envivo #vel{display:none}
+.full.envivo #bar,.full.envivo .times,.full.envivo #atras,.full.envivo #adel,.full.envivo #f-caps,.full.envivo #ant,.full.envivo #sig{visibility:hidden}
+.full.envivo .times{height:0;margin:0}
+.mini.envivo #mini-p{display:none}
 </style>
 </head>
 <body>
@@ -478,6 +493,6 @@ body.en-clips .vista{padding:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=26"></script>
+<script src="/app.js?v=28"></script>
 </body>
 </html>
