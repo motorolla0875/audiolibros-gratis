@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", chipRadios:"Radios", radiosVivo:"Radios en vivo", enVivo:"EN VIVO", guardarRadio:"Guardar radio", enFavoritas:"En tus radios", radiosFav:"Tus radios", buscarRadioPh:"Buscar una radio", masEscuchadasR:"Más escuchadas", sinRadios:"No encontramos radios acá.", radioGuardada:"Guardaste {0} en tus radios", radioSacada:"Sacaste {0} de tus radios", radioNoAnda:"Esta radio no responde ahora. Probá otra.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", porMes:"{0} por mes", porAnio:"{0} por año", ahorroPct:"Ahorrás {0}%", compraFallo:"No se pudo completar la compra. Probá de nuevo.", sinProductos:"Todavía no cargaron los planes. Probá en un ratito.", gestionar:"Administrar suscripción", nadaRestaurar:"No encontramos compras para restaurar", restaurado:"Listo, recuperamos tu Premium", volvioInternet:"Volvió internet", chipRadios:"Radios", paisRadio:"País", todosPaises:"Todos los países", verMas:"Ver más", mundoRadios:"Todo el mundo", radiosVivo:"Radios en vivo", enVivo:"EN VIVO", guardarRadio:"Guardar radio", enFavoritas:"En tus radios", radiosFav:"Tus radios", buscarRadioPh:"Buscar una radio", masEscuchadasR:"Más escuchadas", sinRadios:"No encontramos radios acá.", radioGuardada:"Guardaste {0} en tus radios", radioSacada:"Sacaste {0} de tus radios", radioNoAnda:"Esta radio no responde ahora. Probá otra.", premTit:"Escuchá sin límites", legalSub:"La suscripción se renueva sola al mismo precio hasta que la canceles. Podés cancelarla cuando quieras desde los ajustes de tu cuenta de Apple, al menos 24 horas antes de que se renueve.", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", chipRadios:"Radio", radiosVivo:"Live radio", enVivo:"LIVE", guardarRadio:"Save station", enFavoritas:"In your stations", radiosFav:"Your stations", buscarRadioPh:"Search a station", masEscuchadasR:"Most listened", sinRadios:"No stations found here.", radioGuardada:"{0} saved to your stations", radioSacada:"{0} removed from your stations", radioNoAnda:"This station is not responding. Try another one.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", porMes:"{0} per month", porAnio:"{0} per year", ahorroPct:"Save {0}%", compraFallo:"The purchase could not be completed. Try again.", sinProductos:"Plans have not loaded yet. Try again in a moment.", gestionar:"Manage subscription", nadaRestaurar:"No purchases to restore", restaurado:"Done, your Premium is back", volvioInternet:"You are back online", chipRadios:"Radio", paisRadio:"Country", todosPaises:"All countries", verMas:"See more", mundoRadios:"Whole world", radiosVivo:"Live radio", enVivo:"LIVE", guardarRadio:"Save station", enFavoritas:"In your stations", radiosFav:"Your stations", buscarRadioPh:"Search a station", masEscuchadasR:"Most listened", sinRadios:"No stations found here.", radioGuardada:"{0} saved to your stations", radioSacada:"{0} removed from your stations", radioNoAnda:"This station is not responding. Try another one.", premTit:"Listen without limits", legalSub:"Your subscription renews automatically at the same price until you cancel. You can cancel anytime in your Apple account settings, at least 24 hours before it renews.", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", chipRadios:"Rádios", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", chipRadios:"Rádios", paisRadio:"País", todosPaises:"Todos os países", verMas:"Ver mais", mundoRadios:"Mundo todo", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -694,7 +694,7 @@ async function vPodcasts(irTop){
   h += '<div class="lista" id="top">' + (cacheTop && cacheTop.pais === E.pais ? "" : skLista()) + '</div>';
   V.innerHTML = h;
   V.querySelectorAll("[data-pais]").forEach(b => b.onclick = () => { elegirPais(b.dataset.pais); vPodcasts(irTop); });
-  api("/api/radios").then(d => { const c = $("pod-radios"); if (!c) return; const favs = (E.radios || []).filter(r => !d.radios.some(x => x.id === r.id)); c.innerHTML = favs.concat(d.radios).slice(0, 20).map(tarjetaRadio).join(""); }).catch(() => { const c = $("pod-radios"); if (c && !(E.radios || []).length) c.parentNode && c.remove(); });
+  api("/api/radios?rpais=" + paisRadio()).then(d => { const c = $("pod-radios"); if (!c) return; const favs = (E.radios || []).filter(r => !d.radios.some(x => x.id === r.id)); c.innerHTML = favs.concat(d.radios).slice(0, 20).map(tarjetaRadio).join(""); }).catch(() => { const c = $("pod-radios"); if (c && !(E.radios || []).length) c.parentNode && c.remove(); });
   if (irTop && $("top")) $("top").previousElementSibling.previousElementSibling.scrollIntoView({ block:"start" });
   const on = V.querySelector('[data-pais][aria-pressed="true"]'); if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
   if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; if (pais !== E.pais) return; }
@@ -702,26 +702,48 @@ async function vPodcasts(irTop){
 }
 
 // ================= Radios en vivo =================
-let tBusqR = null;
+let tBusqR = null, paisesRadio = null;
+// Nombre del país en el idioma de la app (sale del teléfono, no hace falta traducir a mano).
+const nombrePais = c => { if (c === "mundo") return t("mundoRadios"); try { return new Intl.DisplayNames([L], { type:"region" }).of(c.toUpperCase()) || c.toUpperCase(); } catch (e) { return c.toUpperCase(); } };
+const paisRadio = () => E.paisRadio || E.pais || "ar";
 async function vRadios(tema){
   const favs = E.radios || [];
   V.innerHTML = barraVolver() + '<h1>' + t("radiosVivo") + '</h1>' +
+    '<button class="sel-pais" id="r-pais">' + t("paisRadio") + ': <b>' + esc(nombrePais(paisRadio())) + '</b> ▾</button>' +
     '<label class="buscar" style="margin-top:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="qr" type="search" enterkeyhint="search" autocomplete="off" placeholder="' + esc(t("buscarRadioPh")) + '"></label>' +
     (favs.length ? '<div class="fila-tit"><h2>' + t("radiosFav") + '</h2></div><div class="carr">' + favs.map(tarjetaRadio).join("") + '</div>' : '') +
-    '<div class="chips" id="r-temas" style="margin-top:18px"></div><div class="lista" id="r-lista" style="margin-top:8px">' + skLista(8) + '</div>';
+    '<div class="chips" id="r-temas" style="margin-top:18px"></div><div class="lista" id="r-lista" style="margin-top:8px">' + skLista(8) + '</div><div id="r-mas" style="text-align:center"></div>';
+  let todas = [], mostradas = 0;
+  const pintarMas = () => {
+    const l = $("r-lista"); if (!l) return;
+    l.insertAdjacentHTML("beforeend", todas.slice(mostradas, mostradas + 25).map(filaRadio).join(""));
+    mostradas = Math.min(todas.length, mostradas + 25);
+    $("r-mas").innerHTML = mostradas < todas.length ? '<button class="mas">' + t("verMas") + '</button>' : '';
+    if ($("r-mas").firstChild) $("r-mas").firstChild.onclick = pintarMas;
+  };
   const cargar = async (tm, q) => {
-    $("r-lista").innerHTML = skLista(8);
+    $("r-lista").innerHTML = skLista(8); $("r-mas").innerHTML = "";
     try {
-      const d = await api("/api/radios?" + (q ? "q=" + encodeURIComponent(q) : "tema=" + encodeURIComponent(tm || "")));
+      const d = await api("/api/radios?rpais=" + paisRadio() + "&" + (q ? "q=" + encodeURIComponent(q) : "tema=" + encodeURIComponent(tm || "")));
       if (!$("r-lista")) return;
       $("r-temas").innerHTML = '<button class="chip" data-tema="" aria-pressed="' + (!tm && !q) + '">' + t("masEscuchadasR") + '</button>' + d.temas.map(c => '<button class="chip" data-tema="' + c.id + '" aria-pressed="' + (c.id === tm && !q) + '">' + esc(c.nombre) + '</button>').join("");
-      $("r-temas").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { $("qr").value = ""; history.replaceState(null, "", "#/radios/" + b.dataset.tema); rutaPrevia = rutaActual(); cargar(b.dataset.tema); });
-      $("r-lista").innerHTML = d.radios.length ? d.radios.map(filaRadio).join("") : '<div class="vacio">' + t("sinRadios") + '</div>';
+      $("r-temas").querySelectorAll("[data-tema]").forEach(b => b.onclick = () => { $("qr").value = ""; tema = b.dataset.tema; history.replaceState(null, "", "#/radios/" + tema); rutaPrevia = rutaActual(); cargar(tema); });
+      todas = d.radios; mostradas = 0; $("r-lista").innerHTML = "";
+      if (!todas.length) $("r-lista").innerHTML = '<div class="vacio">' + t("sinRadios") + '</div>'; else pintarMas();
     } catch (e) { if ($("r-lista")) $("r-lista").innerHTML = error(e.message, "vRadios('" + esc(tm || "") + "')"); }
   };
+  $("r-pais").onclick = elegirPaisRadio;
   $("qr").oninput = () => { clearTimeout(tBusqR); tBusqR = setTimeout(() => { const q = $("qr").value.trim(); cargar(tema, q.length >= 2 ? q : ""); }, 400); };
   $("qr").onkeydown = e => { if (e.key === "Enter") $("qr").blur(); };
   await cargar(tema);
+}
+// Elegir país: primero los del idioma de la app, después todos los demás por orden alfabético.
+async function elegirPaisRadio(){
+  if (!paisesRadio) { try { paisesRadio = (await api("/api/radios/paises")).paises.map(p => p.id); } catch (e) { paisesRadio = []; } }
+  const propios = PAISES_IDIOMA[L] || [];
+  const resto = paisesRadio.filter(c => !propios.includes(c)).map(c => [nombrePais(c), c]).sort((a, b) => a[0].localeCompare(b[0], L));
+  const ops = propios.map(c => [nombrePais(c), c]).concat([[t("mundoRadios"), "mundo"]], resto);
+  hoja(t("paisRadio"), ops, c => { E.paisRadio = c; guardar(); vRadios(""); history.replaceState(null, "", "#/radios"); }, paisRadio());
 }
 
 // ================= Nuevos episodios =================

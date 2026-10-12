@@ -77,6 +77,7 @@ const falso = http.createServer((req, res) => {
     return json([est(1), est(2, { url_resolved: 'http://inseguro/2.mp3' }), est(3, { hls: 1 }), est(4, { lastcheckok: 0 }), est(5, { codec: 'OGG' }), est(6, { name: 'Radio 1' }), est(7, { favicon: 'http://logo-inseguro.png', codec: 'AAC' })]);
   }
   if (u.pathname.startsWith('/json/url/')) return json({ ok: 'true' });
+  if (u.pathname === '/json/countries') return json([{ name: 'Argentina', iso_3166_1: 'AR', stationcount: 900 }, { name: 'Tiny', iso_3166_1: 'TT', stationcount: 2 }]);
   res.statusCode = 404; res.end('no');
 });
 
@@ -110,6 +111,10 @@ falso.listen(0, '127.0.0.1', async () => {
       assert.equal(rr.body.radios[0].titulo, 'Busqueda rock');
       const pr = await fetch('http://127.0.0.1:' + srv.address().port + '/api/radio/' + fr.items[0].id + '/escuchar', { method: 'POST' });
       assert.equal(pr.status, 200);
+      rr = await api('/api/radios/paises');
+      assert.deepEqual(rr.body.paises, [{ id: 'ar', n: 900 }]);
+      rr = await api('/api/radios?rpais=ar');
+      assert.equal(rr.body.radios.length, 2);
       assert.ok(!ids.includes('propios') && ids.includes('top-libros') && ids.includes('top-pods'), ids.join());
       assert.equal(r.body.filas.find(f => f.id === 'top-libros').items[0].autor, 'Horacio Quiroga');
 

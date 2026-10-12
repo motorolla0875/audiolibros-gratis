@@ -553,7 +553,7 @@ app.get('/api/inicio', ruta(async req => {
 
 // ---------- Radios en vivo (directorio público Radio Browser) ----------
 // Solo emisoras que el directorio marca como funcionando, con conexión segura (https) y en MP3/AAC.
-const RB = process.env.RADIO_BASE ? [process.env.RADIO_BASE] : ['https://de1.api.radio-browser.info', 'https://nl1.api.radio-browser.info', 'https://at1.api.radio-browser.info'];
+const RB = process.env.RADIO_BASE ? [process.env.RADIO_BASE] : ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info', 'https://fi1.api.radio-browser.info', 'https://nl1.api.radio-browser.info', 'https://at1.api.radio-browser.info'];
 const IDIOMA_RB = { es: 'spanish', en: 'english', pt: 'portuguese' };
 const TEMAS_RADIO = {
   noticias: { nombre: { es: 'Noticias', en: 'News', pt: 'Notícias' }, tags: ['news', 'noticias', 'talk', 'noticias y deportes', 'notícias'] },
@@ -561,9 +561,15 @@ const TEMAS_RADIO = {
   deportes: { nombre: { es: 'Deportes', en: 'Sports', pt: 'Esportes' }, tags: ['sports', 'deportes', 'futbol', 'esportes', 'football'] }
 };
 T.radios = { es: 'Radios en vivo', en: 'Live radio', pt: 'Rádios ao vivo' };
+// Prueba los servidores espejo del directorio uno por uno; recuerda el último que anduvo.
+let rbBueno = 0;
 async function rb(ruta) {
   let ultimo;
-  for (const base of RB) { try { return await traer(base + ruta, 'json', {}, 10000); } catch (e) { ultimo = e; } }
+  for (let k = 0; k < RB.length; k++) {
+    const i = (rbBueno + k) % RB.length;
+    try { const r = await traer(RB[i] + ruta, 'json', {}, 9000); rbBueno = i; return r; }
+    catch (e) { ultimo = e; console.error('radio-browser ' + RB[i] + ': ' + e.message); }
+  }
   throw ultimo;
 }
 const aRadio = r => ({
@@ -590,15 +596,23 @@ async function radios(L, pais, tema, n = 40) {
   }).then(l => l.slice(0, n));
 }
 app.get('/api/radios', ruta(async req => {
-  const L = idiomaDe(req), pais = paisDe(req, L);
+  const L = idiomaDe(req), rp = String(req.query.rpais || '').toLowerCase();
+  const pais = /^[a-z]{2}$/.test(rp) || rp === 'mundo' ? rp : paisDe(req, L);
   const tema = TEMAS_RADIO[req.query.tema] ? req.query.tema : '';
   const q = String(req.query.q || '').slice(0, 60).trim();
   let lista;
   if (q.length >= 2) {
     const r = await rb('/json/stations/search?name=' + encodeURIComponent(q) + '&hidebroken=true&is_https=true&order=clickcount&reverse=true&limit=80');
     lista = r.filter(radioSirve).map(aRadio).slice(0, 40);
-  } else lista = await radios(L, pais, tema, 60);
+  } else lista = await radios(L, pais, tema, 80);
   return { radios: lista, temas: Object.entries(TEMAS_RADIO).map(([id, c]) => ({ id, nombre: c.nombre[L] })) };
+}));
+// Países que tienen radios (para elegir en la app). El nombre lo pone la app en su idioma.
+app.get('/api/radios/paises', ruta(async () => {
+  const l = await conCache('radios:paises', 24 * 3600, async () => (await rb('/json/countries'))
+    .filter(c => /^[A-Z]{2}$/.test(c.iso_3166_1 || '') && (c.stationcount || 0) >= 5)
+    .map(c => ({ id: c.iso_3166_1.toLowerCase(), n: c.stationcount })));
+  return { paises: l };
 }));
 // Al escuchar, le avisamos al directorio (así ordena por las más escuchadas). No esperamos la respuesta.
 app.post('/api/radio/:id/escuchar', (req, res) => {
