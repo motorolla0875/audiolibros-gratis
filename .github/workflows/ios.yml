@@ -75,6 +75,11 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :NSBonjourServices array" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :NSBonjourServices:0 string _googlecast._tcp" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :NSBonjourServices:1 string _CC1AD845._googlecast._tcp" "$PLIST" || true
+          # Publicidad (Unity Ads): pregunta de Apple sobre seguimiento y la red de anuncios de Unity
+          /usr/libexec/PlistBuddy -c "Add :NSUserTrackingUsageDescription string Se usa para mostrarte anuncios más relevantes en la versión gratis. Si no lo permitís, igual vas a ver anuncios, pero menos personalizados." "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :SKAdNetworkItems array" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :SKAdNetworkItems:0 dict" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :SKAdNetworkItems:0:SKAdNetworkIdentifier string 4dzt52r2t5.skadnetwork" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Audiolibros" "$PLIST" || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Audiolibros" "$PLIST"
 
       - name: Guardar la clave de App Store Connect

@@ -1,0 +1,9 @@
+{
+  "name": "capacitor-unity-ads-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plugin propio de Audiolibros: anuncios de Unity Ads (video con premio y entre clips) para iPhone y Android.",
+  "main": "index.js",
+  "files": ["index.js", "ios/Sources", "android/src/main", "android/build.gradle", "Package.swift"],
+  "capacitor": { "ios": { "src": "ios" }, "android": { "src": "android" } }
+}

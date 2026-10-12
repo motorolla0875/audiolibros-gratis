@@ -138,7 +138,7 @@ Object.assign(TX.es, {
   muroTele:"Se terminaron tus usos gratis de transmitir", muroTeleTxt:"Mirá un video para ganar un uso más, o hacete Premium y mandá a la tele siempre.",
   muroCandado:"Este capítulo está guardado con candado", muroCandadoTxt:"Sin internet podés escuchar {0} minutos de lo que guardaste. Mirá un video para destrabar 20 minutos más por hoy, o hacete Premium.",
   verVideo20:"Ver video y sumar 20 minutos", verVideo1:"Ver video y ganar 1 uso", quedanVideos:"Te quedan {0} videos hoy", sinVideosHoy:"Ya viste los 3 videos de hoy. Mañana podés ver más.",
-  ganaste20:"¡Listo! Sumaste 20 minutos para hoy", ganaste1:"¡Listo! Ganaste 1 uso más", anuncioCortado:"Hay que ver el video entero para ganar el premio",
+  ganaste20:"¡Listo! Sumaste 20 minutos para hoy", ganaste1:"¡Listo! Ganaste 1 uso más", anuncioCortado:"Hay que ver el video entero para ganar el premio", sinVideoRegalo:"Ahora no hay videos para mostrar: te lo regalamos",
   usosQuedan:"Te quedan {0} usos gratis", espacioUsado:"Sin internet: {0} de {1} min", espacioPremium:"Sin internet: sin límite (Premium)",
   bloqueado:"Con candado: sin internet se destraba con un video o con Premium",
   anuncio:"Publicidad", anuncioPrueba:"ANUNCIO DE PRUEBA", anuncioPruebaTxt:"Acá va a ir el video de publicidad de verdad.", cerrar:"Cerrar", seCierraEn:"Se puede cerrar en {0}",
@@ -156,7 +156,7 @@ Object.assign(TX.en, {
   muroTele:"You're out of free casts", muroTeleTxt:"Watch a video to earn one more use, or go Premium and cast anytime.",
   muroCandado:"This chapter is locked", muroCandadoTxt:"Offline you can play {0} minutes of what you saved. Watch a video to unlock 20 more minutes for today, or go Premium.",
   verVideo20:"Watch a video for 20 more minutes", verVideo1:"Watch a video for 1 more use", quedanVideos:"{0} videos left today", sinVideosHoy:"You've watched today's 3 videos. Come back tomorrow.",
-  ganaste20:"Done! You got 20 more minutes for today", ganaste1:"Done! You got 1 more use", anuncioCortado:"Watch the whole video to get the reward",
+  ganaste20:"Done! You got 20 more minutes for today", ganaste1:"Done! You got 1 more use", anuncioCortado:"Watch the whole video to get the reward", sinVideoRegalo:"No videos available right now, so it's on us",
   usosQuedan:"{0} free uses left", espacioUsado:"Offline: {0} of {1} min", espacioPremium:"Offline: unlimited (Premium)",
   bloqueado:"Locked: unlock offline with a video or Premium",
   anuncio:"Ad", anuncioPrueba:"TEST AD", anuncioPruebaTxt:"The real video ad will go here.", cerrar:"Close", seCierraEn:"You can close in {0}",
@@ -174,7 +174,7 @@ Object.assign(TX.pt, {
   muroTele:"Acabaram seus usos grátis de transmitir", muroTeleTxt:"Assista a um vídeo para ganhar mais um uso, ou seja Premium e transmita sempre.",
   muroCandado:"Este capítulo está com cadeado", muroCandadoTxt:"Offline você pode ouvir {0} minutos do que salvou. Assista a um vídeo para liberar mais 20 minutos hoje, ou seja Premium.",
   verVideo20:"Ver vídeo e somar 20 minutos", verVideo1:"Ver vídeo e ganhar 1 uso", quedanVideos:"Restam {0} vídeos hoje", sinVideosHoy:"Você já viu os 3 vídeos de hoje. Amanhã tem mais.",
-  ganaste20:"Pronto! Você somou 20 minutos para hoje", ganaste1:"Pronto! Você ganhou mais 1 uso", anuncioCortado:"Assista ao vídeo inteiro para ganhar o prêmio",
+  ganaste20:"Pronto! Você somou 20 minutos para hoje", ganaste1:"Pronto! Você ganhou mais 1 uso", anuncioCortado:"Assista ao vídeo inteiro para ganhar o prêmio", sinVideoRegalo:"Agora não há vídeos para mostrar: é por nossa conta",
   usosQuedan:"Restam {0} usos grátis", espacioUsado:"Offline: {0} de {1} min", espacioPremium:"Offline: sem limite (Premium)",
   bloqueado:"Com cadeado: offline libera com um vídeo ou Premium",
   anuncio:"Anúncio", anuncioPrueba:"ANÚNCIO DE TESTE", anuncioPruebaTxt:"Aqui vai entrar o vídeo de anúncio de verdade.", cerrar:"Fechar", seCierraEn:"Pode fechar em {0}",
@@ -1152,13 +1152,33 @@ function tocarDL(item, p){
 // Gratis: 60 min sin internet (+20 por video, hasta 3 videos por día; al otro día vuelve a 60),
 // Dormir 5 usos y Chromecast 3 usos (para siempre; un video da 1 uso más), publicidad cada 8 clips.
 // Premium: todo sin límite y sin publicidad.
-// Mientras no estén RevenueCat (PLUG.Purchases) ni AppLovin (PLUG.AppLovin), compras y anuncios son de prueba.
+// Mientras no estén RevenueCat (PLUG.Purchases) ni Unity Ads (PLUG.UnityAds), compras y anuncios son de prueba.
 const PREMIUM = { base:60, porVideo:20, videosDia:3, cadaClips:8, pausaAnuncios:10 * 60000, dormir:5, tele:3 };
-const PRUEBA_PAGOS = !(NATIVO && PLUG.Purchases), PRUEBA_ANUNCIOS = !(NATIVO && PLUG.AppLovin);
+const PRUEBA_PAGOS = !(NATIVO && PLUG.Purchases);
 // RevenueCat (cobro de Apple). La clave pública va en la app; el permiso se llama "premium".
 const RC_CLAVES = { ios:"appl_gMditIuteGhENUwgxPZyVBKdmyO" }, RC_PERMISO = "premium";
 const PAGOS = { listo:false, pkgs:{}, ocupado:false };
 const plataforma = () => { try { return window.Capacitor.getPlatform(); } catch (e) { return "web"; } };
+// Unity Ads: un "Game ID" por tienda y dos lugares de anuncio (video con premio y corte entre clips).
+// En TestFlight y en Android de prueba el plugin pide anuncios de prueba solo.
+const ANUNCIOS = {
+  ios:     { juego:"800396259", premio:"BP_Rewarded_iOS",     corte:"BP_Interstitial_iOS" },
+  android: { juego:"800396260", premio:"BP_Rewarded_Android", corte:"BP_Interstitial_Android" }
+};
+const PRUEBA_ANUNCIOS = !(NATIVO && PLUG.UnityAds && ANUNCIOS[plataforma()]);
+const ADS = { listo:false, arrancando:null };
+// Arranca el SDK (en iPhone primero aparece la pregunta de Apple sobre seguimiento). A los Premium no se les pregunta.
+function iniciarAnuncios(){
+  if (PRUEBA_ANUNCIOS) return Promise.resolve(false);
+  if (ADS.listo) return Promise.resolve(true);
+  if (ADS.arrancando) return ADS.arrancando;
+  const c = ANUNCIOS[plataforma()];
+  ADS.arrancando = PLUG.UnityAds.initialize({ gameId:c.juego })
+    .then(() => { ADS.listo = true; PLUG.UnityAds.preload({ placementId:c.premio, rewarded:true }).catch(() => {}); PLUG.UnityAds.preload({ placementId:c.corte }).catch(() => {}); return true; })
+    .catch(() => false)
+    .finally(() => { ADS.arrancando = null; });
+  return ADS.arrancando;
+}
 async function iniciarPagos(){
   if (PRUEBA_PAGOS) return;
   const clave = RC_CLAVES[plataforma()]; if (!clave) return;
@@ -1207,14 +1227,26 @@ function gastarCredito(k){
 }
 
 // Ventana de publicidad. tipo "premio" = hay que verla entera; "corte" = se puede cerrar a los 5 s.
-// Con AppLovin conectado se usa el anuncio real; si no, una ventana de prueba.
+// Con Unity Ads conectado se usa el anuncio real; si no, una ventana de prueba.
+// Si no hay ningún video para mostrar (pasa a veces), el premio se da igual: no es culpa del usuario.
 function verAnuncio(tipo){
   return mostrarAnuncio(tipo).then(visto => { if (visto) { E.ultAnuncio = Date.now(); guardar(); } return visto; });
 }
 function mostrarAnuncio(tipo){
   if (!PRUEBA_ANUNCIOS) {
-    const ap = PLUG.AppLovin;
-    return (tipo === "premio" ? ap.showRewarded() : ap.showInterstitial()).then(r => tipo !== "premio" || !!(r && r.rewarded)).catch(() => false);
+    const c = ANUNCIOS[plataforma()], premio = tipo === "premio", sonaba = !A.paused;
+    const sinVideo = () => { if (premio) { toast(t("sinVideoRegalo")); return true; } return false; };
+    A.pause(); RES.forEach(a => a.pause());
+    const volver = r => { if (sonaba) A.play().catch(() => {}); return r; };
+    // Por si el anuncio nunca contesta, a los 90 s se sigue como si no hubiera habido video.
+    const tope = new Promise(ok => setTimeout(() => ok(null), 90000));
+    return iniciarAnuncios()
+      .then(ok => ok ? Promise.race([PLUG.UnityAds.show({ placementId:premio ? c.premio : c.corte, rewarded:premio }), tope]) : null)
+      .then(r => {
+        if (!r || !r.shown) return volver(sinVideo());
+        return volver(premio ? !!r.rewarded : true);
+      })
+      .catch(() => volver(sinVideo()));
   }
   return new Promise(ok => {
     const sonaba = !A.paused, clip = !AC.paused;
@@ -1761,4 +1793,5 @@ AVISOS.iniciar();
 document.addEventListener("visibilitychange", () => { if (document.hidden) AVISOS.programar(); else buscarNovedades().catch(() => {}); });
 // Cobro de Apple: al abrir la app y cada vez que vuelve al frente (por si renovó o canceló).
 iniciarPagos();
+setTimeout(() => { if (!esPremium()) iniciarAnuncios(); }, 4000);
 if (NATIVO && PLUG.App) PLUG.App.addListener("resume", () => { if (PAGOS.listo) iniciarPagos(); });
