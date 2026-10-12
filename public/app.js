@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  chipTop:"Top 50", chipCats:"Categorías", premTit:"Escuchá sin límites", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", chipNuevos:"Nuevos episodios", nuevosTxtSubs:"Lo último de los podcasts que seguís", nuevosTxtTop:"Lo último de los podcasts más escuchados", nuevosVacio:"No encontramos episodios nuevos por ahora.", premTit:"Escuchá sin límites", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  chipTop:"Top 50", chipCats:"Categories", premTit:"Listen without limits", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", chipNuevos:"New episodes", nuevosTxtSubs:"The latest from the podcasts you follow", nuevosTxtTop:"The latest from the top podcasts", nuevosVacio:"No new episodes right now.", premTit:"Listen without limits", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  chipTop:"Top 50", chipCats:"Categorias", premTit:"Ouça sem limites", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", premTit:"Ouça sem limites", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -275,7 +275,7 @@ async function router(){
   if (rutaPrevia) scrolls[rutaPrevia] = scrollY;
   rutaPrevia = r;
   const p = r.split("/").filter(Boolean);
-  const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
+  const tab = { clips:"clips", explorar:"explorar", cat:"explorar", podcasts:"podcasts", podcast:"podcasts", nuevos:"podcasts", biblioteca:"biblioteca", ajustes:"biblioteca" }[p[0]] || "inicio";
   marcarTab(tab);
   try {
     if (!p.length) await vInicio();
@@ -283,6 +283,7 @@ async function router(){
     else if (p[0] === "explorar") vExplorar(decodeURIComponent(p[1] || ""));
     else if (p[0] === "cat") await vCategoria(p[1], p[2]);
     else if (p[0] === "podcasts") await vPodcasts(p[1] === "top");
+    else if (p[0] === "nuevos") await vNuevos();
     else if (p[0] === "biblioteca") vBiblioteca(p[1] || "escuchando");
     else if (p[0] === "ajustes") vAjustes();
     else if (p[0] === "libro") await vLibro(decodeURIComponent(p[1]));
@@ -331,7 +332,7 @@ async function vInicio(){
     const prem = slidePremium(d);
     if (prem) slides.splice(Math.min(1, slides.length), 0, prem);
     nSlides = slides.length;
-    const chips = '<div class="hchips"><a href="#/cat/libros/todos">' + t("audiolibros") + '</a><a href="#/podcasts">' + t("podcasts") + '</a><a href="#/podcasts/top">' + t("chipTop") + '</a><a href="#/explorar">' + t("chipCats") + '</a></div>';
+    const chips = '<div class="hchips"><a href="#/podcasts/top">' + t("chipTop") + '</a><a href="#/nuevos">' + t("chipNuevos") + '</a><a href="#/cat/libros/todos">' + t("audiolibros") + '</a><a href="#/explorar">' + t("chipCats") + '</a></div>';
     html = '<div class="hero-car">' + hd + chips + '<div class="pista" id="h-pista">' + slides.join("") + '</div>' + (slides.length > 1 ? '<div class="puntos" id="h-puntos">' + slides.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
@@ -621,6 +622,29 @@ async function vPodcasts(irTop){
   const on = V.querySelector('[data-pais][aria-pressed="true"]'); if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
   if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; if (pais !== E.pais) return; }
   if ($("top")) $("top").innerHTML = cacheTop.lista.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");
+}
+
+// ================= Nuevos episodios =================
+// De los podcasts que seguís; si todavía no seguís ninguno, de los más escuchados de tu país.
+async function vNuevos(){
+  const conSubs = E.subs.length > 0;
+  V.innerHTML = barraVolver() + '<h1>' + t("chipNuevos") + '</h1><p class="sub">' + t(conSubs ? "nuevosTxtSubs" : "nuevosTxtTop") + '</p><div class="lista" id="nv" style="margin-top:14px">' + skLista(8) + '</div>';
+  let pods = E.subs.slice(0, 12);
+  if (!conSubs) {
+    if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; }
+    pods = cacheTop.lista.slice(0, 10);
+  }
+  const fichasP = await Promise.all(pods.map(x => (fichas["p:" + x.id] ? Promise.resolve(fichas["p:" + x.id]) : api("/api/podcast/" + x.id).then(p => fichas["p:" + x.id] = p)).catch(() => null)));
+  if (rutaActual() !== "/nuevos") return;
+  const eps = [];
+  fichasP.forEach(p => { if (!p) return; p.episodios.slice(0, conSubs ? 3 : 2).forEach(e => eps.push({ p, e })); });
+  eps.sort((a, b) => new Date(b.e.fecha || 0) - new Date(a.e.fecha || 0));
+  const lista = eps.slice(0, 40);
+  $("nv").innerHTML = lista.length ? lista.map(({ p, e }, i) => '<button class="row" data-nv="' + i + '">' + cover(Object.assign({}, p, e.portada ? { portada:e.portada } : {})) + '<div class="info"><small>' + esc(fecha(e.fecha)) + ' · ' + esc(p.titulo) + '</small><b>' + esc(e.titulo) + '</b><small>' + (e.duracion ? largo(e.duracion) : "") + '</small></div><span class="ic">' + ICO.playC + '</span></button>').join("") : '<div class="vacio">' + t("nuevosVacio") + '</div>';
+  V.querySelectorAll("[data-nv]").forEach(b => b.onclick = () => {
+    const { p, e } = lista[+b.dataset.nv];
+    reproducir(p, [{ titulo:e.titulo, url:e.url, duracion:e.duracion, portada:e.portada, fecha:e.fecha, tamano:e.tamano }], 0, false);
+  });
 }
 
 // ================= Biblioteca =================
