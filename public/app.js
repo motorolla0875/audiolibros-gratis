@@ -525,7 +525,13 @@ function activarClip(k){
   }
   // Publicidad cada tantos clips (no para Premium).
   let corte = false;
-  if (CL.desbloqueado && CL.actual >= 0 && !esPremium()) { E.clipsVistos = (E.clipsVistos || 0) + 1; guardar(); corte = E.clipsVistos % PREMIUM.cadaClips === 0; }
+  // Como mucho una cada 10 minutos: después de ver una, no vuelve a aparecer hasta que pasen 10 minutos.
+  if (CL.desbloqueado && CL.actual >= 0 && !esPremium()) {
+    E.clipsVistos = (E.clipsVistos || 0) + 1;
+    corte = E.clipsVistos >= PREMIUM.cadaClips && Date.now() - (E.ultAnuncio || 0) >= PREMIUM.pausaAnuncios;
+    if (corte) E.clipsVistos = 0;
+    guardar();
+  }
   CL.actual = k;
   const c = CL.lista[k];
   document.querySelectorAll("#clips .clip").forEach(el => el.classList.remove("sonando", "pausado"));
@@ -744,7 +750,7 @@ function vAjustes(){
   if ($("aj-restaurar")) $("aj-restaurar").onclick = () => restaurarCompras();
   if ($("aj-gestionar")) $("aj-gestionar").onclick = () => gestionarSuscripcion();
   if ($("aj-quitar")) $("aj-quitar").onclick = () => { E.premium = false; guardar(); toast(t("premiumQuitado")); vAjustes(); };
-  if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
+  if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; E.ultAnuncio = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
   if ($("aj-gustos")) $("aj-gustos").onclick = () => { E.gustos = {}; guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true; toast(t("gustosOk")); };
   if ($("aj-borrar")) $("aj-borrar").onclick = () => confirmar(t("borrarTodasQ"), async () => { for (const u of Object.keys(E.desc)) await DL.borrar(u); vAjustes(); });
 }
@@ -949,7 +955,7 @@ function tocarDL(item, p){
 // Dormir 5 usos y Chromecast 3 usos (para siempre; un video da 1 uso más), publicidad cada 8 clips.
 // Premium: todo sin límite y sin publicidad.
 // Mientras no estén RevenueCat (PLUG.Purchases) ni AppLovin (PLUG.AppLovin), compras y anuncios son de prueba.
-const PREMIUM = { base:60, porVideo:20, videosDia:3, cadaClips:8, dormir:5, tele:3 };
+const PREMIUM = { base:60, porVideo:20, videosDia:3, cadaClips:8, pausaAnuncios:10 * 60000, dormir:5, tele:3 };
 const PRUEBA_PAGOS = !(NATIVO && PLUG.Purchases), PRUEBA_ANUNCIOS = !(NATIVO && PLUG.AppLovin);
 // RevenueCat (cobro de Apple). La clave pública va en la app; el permiso se llama "premium".
 const RC_CLAVES = { ios:"appl_gMditIuteGhENUwgxPZyVBKdmyO" }, RC_PERMISO = "premium";
@@ -1005,6 +1011,9 @@ function gastarCredito(k){
 // Ventana de publicidad. tipo "premio" = hay que verla entera; "corte" = se puede cerrar a los 5 s.
 // Con AppLovin conectado se usa el anuncio real; si no, una ventana de prueba.
 function verAnuncio(tipo){
+  return mostrarAnuncio(tipo).then(visto => { if (visto) { E.ultAnuncio = Date.now(); guardar(); } return visto; });
+}
+function mostrarAnuncio(tipo){
   if (!PRUEBA_ANUNCIOS) {
     const ap = PLUG.AppLovin;
     return (tipo === "premio" ? ap.showRewarded() : ap.showInterstitial()).then(r => tipo !== "premio" || !!(r && r.rewarded)).catch(() => false);
