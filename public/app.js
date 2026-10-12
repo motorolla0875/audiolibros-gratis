@@ -144,7 +144,7 @@ Object.assign(TX.es, {
   compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
   quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
   creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados",
-  premTit:"Escuchá sin límites", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
+  chipTop:"Top 50", chipCats:"Categorías", premTit:"Escuchá sin límites", premSub:"Sin publicidad, sin internet y en la tele", premNota:"Cancelá cuando quieras."
 });
 Object.assign(TX.en, {
   premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
@@ -162,7 +162,7 @@ Object.assign(TX.en, {
   compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
   quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
   creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset",
-  premTit:"Listen without limits", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
+  chipTop:"Top 50", chipCats:"Categories", premTit:"Listen without limits", premSub:"No ads, offline and on your TV", premNota:"Cancel anytime."
 });
 Object.assign(TX.pt, {
   premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
@@ -180,7 +180,7 @@ Object.assign(TX.pt, {
   compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
   quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
-  premTit:"Ouça sem limites", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
+  chipTop:"Top 50", chipCats:"Categorias", premTit:"Ouça sem limites", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
@@ -282,7 +282,7 @@ async function router(){
     else if (p[0] === "clips") await vClips();
     else if (p[0] === "explorar") vExplorar(decodeURIComponent(p[1] || ""));
     else if (p[0] === "cat") await vCategoria(p[1], p[2]);
-    else if (p[0] === "podcasts") await vPodcasts();
+    else if (p[0] === "podcasts") await vPodcasts(p[1] === "top");
     else if (p[0] === "biblioteca") vBiblioteca(p[1] || "escuchando");
     else if (p[0] === "ajustes") vAjustes();
     else if (p[0] === "libro") await vLibro(decodeURIComponent(p[1]));
@@ -331,7 +331,8 @@ async function vInicio(){
     const prem = slidePremium(d);
     if (prem) slides.splice(Math.min(1, slides.length), 0, prem);
     nSlides = slides.length;
-    html = '<div class="hero-car">' + hd + '<div class="pista" id="h-pista">' + slides.join("") + '</div>' + (slides.length > 1 ? '<div class="puntos" id="h-puntos">' + slides.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
+    const chips = '<div class="hchips"><a href="#/cat/libros/todos">' + t("audiolibros") + '</a><a href="#/podcasts">' + t("podcasts") + '</a><a href="#/podcasts/top">' + t("chipTop") + '</a><a href="#/explorar">' + t("chipCats") + '</a></div>';
+    html = '<div class="hero-car">' + hd + chips + '<div class="pista" id="h-pista">' + slides.join("") + '</div>' + (slides.length > 1 ? '<div class="puntos" id="h-puntos">' + slides.map((_, k) => '<button aria-label="' + (k + 1) + '"' + (k ? '' : ' class="on"') + ' data-punto="' + k + '"></button>').join("") + '</div>' : '') + '</div>';
   } else html = '<div style="display:flex;justify-content:space-between;align-items:center">' + hd.replace('class="hd"', 'class="tit-fila" style="width:100%"') + '</div>';
 
   const rec = E.recientes.slice(0, 12);
@@ -606,7 +607,7 @@ async function vCategoria(tipo, id){
 
 // ================= Podcasts =================
 let cacheTop = null;
-async function vPodcasts(){
+async function vPodcasts(irTop){
   if (!cats) cats = await api("/api/categorias").catch(() => null);
   let h = '<h1>' + t("podcasts") + '</h1>';
   if (E.subs.length) h += '<div class="fila-tit"><h2>' + t("tusPods") + '</h2></div><div class="carr">' + E.subs.map(item).join("") + '</div>';
@@ -615,7 +616,8 @@ async function vPodcasts(){
   if (cats && cats.paises) h += '<div class="chips" style="margin-bottom:6px">' + cats.paises.map(c => '<button class="chip" data-pais="' + c.id + '" aria-pressed="' + (c.id === E.pais) + '">' + esc(c.nombre) + '</button>').join("") + '</div>';
   h += '<div class="lista" id="top">' + (cacheTop && cacheTop.pais === E.pais ? "" : skLista()) + '</div>';
   V.innerHTML = h;
-  V.querySelectorAll("[data-pais]").forEach(b => b.onclick = () => { elegirPais(b.dataset.pais); vPodcasts(); });
+  V.querySelectorAll("[data-pais]").forEach(b => b.onclick = () => { elegirPais(b.dataset.pais); vPodcasts(irTop); });
+  if (irTop && $("top")) $("top").previousElementSibling.previousElementSibling.scrollIntoView({ block:"start" });
   const on = V.querySelector('[data-pais][aria-pressed="true"]'); if (on) on.scrollIntoView({ inline:"center", block:"nearest" });
   if (!cacheTop || cacheTop.pais !== E.pais) { const pais = E.pais; const d = await api("/api/podcasts"); cacheTop = { pais, lista:d.podcasts }; if (pais !== E.pais) return; }
   if ($("top")) $("top").innerHTML = cacheTop.lista.map((x, i) => row(x).replace('<div class="cv', '<span class="num">' + (i + 1) + '</span><div class="cv')).join("");

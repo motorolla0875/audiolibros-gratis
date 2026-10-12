@@ -316,8 +316,8 @@ body.en-clips .vista{padding:0}
 .espacio-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px 14px;margin:4px 0 8px;font-size:13.5px}
 
 /* Destacados enmarcados (tarjeta con borde, estilo Netflix) */
-.hero-car .pista{gap:12px;padding:2px 16px 0;scroll-padding:0 16px}
-.hero-car .hero.slide{flex:0 0 calc(100% - 32px);border-radius:16px;border:1px solid rgba(244,238,230,.14);box-shadow:0 18px 40px -20px rgba(0,0,0,.9);height:min(128vw,600px)}
+.hero-car .pista{gap:0;padding:2px 0 0}
+.hero-car .hero.slide{flex:0 0 calc(100% - 32px);margin:0 16px;scroll-margin:0 16px;border-radius:16px;border:1px solid rgba(244,238,230,.14);box-shadow:0 18px 40px -20px rgba(0,0,0,.9);height:min(128vw,600px)}
 .hero-car .hero.poster{height:min(128vw,600px)}
 .hero-car .hero.slide::after,.hero-car .hero.poster::after{background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 48%,rgba(10,8,7,.72) 74%,rgba(10,8,7,.94) 100%)}
 .hero-car .hero.poster .arte{-webkit-mask-image:none;mask-image:none}
@@ -326,6 +326,10 @@ body.en-clips .vista{padding:0}
 .hero-car .bts .hb{flex:1;justify-content:center;border-radius:10px;padding:12px 10px}
 .hero-car .bts .hb.g:last-child{flex:none}
 .hero-car .puntos{position:static;margin:12px 0 2px}
+.hchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 12px}
+.hchips::-webkit-scrollbar{display:none}
+.hchips a{flex:none;color:var(--ink);text-decoration:none;font-weight:600;font-size:14.5px;padding:8px 15px;border-radius:10px;border:1px solid rgba(244,238,230,.22);background:rgba(244,238,230,.06)}
+.hchips a:active{background:rgba(244,238,230,.16)}
 /* Tarjeta de Premium con collage de portadas */
 .hero.prem{background:radial-gradient(120% 80% at 50% 30%,#3A1416 0%,#1A0E0D 55%,#0E0C0A 100%)}
 .pr-col{position:absolute;left:50%;top:35%;width:150%;height:62%;transform:translate(-50%,-50%) rotate(-14deg)}
@@ -394,6 +398,6 @@ body.en-clips .vista{padding:0}
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="metadata"></audio>
 
-<script src="/app.js?v=15"></script>
+<script src="/app.js?v=16"></script>
 </body>
 </html>
