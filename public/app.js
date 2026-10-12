@@ -328,7 +328,8 @@ async function vInicio(){
       const bts = '<div class="bts"><button class="hb w" data-hplay="' + k + '">' + ICO.play + t("escuchar") + '</button><button class="hb g" data-hlista="' + k + '"></button><a class="hb g" href="' + (pod ? "#/podcast/" + h.id : "#/libro/" + encodeURIComponent(h.id)) + '" aria-label="' + t("masInfo") + '">' + info + '</a></div>';
       const cnt = '<div class="cnt"><div class="kick">' + esc(h.etiqueta) + '</div><h1>' + esc(h.titulo) + '</h1><div class="gens">' + (h.generos || []).map(g => '<span>' + esc(g) + '</span>').join("") + '</div>' + bts + '</div>';
       // Podcast: portada cuadrada al centro sobre su propia imagen difuminada.
-      if (pod) return '<div class="hero libro pod slide"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="cv pod-cv"><img src="' + esc(abs(h.poster || h.portada)) + '" alt="" onerror="this.src=\'' + esc(abs(h.portada)) + '\'"></div>' + cnt + '</div>';
+      // Solo la imagen (el nombre ya viene en la portada) y los botones.
+      if (pod) return '<div class="hero libro pod slide"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="cv pod-cv"><img src="' + esc(abs(h.poster || h.portada)) + '" alt="' + esc(h.titulo) + '" onerror="this.src=\'' + esc(abs(h.portada)) + '\'"></div><div class="cnt">' + bts + '</div></div>';
       if (h.imagen) return '<div class="hero slide" style="background-image:url(\'' + esc(abs(h.imagen)) + '\')">' + cnt + '</div>';
       return '<div class="hero poster slide"><div class="fondo" style="background-image:url(\'' + esc(abs(h.portada)) + '\')"></div><div class="arte" style="background-image:url(\'' + esc(abs(h.poster || h.portada)) + '\'),url(\'' + esc(abs(h.portada)) + '\')"></div>' + cnt + '</div>';
     });
