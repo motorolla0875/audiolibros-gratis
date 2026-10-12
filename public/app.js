@@ -127,6 +127,58 @@ const TX = {
     cancelar:"Cancelar", borrar:"Apagar"
   }
 };
+// Textos de Premium, créditos y publicidad
+Object.assign(TX.es, {
+  premium:"Premium", hacetePremium:"Hacete Premium", sosPremium:"Sos Premium", graciasPremium:"¡Gracias por ser Premium!",
+  planMes:"US$1,99 por mes", planAnio:"US$14,99 por año", ahorro:"Ahorrás 37%", ahoraNo:"Ahora no", restaurar:"Restaurar compras",
+  benSinPubli:"Sin publicidad", benSinLimite:"Guardá sin internet todo lo que quieras", benDormir:"Temporizador para dormir sin límite", benTele:"Transmitir al Chromecast sin límite",
+  muroEspacio:"Llegaste a tu espacio sin internet", muroEspacioTxt:"Podés guardar {0} minutos gratis. Mirá un video para sumar 20 minutos más por hoy, o hacete Premium y guardá sin límite.",
+  muroDormir:"Se terminaron tus usos gratis de Dormir", muroDormirTxt:"Mirá un video para ganar un uso más, o hacete Premium y usalo todas las noches.",
+  muroTele:"Se terminaron tus usos gratis de transmitir", muroTeleTxt:"Mirá un video para ganar un uso más, o hacete Premium y mandá a la tele siempre.",
+  muroCandado:"Este capítulo está guardado con candado", muroCandadoTxt:"Sin internet podés escuchar {0} minutos de lo que guardaste. Mirá un video para destrabar 20 minutos más por hoy, o hacete Premium.",
+  verVideo20:"Ver video y sumar 20 minutos", verVideo1:"Ver video y ganar 1 uso", quedanVideos:"Te quedan {0} videos hoy", sinVideosHoy:"Ya viste los 3 videos de hoy. Mañana podés ver más.",
+  ganaste20:"¡Listo! Sumaste 20 minutos para hoy", ganaste1:"¡Listo! Ganaste 1 uso más", anuncioCortado:"Hay que ver el video entero para ganar el premio",
+  usosQuedan:"Te quedan {0} usos gratis", espacioUsado:"Sin internet: {0} de {1} min", espacioPremium:"Sin internet: sin límite (Premium)",
+  bloqueado:"Con candado: sin internet se destraba con un video o con Premium",
+  anuncio:"Publicidad", anuncioPrueba:"ANUNCIO DE PRUEBA", anuncioPruebaTxt:"Acá va a ir el video de publicidad de verdad.", cerrar:"Cerrar", seCierraEn:"Se puede cerrar en {0}",
+  compraPrueba:"Compra de prueba", compraPruebaTxt:"Todavía no está conectado el cobro de Apple. ¿Activar Premium de prueba?", activarPrueba:"Activar de prueba",
+  quitarPremium:"Quitar Premium (prueba)", premiumQuitado:"Premium desactivado", premiumOk:"¡Ya sos Premium!", modoPrueba:"Modo prueba: los pagos y anuncios son simulados.",
+  creditosDormir:"Dormir: {0} usos gratis", creditosTele:"Transmitir: {0} usos gratis", reiniciarPrueba:"Reiniciar créditos y espacio (prueba)", reiniciado:"Créditos y espacio reiniciados"
+});
+Object.assign(TX.en, {
+  premium:"Premium", hacetePremium:"Go Premium", sosPremium:"You're Premium", graciasPremium:"Thanks for being Premium!",
+  planMes:"US$1.99 per month", planAnio:"US$14.99 per year", ahorro:"Save 37%", ahoraNo:"Not now", restaurar:"Restore purchases",
+  benSinPubli:"No ads", benSinLimite:"Save as much as you want for offline", benDormir:"Unlimited sleep timer", benTele:"Unlimited Chromecast",
+  muroEspacio:"You've reached your offline space", muroEspacioTxt:"You can save {0} minutes for free. Watch a video to add 20 more minutes for today, or go Premium for unlimited.",
+  muroDormir:"You're out of free sleep timers", muroDormirTxt:"Watch a video to earn one more use, or go Premium and use it every night.",
+  muroTele:"You're out of free casts", muroTeleTxt:"Watch a video to earn one more use, or go Premium and cast anytime.",
+  muroCandado:"This chapter is locked", muroCandadoTxt:"Offline you can play {0} minutes of what you saved. Watch a video to unlock 20 more minutes for today, or go Premium.",
+  verVideo20:"Watch a video for 20 more minutes", verVideo1:"Watch a video for 1 more use", quedanVideos:"{0} videos left today", sinVideosHoy:"You've watched today's 3 videos. Come back tomorrow.",
+  ganaste20:"Done! You got 20 more minutes for today", ganaste1:"Done! You got 1 more use", anuncioCortado:"Watch the whole video to get the reward",
+  usosQuedan:"{0} free uses left", espacioUsado:"Offline: {0} of {1} min", espacioPremium:"Offline: unlimited (Premium)",
+  bloqueado:"Locked: unlock offline with a video or Premium",
+  anuncio:"Ad", anuncioPrueba:"TEST AD", anuncioPruebaTxt:"The real video ad will go here.", cerrar:"Close", seCierraEn:"You can close in {0}",
+  compraPrueba:"Test purchase", compraPruebaTxt:"Apple billing isn't connected yet. Turn on test Premium?", activarPrueba:"Turn on (test)",
+  quitarPremium:"Remove Premium (test)", premiumQuitado:"Premium turned off", premiumOk:"You're Premium now!", modoPrueba:"Test mode: payments and ads are simulated.",
+  creditosDormir:"Sleep: {0} free uses", creditosTele:"Cast: {0} free uses", reiniciarPrueba:"Reset credits and space (test)", reiniciado:"Credits and space reset"
+});
+Object.assign(TX.pt, {
+  premium:"Premium", hacetePremium:"Seja Premium", sosPremium:"Você é Premium", graciasPremium:"Obrigado por ser Premium!",
+  planMes:"US$1,99 por mês", planAnio:"US$14,99 por ano", ahorro:"Economize 37%", ahoraNo:"Agora não", restaurar:"Restaurar compras",
+  benSinPubli:"Sem anúncios", benSinLimite:"Salve offline o quanto quiser", benDormir:"Timer para dormir sem limite", benTele:"Chromecast sem limite",
+  muroEspacio:"Você chegou ao seu espaço offline", muroEspacioTxt:"Você pode salvar {0} minutos grátis. Assista a um vídeo para somar mais 20 minutos hoje, ou seja Premium e salve sem limite.",
+  muroDormir:"Acabaram seus usos grátis do timer", muroDormirTxt:"Assista a um vídeo para ganhar mais um uso, ou seja Premium e use todas as noites.",
+  muroTele:"Acabaram seus usos grátis de transmitir", muroTeleTxt:"Assista a um vídeo para ganhar mais um uso, ou seja Premium e transmita sempre.",
+  muroCandado:"Este capítulo está com cadeado", muroCandadoTxt:"Offline você pode ouvir {0} minutos do que salvou. Assista a um vídeo para liberar mais 20 minutos hoje, ou seja Premium.",
+  verVideo20:"Ver vídeo e somar 20 minutos", verVideo1:"Ver vídeo e ganhar 1 uso", quedanVideos:"Restam {0} vídeos hoje", sinVideosHoy:"Você já viu os 3 vídeos de hoje. Amanhã tem mais.",
+  ganaste20:"Pronto! Você somou 20 minutos para hoje", ganaste1:"Pronto! Você ganhou mais 1 uso", anuncioCortado:"Assista ao vídeo inteiro para ganhar o prêmio",
+  usosQuedan:"Restam {0} usos grátis", espacioUsado:"Offline: {0} de {1} min", espacioPremium:"Offline: sem limite (Premium)",
+  bloqueado:"Com cadeado: offline libera com um vídeo ou Premium",
+  anuncio:"Anúncio", anuncioPrueba:"ANÚNCIO DE TESTE", anuncioPruebaTxt:"Aqui vai entrar o vídeo de anúncio de verdade.", cerrar:"Fechar", seCierraEn:"Pode fechar em {0}",
+  compraPrueba:"Compra de teste", compraPruebaTxt:"A cobrança da Apple ainda não está conectada. Ativar Premium de teste?", activarPrueba:"Ativar teste",
+  quitarPremium:"Tirar Premium (teste)", premiumQuitado:"Premium desativado", premiumOk:"Agora você é Premium!", modoPrueba:"Modo teste: pagamentos e anúncios são simulados.",
+  creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados"
+});
 const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
 
 // ================= Estado guardado en el teléfono =================
@@ -405,6 +457,9 @@ function activarClip(k){
     const oido = (AC.currentTime || 0) - CL.base;
     if (oido < 5) ajustarGusto(previo.tema, 0.85); else if (oido >= DUR_CLIP - 3) ajustarGusto(previo.tema, 1.1);
   }
+  // Publicidad cada tantos clips (no para Premium).
+  let corte = false;
+  if (CL.desbloqueado && CL.actual >= 0 && !esPremium()) { E.clipsVistos = (E.clipsVistos || 0) + 1; guardar(); corte = E.clipsVistos % PREMIUM.cadaClips === 0; }
   CL.actual = k;
   const c = CL.lista[k];
   document.querySelectorAll("#clips .clip").forEach(el => el.classList.remove("sonando", "pausado"));
@@ -417,7 +472,8 @@ function activarClip(k){
   else if (AC.readyState >= 1 && Math.abs(AC.currentTime - (+AC.dataset.inicio || 0)) > 3 && AC.currentTime < (+AC.dataset.inicio || 0)) adelantar(AC);
   // El siguiente va cargando en el otro reproductor.
   cargarEn(otro(), k + 1);
-  if (CL.desbloqueado && !CL.saltarAuto) tocarClip(true);
+  if (corte) { AC.pause(); verAnuncio("corte").then(() => { if (CL.actual === k && document.body.classList.contains("en-clips")) tocarClip(true); }); }
+  else if (CL.desbloqueado && !CL.saltarAuto) tocarClip(true);
   else if (CL.saltarAuto) { const el = document.querySelector('#clips .clip[data-k="' + k + '"]'); if (el) el.classList.add("pausado"); }
   CL.saltarAuto = false;
   if (k >= CL.lista.length - 3) masClips();
@@ -557,13 +613,15 @@ function vBiblioteca(s){
   } else if (s === "podcasts") {
     h += E.subs.length ? E.subs.map(x => row(x)).join("") : vacio("vacioPods");
   } else {
-    const ds = Object.entries(E.desc).sort((a, b) => b[1].ts - a[1].ts);
-    h += ds.length ? ds.map(([url, d]) => '<div class="row"><button class="row" style="border:0;padding:0" data-dl="' + esc(url) + '">' + cover(d.item) + '<div class="info"><b>' + esc(d.pista.titulo) + '</b><small>' + esc(d.item.titulo) + (d.bytes ? " · " + megas(d.bytes) : "") + '</small></div></button><button class="dl ok" data-borrar="' + esc(url) + '" aria-label="' + t("borrar") + '">' + ICO.bajado + '</button></div>').join("") : vacio("vacioDesc");
+    const ds = Object.entries(E.desc).sort((a, b) => b[1].ts - a[1].ts), cand = conCandado();
+    h += '<div class="espacio-bar"><span>' + (esPremium() ? t("espacioPremium") : t("espacioUsado", Math.round(minGuardados()), limiteMin())) + '</span>' + (esPremium() ? '' : '<button class="link" id="esp-mas">' + t("hacetePremium") + '</button>') + '</div>';
+    h += ds.length ? ds.map(([url, d]) => '<div class="row"><button class="row" style="border:0;padding:0" data-dl="' + esc(url) + '">' + cover(d.item) + '<div class="info"><b>' + (cand.has(url) ? "🔒 " : "") + esc(d.pista.titulo) + '</b><small>' + esc(d.item.titulo) + (d.bytes ? " · " + megas(d.bytes) : "") + (cand.has(url) ? " · " + t("bloqueado") : "") + '</small></div></button><button class="dl ok" data-borrar="' + esc(url) + '" aria-label="' + t("borrar") + '">' + ICO.bajado + '</button></div>').join("") : vacio("vacioDesc");
   }
   V.innerHTML = h + '</div>';
   V.querySelectorAll("[data-rec]").forEach(b => b.onclick = () => continuar(E.recientes[+b.dataset.rec]));
   V.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => { const d = E.desc[b.dataset.dl]; reproducir(d.item, [d.pista], 0, false); });
   V.querySelectorAll("[data-borrar]").forEach(b => b.onclick = () => confirmar(t("borrarDescarga"), async () => { await DL.borrar(b.dataset.borrar); toast(t("borrado")); vBiblioteca("descargas"); }));
+  if ($("esp-mas")) $("esp-mas").onclick = () => muro(conCandado().size ? "candado" : "espacio", () => vBiblioteca("descargas"));
 }
 const vacio = k => '<div class="vacio"><b>' + t(k) + '</b>' + t(k + "Txt") + '</div>';
 
@@ -571,6 +629,13 @@ const vacio = k => '<div class="vacio"><b>' + t(k) + '</b>' + t(k + "Txt") + '</
 function vAjustes(){
   const total = Object.values(E.desc).reduce((a, d) => a + (d.bytes || 0), 0), n = Object.keys(E.desc).length;
   V.innerHTML = barraVolver() + '<h1>' + t("ajustes") + '</h1>' +
+    '<p class="lbl">' + t("premium") + '</p><div class="grupo">' +
+      (esPremium() ? '<div class="op"><span>' + t("sosPremium") + '</span><small>✓</small></div>' : '<button class="op" id="aj-premium" style="color:var(--accent);font-weight:700"><span>' + t("hacetePremium") + '</span><small>›</small></button>') +
+      '<div class="op"><span>' + (esPremium() ? t("espacioPremium") : t("espacioUsado", Math.round(minGuardados()), limiteMin())) + '</span></div>' +
+      (esPremium() ? '' : '<div class="op"><span>' + t("creditosDormir", E.creditos.dormir) + '</span></div><div class="op"><span>' + t("creditosTele", E.creditos.tele) + '</span></div>') +
+      '<button class="op" id="aj-restaurar">' + t("restaurar") + '</button>' +
+      (PRUEBA_PAGOS ? (esPremium() ? '<button class="op peligro" id="aj-quitar">' + t("quitarPremium") + '</button>' : '') + '<button class="op" id="aj-reinicio">' + t("reiniciarPrueba") + '</button>' : '') +
+    '</div>' + (PRUEBA_PAGOS ? '<p class="aviso" style="text-align:left">' + t("modoPrueba") + '</p>' : '') +
     '<p class="lbl">' + t("idioma") + '</p><div class="grupo">' + IDIOMAS.map(([id, nom]) => '<button class="op' + (id === L ? " on" : "") + '" data-idioma="' + id + '"><span>' + nom + '</span>' + (id === L ? "✓" : "") + '</button>').join("") + '</div><p class="aviso" style="text-align:left">' + t("idiomaTxt") + '</p>' +
     (cats && cats.paises ? '<p class="lbl">' + t("paisRanking") + '</p><div class="grupo">' + cats.paises.map(c => '<button class="op' + (c.id === E.pais ? " on" : "") + '" data-paisaj="' + c.id + '"><span>' + esc(c.nombre) + '</span>' + (c.id === E.pais ? "✓" : "") + '</button>').join("") + '</div>' : '') +
     '<p class="lbl">' + t("descargas") + '</p><div class="grupo"><div class="op"><span>' + t("espacio") + '</span><small>' + (n ? megas(total) + " (" + n + ")" : "0 MB") + '</small></div>' + (n ? '<button class="op peligro" id="aj-borrar">' + t("borrarTodas") + '</button>' : '') + '</div>' +
@@ -584,6 +649,10 @@ function vAjustes(){
   V.querySelectorAll("[data-idioma]").forEach(b => b.onclick = () => cambiarIdioma(b.dataset.idioma));
   V.querySelectorAll("[data-paisaj]").forEach(b => b.onclick = () => { elegirPais(b.dataset.paisaj); vAjustes(); });
   if (!cats) api("/api/categorias").then(c => { cats = c; if (rutaActual() === "/ajustes") vAjustes(); }).catch(() => {});
+  if ($("aj-premium")) $("aj-premium").onclick = () => muro("ajustes");
+  if ($("aj-restaurar")) $("aj-restaurar").onclick = () => restaurarCompras();
+  if ($("aj-quitar")) $("aj-quitar").onclick = () => { E.premium = false; guardar(); toast(t("premiumQuitado")); vAjustes(); };
+  if ($("aj-reinicio")) $("aj-reinicio").onclick = () => { E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele }; E.extra = null; E.clipsVistos = 0; guardar(); toast(t("reiniciado")); vAjustes(); };
   if ($("aj-gustos")) $("aj-gustos").onclick = () => { E.gustos = {}; guardar(); CL.lista = []; CL.pagina = 0; CL.hayMas = true; toast(t("gustosOk")); };
   if ($("aj-borrar")) $("aj-borrar").onclick = () => confirmar(t("borrarTodasQ"), async () => { for (const u of Object.keys(E.desc)) await DL.borrar(u); vAjustes(); });
 }
@@ -637,7 +706,7 @@ async function vLibro(id){
   const pintar = () => dl.innerHTML = enLista(x) ? ICO.ok : ICO.mas;
   pintar(); dl.onclick = () => { alternarLista(x); pintar(); };
   $("d-play").onclick = () => ult ? continuar(ult) : reproducir(b, b.capitulos, 0);
-  if ($("d-todo")) $("d-todo").onclick = () => { b.capitulos.forEach(c => { if (!E.desc[pistaUrl(c, true)]) DL.bajar(x, c); }); toast(t("descargando")); };
+  if ($("d-todo")) $("d-todo").onclick = () => { let n = 0; for (const c of b.capitulos) { if (E.desc[pistaUrl(c, true)]) continue; if (!DL.bajar(x, c)) break; n++; } if (n) toast(t("descargando")); };
   if ($("d-pap")) $("d-pap").onclick = () => abrirAfuera(CONFIG.afiliado.url.replace("{q}", encodeURIComponent(b.titulo + " " + b.autor)));
   conectarFilas(b, b.capitulos, true);
   leerMas();
@@ -694,11 +763,13 @@ const DL = {
   nombre(url){ return "audio/" + hash(url).toString(36) + "-" + url.length + ".mp3"; },
   bajar(item, p){
     const url = pistaUrl(p, true);
-    if (E.desc[url] || this.bajando[url]) return;
+    if (E.desc[url] || this.bajando[url]) return true;
+    if (!puedeGuardar()) { muro("espacio", () => this.bajar(item, p)); return false; }
     this.bajando[url] = { pct:0 };
     this.cola.push({ item:corto(item), p, url });
     this.refrescar(url);
     this.siguiente();
+    return true;
   },
   async siguiente(){
     if (this.activo >= 2 || !this.cola.length) return;
@@ -781,6 +852,129 @@ function tocarDL(item, p){
   else if (!DL.bajando[u]) DL.bajar(item, p);
 }
 
+// ================= Premium, créditos y publicidad =================
+// Gratis: 60 min sin internet (+20 por video, hasta 3 videos por día; al otro día vuelve a 60),
+// Dormir 5 usos y Chromecast 3 usos (para siempre; un video da 1 uso más), publicidad cada 8 clips.
+// Premium: todo sin límite y sin publicidad.
+// Mientras no estén RevenueCat (PLUG.Purchases) ni AppLovin (PLUG.AppLovin), compras y anuncios son de prueba.
+const PREMIUM = { base:60, porVideo:20, videosDia:3, cadaClips:8, dormir:5, tele:3 };
+const PRUEBA_PAGOS = !(NATIVO && PLUG.Purchases), PRUEBA_ANUNCIOS = !(NATIVO && PLUG.AppLovin);
+if (!E.creditos) E.creditos = { dormir:PREMIUM.dormir, tele:PREMIUM.tele };
+const esPremium = () => !!E.premium;
+const hoyStr = () => { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
+function extraHoy(){ if (!E.extra || E.extra.dia !== hoyStr()) E.extra = { dia:hoyStr(), min:0, videos:0 }; return E.extra; }
+const limiteMin = () => esPremium() ? Infinity : PREMIUM.base + extraHoy().min;
+// Minutos de una pista: la duración que conocemos, o la estimamos por el tamaño (audio de ~64 kbps).
+const minDe = (p, bytes) => ((p && p.duracion) || (bytes ? bytes / 8000 : (p && p.tamano ? p.tamano / 8000 : 1800))) / 60;
+const minGuardados = () => Object.values(E.desc).reduce((a, d) => a + minDe(d.pista, d.bytes), 0);
+const minEnCola = () => DL.cola.reduce((a, x) => a + minDe(x.p), 0) + 0;
+// Lo guardado que pasa del límite de hoy queda con candado (se escucha con internet, no sin internet).
+function conCandado(){
+  const s = new Set(); if (esPremium()) return s;
+  const lim = limiteMin(); let acc = 0;
+  Object.entries(E.desc).sort((a, b) => a[1].ts - b[1].ts).forEach(([u, d]) => { if (acc >= lim) s.add(u); acc += minDe(d.pista, d.bytes); });
+  return s;
+}
+function puedeGuardar(){ return esPremium() || minGuardados() + minEnCola() < limiteMin(); }
+function gastarCredito(k){
+  if (esPremium()) return true;
+  if ((E.creditos[k] || 0) <= 0) return false;
+  E.creditos[k]--; guardar();
+  toast(t("usosQuedan", E.creditos[k]));
+  return true;
+}
+
+// Ventana de publicidad. tipo "premio" = hay que verla entera; "corte" = se puede cerrar a los 5 s.
+// Con AppLovin conectado se usa el anuncio real; si no, una ventana de prueba.
+function verAnuncio(tipo){
+  if (!PRUEBA_ANUNCIOS) {
+    const ap = PLUG.AppLovin;
+    return (tipo === "premio" ? ap.showRewarded() : ap.showInterstitial()).then(r => tipo !== "premio" || !!(r && r.rewarded)).catch(() => false);
+  }
+  return new Promise(ok => {
+    const sonaba = !A.paused, clip = !AC.paused;
+    A.pause(); RES.forEach(a => a.pause());
+    const seg = tipo === "premio" ? 10 : 5;
+    const el = document.createElement("div"); el.className = "anuncio";
+    el.innerHTML = '<div class="an-top"><span>' + t("anuncio") + '</span><button class="an-x" disabled>' + t("seCierraEn", seg) + '</button></div>' +
+      '<div class="an-c"><div class="an-logo">' + ICO.auris + '</div><b>' + t("anuncioPrueba") + '</b><p>' + t("anuncioPruebaTxt") + '</p><div class="an-bar"><i></i></div></div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(() => { el.classList.add("on"); el.querySelector(".an-bar i").style.transition = "width " + seg + "s linear"; el.querySelector(".an-bar i").style.width = "100%"; });
+    let q = seg; const x = el.querySelector(".an-x");
+    const tm = setInterval(() => { q--; if (q > 0) x.textContent = t("seCierraEn", q); else { clearInterval(tm); x.disabled = false; x.textContent = "✕ " + t("cerrar"); } }, 1000);
+    x.onclick = () => { if (x.disabled) return; el.remove(); if (sonaba) A.play().catch(() => {}); ok(true); void clip; };
+  });
+}
+
+// Pantalla para pasar a Premium (motivo: espacio, candado, dormir, tele o ajustes).
+function muro(motivo, alGanar){
+  const ex = extraHoy(), quedan = PREMIUM.videosDia - ex.videos;
+  const tit = { espacio:"muroEspacio", candado:"muroCandado", dormir:"muroDormir", tele:"muroTele" }[motivo];
+  const conVideo = motivo === "espacio" || motivo === "candado" ? (quedan > 0 ? "20" : "no") : (motivo === "dormir" || motivo === "tele" ? "1" : "");
+  const el = document.createElement("div"); el.className = "muro";
+  el.innerHTML = '<div class="mu-c"><button class="mu-x" aria-label="' + t("cerrar") + '">✕</button>' +
+    '<div class="mu-logo">' + ICO.auris + '</div>' +
+    (tit ? '<h2>' + t(tit) + '</h2><p class="mu-txt">' + t(tit + "Txt", PREMIUM.base + ex.min) + '</p>' : '<h2>' + t("hacetePremium") + '</h2>') +
+    '<ul class="mu-ben">' + ["benSinPubli", "benSinLimite", "benDormir", "benTele"].map(k => '<li>' + ICO.ok + t(k) + '</li>').join("") + '</ul>' +
+    '<button class="btn mu-plan" data-plan="anual"><span>' + t("planAnio") + '</span><small>' + t("ahorro") + '</small></button>' +
+    '<button class="btn sec mu-plan" data-plan="mensual"><span>' + t("planMes") + '</span></button>' +
+    (conVideo === "20" ? '<button class="mu-video" data-video="20">▶ ' + t("verVideo20") + '<small>' + t("quedanVideos", quedan) + '</small></button>' : '') +
+    (conVideo === "no" ? '<p class="mu-nota">' + t("sinVideosHoy") + '</p>' : '') +
+    (conVideo === "1" ? '<button class="mu-video" data-video="1">▶ ' + t("verVideo1") + '</button>' : '') +
+    '<button class="link mu-rest">' + t("restaurar") + '</button>' + (PRUEBA_PAGOS ? '<p class="mu-nota">' + t("modoPrueba") + '</p>' : '') + '</div>';
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("on"));
+  const cerrar = () => { el.classList.remove("on"); setTimeout(() => el.remove(), 250); };
+  el.querySelector(".mu-x").onclick = cerrar;
+  el.onclick = e => { if (e.target === el) cerrar(); };
+  el.querySelectorAll(".mu-plan").forEach(b => b.onclick = () => comprar(b.dataset.plan).then(ok => { if (ok) { cerrar(); if (alGanar) alGanar(); } }));
+  el.querySelector(".mu-rest").onclick = () => restaurarCompras().then(ok => { if (ok) cerrar(); });
+  const bv = el.querySelector(".mu-video");
+  if (bv) bv.onclick = async () => {
+    cerrar();
+    const visto = await verAnuncio("premio");
+    if (!visto) return toast(t("anuncioCortado"));
+    if (bv.dataset.video === "20") { const e2 = extraHoy(); e2.videos++; e2.min += PREMIUM.porVideo; guardar(); toast(t("ganaste20")); }
+    else { const k = motivo === "dormir" ? "dormir" : "tele"; E.creditos[k] = (E.creditos[k] || 0) + 1; guardar(); toast(t("ganaste1")); }
+    refrescarPremium();
+    if (alGanar) alGanar();
+  };
+}
+function comprar(plan){
+  if (!PRUEBA_PAGOS) {
+    // RevenueCat: paquetes "$rc_monthly" y "$rc_annual" de la oferta actual.
+    const RC = PLUG.Purchases;
+    return RC.getOfferings().then(o => {
+      const pk = o.current && o.current.availablePackages.find(p => p.packageType === (plan === "anual" ? "ANNUAL" : "MONTHLY"));
+      if (!pk) throw new Error("sin paquete");
+      return RC.purchasePackage({ aPackage:pk });
+    }).then(r => activarSiCorresponde(r && r.customerInfo)).catch(() => false);
+  }
+  return new Promise(ok => {
+    const h = $("hoja");
+    h.innerHTML = '<div class="agarre"></div><h3>' + t("compraPrueba") + '</h3><p class="sub" style="margin:0 4px 8px">' + t("compraPruebaTxt") + ' (' + t(plan === "anual" ? "planAnio" : "planMes") + ')</p><button class="op" style="color:var(--accent);font-weight:700" id="h-si">' + t("activarPrueba") + '</button><button class="op" id="h-no">' + t("cancelar") + '</button>';
+    h.classList.add("on", "sobre"); $("hoja-fondo").classList.add("on", "sobre");
+    $("h-si").onclick = () => { cerrarHoja(); E.premium = true; guardar(); toast(t("premiumOk")); refrescarPremium(); ok(true); };
+    $("h-no").onclick = () => { cerrarHoja(); ok(false); };
+  });
+}
+function activarSiCorresponde(info){
+  const activo = !!(info && info.entitlements && info.entitlements.active && info.entitlements.active.premium);
+  E.premium = activo; guardar(); refrescarPremium();
+  if (activo) toast(t("premiumOk"));
+  return activo;
+}
+function restaurarCompras(){
+  if (PRUEBA_PAGOS) { toast(t("modoPrueba")); return Promise.resolve(false); }
+  return PLUG.Purchases.restorePurchases().then(r => activarSiCorresponde(r && r.customerInfo)).catch(() => false);
+}
+// Repinta lo que depende de Premium en la pantalla actual.
+function refrescarPremium(){
+  const r = rutaActual();
+  if (r === "/ajustes") vAjustes();
+  else if (r === "/biblioteca/descargas") vBiblioteca("descargas");
+}
+
 // ================= Reproductor =================
 const A = $("audio");
 const P = { item:null, pistas:[], i:0, seguido:true, texto:null };
@@ -806,7 +1000,12 @@ function reproducir(item, pistas, i, seguido = true, desde = null){
 }
 function continuar(r){ reproducir(r.item, r.pistas, r.i, r.item.tipo === "libro"); }
 async function ponerFuente(p){
-  const local = await DL.fuente(pistaUrl(p, true));
+  const u = pistaUrl(p, true);
+  let local = null;
+  if (E.desc[u] && conCandado().has(u)) {
+    // Con candado: con internet se escucha desde la red; sin internet, hay que destrabar.
+    if (navigator.onLine === false) { muro("candado", () => cargarPista(null, true)); throw new Error("candado"); }
+  } else local = await DL.fuente(u);
   if (urlLocal && urlLocal !== local && urlLocal.startsWith("blob:")) URL.revokeObjectURL(urlLocal);
   urlLocal = local;
   A.src = local || pistaUrl(p);
@@ -818,7 +1017,7 @@ async function cargarPista(desde, tocar){
   $("full").classList.add("cargando"); pintarPlay(true);
   pintarFicha();
   registrarReciente();
-  await ponerFuente(p);
+  try { await ponerFuente(p); } catch (e) { $("full").classList.remove("cargando"); pintarPlay(); return; }
   if (P.pistas[P.i] !== p) return;
   A.playbackRate = E.vel;
   A.addEventListener("loadedmetadata", () => { if (t0) A.currentTime = Math.min(t0, (A.duration || t0 + 1) - 1); A.playbackRate = E.vel; }, { once:true });
@@ -952,7 +1151,12 @@ if ("mediaSession" in navigator) {
 // Temporizador para dormir
 let sueñoT = null, finCapitulo = false, sueñoMin = 0;
 function pintarSueno(min){ $("sueno-t").textContent = min === "fin" ? t("finCap") : min ? min + " min" : t("dormir"); $("sueno").classList.toggle("on", !!min); }
-$("sueno").onclick = () => hoja(t("apagarEn"), [[t("desactivado"), 0], [t("min15"), 15], [t("min30"), 30], [t("min45"), 45], [t("hora1"), 60], [t("alTerminar"), "fin"]], v => {
+$("sueno").onclick = () => {
+  if (!esPremium() && !sueñoMin && (E.creditos.dormir || 0) <= 0) return muro("dormir", () => $("sueno").onclick());
+  elegirSueno();
+};
+const elegirSueno = () => hoja(t("apagarEn"), [[t("desactivado"), 0], [t("min15"), 15], [t("min30"), 30], [t("min45"), 45], [t("hora1"), 60], [t("alTerminar"), "fin"]], v => {
+  if (v && !sueñoMin && !gastarCredito("dormir")) return muro("dormir");
   clearTimeout(sueñoT); finCapitulo = false; sueñoMin = v;
   if (v === "fin") finCapitulo = true;
   else if (v) sueñoT = setTimeout(() => { pausar(); sueñoMin = 0; pintarSueno(0); }, v * 60000);
@@ -976,7 +1180,7 @@ function confirmar(pregunta, fn){
   $("h-si").onclick = () => { cerrarHoja(); fn(); };
   $("h-no").onclick = cerrarHoja;
 }
-function cerrarHoja(){ $("hoja").classList.remove("on"); $("hoja-fondo").classList.remove("on"); }
+function cerrarHoja(){ $("hoja").classList.remove("on", "sobre"); $("hoja-fondo").classList.remove("on", "sobre"); }
 $("hoja-fondo").onclick = cerrarHoja;
 
 // Voces y texto sincronizado (libros narrados por nosotros)
@@ -1045,7 +1249,7 @@ function iniciarCast(){
   ctx.addEventListener(cf.CastContextEventType.CAST_STATE_CHANGED, e => { CAST.cc = e.castState !== cf.CastState.NO_DEVICES_AVAILABLE; CAST.conectado = e.castState === cf.CastState.CONNECTED || (!!A.webkitCurrentPlaybackTargetIsWireless); pintarCast(); });
   ctx.addEventListener(cf.CastContextEventType.SESSION_STATE_CHANGED, e => {
     const S = cf.SessionState;
-    if (e.sessionState === S.SESSION_STARTED) { CS.activo = true; if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); }
+    if (e.sessionState === S.SESSION_STARTED) { CS.activo = true; gastarCredito("tele"); if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); }
     else if (e.sessionState === S.SESSION_RESUMED) { CS.activo = true; seguirFin(ctx.getCurrentSession()); }
     else if (e.sessionState === S.SESSION_ENDED) {
       const tt = CS.ultimo; CS.activo = false; CS.cargando = false;
@@ -1122,7 +1326,7 @@ if (NATIVO && PLUG.Chromecast) {
     if (CS.activo) { pintarPlay(m.playerState === "BUFFERING"); guardarProgreso(); }
     if (CS.activo && m.playerState === "IDLE" && m.idleReason === "FINISHED" && CS.carga > 0) { CS.carga = 0; CS.fin = true; alTerminar(); }
   };
-  const empezo = () => { CS.activo = true; CAST.conectado = true; pintarCast(); if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); };
+  const empezo = () => { CS.activo = true; CAST.conectado = true; pintarCast(); gastarCredito("tele"); if (A.src && P.pistas[P.i]) mandarACast(A.currentTime); };
   const termino = () => {
     if (!CS.activo) return;
     const tt = CS.ultimo; CS.activo = false; CS.cargando = false; CAST.conectado = false; pintarCast();
@@ -1164,16 +1368,23 @@ if (window.WebKitPlaybackTargetAvailabilityEvent) {
   A.remote.watchAvailability(d => { CAST.disponible = d; pintarCast(); }).catch(() => { CAST.disponible = false; pintarCast(); });
   ["connecting", "connect", "disconnect"].forEach(ev => A.remote.addEventListener(ev, () => { CAST.conectado = A.remote.state !== "disconnected"; pintarCast(); }));
 }
+// El Chromecast es de Premium: los demás tienen 3 usos gratis (AirPlay es del sistema y queda libre).
+function permisoTele(){
+  if (esPremium() || CS.activo) return true;
+  if ((E.creditos.tele || 0) > 0) return true;
+  muro("tele", () => transmitir());
+  return false;
+}
 function transmitir(){
   if (!A.src) { toast(t("castPrimero")); return; }
   if (CS.modo === "nat") {
     const cc = () => PLUG.Chromecast.requestSession().catch(() => {});
     // Si hay Chromecast y también teles con AirPlay, que elija.
     if (!CS.activo && CAST.cc && CAST.disponible && A.webkitShowPlaybackTargetPicker)
-      return hoja(t("transmitir"), [["Chromecast", "cc"], ["AirPlay", "ap"]], v => v === "cc" ? cc() : A.webkitShowPlaybackTargetPicker());
-    if (CS.activo || CAST.cc) return cc();
+      return hoja(t("transmitir"), [["Chromecast", "cc"], ["AirPlay", "ap"]], v => v === "cc" ? (permisoTele() && cc()) : A.webkitShowPlaybackTargetPicker());
+    if (CS.activo || CAST.cc) return permisoTele() && cc();
   }
-  if (CS.modo === "web" && (CAST.cc || CS.activo)) return cast.framework.CastContext.getInstance().requestSession().catch(() => {});
+  if (CS.modo === "web" && (CAST.cc || CS.activo)) return permisoTele() && cast.framework.CastContext.getInstance().requestSession().catch(() => {});
   if (A.webkitShowPlaybackTargetPicker) return A.webkitShowPlaybackTargetPicker();
   if (A.remote && A.remote.prompt) return A.remote.prompt().catch(e => { if (e && e.name !== "AbortError") toast(t("castNo")); });
   toast(t("castNo"));
