@@ -46,6 +46,7 @@ const T = {
   podCuentos: { es: 'Relatos en podcast', en: 'Story podcasts', pt: 'Histórias em podcast' },
   populares: { es: 'Más escuchados', en: 'Most listened', pt: 'Mais ouvidos' },
   destacado: { es: 'Destacado', en: 'Featured', pt: 'Destaque' },
+  topEn: { es: 'N.º {n} en {p}', en: '#{n} in {p}', pt: 'Nº {n} em {p}' },
   gratis: { es: 'Gratis', en: 'Free', pt: 'Grátis' }
 };
 
@@ -524,18 +525,26 @@ app.get('/api/inicio', ruta(async req => {
   fila('misterio', CATEGORIAS.misterio.nombre, misterio && misterio.libros, { cat: 'misterio' });
   if (elegidos) fila('populares', T.populares, pop.slice(10), { cat: '' });
 
-  // Destacados: 5 libros de la selección (o los más escuchados) que cambian cada día.
+  // Destacados: los 3 podcasts más escuchados del país y 1 audiolibro de la selección que cambia cada día.
+  // (La app suma la tarjeta de Premium en el segundo lugar.)
   let destacados = [];
   if (L === 'es' && PROPIOS_ACTIVOS) destacados.push(PROPIOS.destacado);
+  (top || []).filter(p => p.portada).slice(0, 3).forEach((p, k) => destacados.push({
+    id: p.id, tipo: 'podcast', titulo: p.titulo, autor: p.autor,
+    etiqueta: T.topEn[L].replace('{n}', k + 1).replace('{p}', nomPais),
+    generos: [p.autor, p.genero].filter(Boolean).slice(0, 2),
+    portada: p.portada, poster: String(p.portada).replace('/600x600bb.', '/1200x1200bb.')
+  }));
   const base = (elegidos && elegidos.libros.length) ? elegidos.libros : pop;
   if (base.length) {
     const dia = Math.floor((Date.now() - 3 * 3600e3) / 864e5); // cambia a la medianoche de Argentina
-    const n = Math.min(5, base.length), inicio = (dia * n) % base.length;
+    const n = Math.min(destacados.length ? 1 : 5, base.length), inicio = (dia * n) % base.length;
     const elegidosHoy = Array.from({ length: n }, (_, k) => base[(inicio + k) % base.length]);
     const grandes = await Promise.all(elegidosHoy.map(d => seguro(portadaGrande(d.id))));
     elegidosHoy.forEach((d, k) => destacados.push({ id: d.id, titulo: d.titulo, autor: d.autor, etiqueta: T.destacado[L], generos: [d.autor, T.gratis[L]], portada: d.portada, poster: grandes[k] || d.portada }));
   }
   destacados = destacados.slice(0, 5);
+  destacados.forEach(d => { if (!d.tipo) d.tipo = 'libro'; });
   const destacado = destacados[0] || null;
   return { destacado, destacados, filas };
 }));
