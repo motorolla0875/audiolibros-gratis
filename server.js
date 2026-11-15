@@ -394,7 +394,11 @@ const PALABRAS = {
   en: 'the and of with my your our show podcast hour daily life talk talks stories story news comedy funny guys girls friends what how why who this that you we it is are on to for from about with not all best new real true needs friend friends people world inside behind time week guide crime murder wondery siriusxm iheartpodcasts iheartradio npr bbc audacy cumulus coco'.split(' '),
   pt: 'o a os as de do da das e com que em um uma por para meu seu sua no na não nao mais como histórias historias humor vida mundo papo conversa ciência negócios mulheres amigos'.split(' ')
 };
+// Idiomas con otro alfabeto: se reconocen por las letras (ruso, árabe, hindi, japonés, coreano, chino).
+const ESCRITURAS = [];
 function idiomaProbable(texto) {
+  // Japonés antes que chino: usa kanji pero también kana.
+  for (const [L, re] of ESCRITURAS) if (re.test(texto)) return L;
   const w = sinAcentos(texto).split(/[^a-z0-9ñç]+/).filter(Boolean);
   const pts = {};
   for (const L of Object.keys(PALABRAS)) pts[L] = w.filter(x => PALABRAS[L].includes(x)).length;
@@ -403,7 +407,7 @@ function idiomaProbable(texto) {
   const orden = Object.entries(pts).sort((a, b) => b[1] - a[1]);
   return orden[0][1] > orden[1][1] ? orden[0][0] : null; // null = no se sabe
 }
-const enIdioma = (lista, L) => (lista || []).filter(x => { const i = idiomaProbable((x.titulo || '') + ' ' + (x.autor || '')); return !i || i === L; });
+const enIdioma = (lista, L) => (lista || []).filter(x => { const i = idiomaProbable((x.titulo || '') + ' ' + (x.autor || '')); return !i || i === L || (i === 'en' && IDIOMAS[L].aceptaIngles); });
 
 // Junta Apple + Podcast Index sin repetir (mismo podcast = mismo id de Apple, mismo feed o mismo título).
 async function buscarPodcasts(idioma, term, n = 25) {
@@ -561,6 +565,20 @@ const TEMAS_RADIO = {
   deportes: { nombre: { es: 'Deportes', en: 'Sports', pt: 'Esportes' }, tags: ['sports', 'deportes', 'futbol', 'esportes', 'football'] }
 };
 T.radios = { es: 'Radios en vivo', en: 'Live radio', pt: 'Rádios ao vivo' };
+
+// ---------- Los demás idiomas (idiomas-servidor.js) ----------
+for (const [L, d] of Object.entries(require('./idiomas-servidor'))) {
+  IDIOMAS[L] = { lang: d.lang, pais: d.pais, aceptaIngles: !!d.aceptaIngles };
+  PAISES[L] = d.paises; MUNDO[L] = d.mundo; IDIOMA_RB[L] = d.rb;
+  for (const k of Object.keys(d.t)) if (T[k]) T[k][L] = d.t[k];
+  for (const k of Object.keys(d.cat)) CATEGORIAS[k].nombre[L] = d.cat[k];
+  for (const k of Object.keys(d.gen)) { GENEROS_POD[k].nombre[L] = d.gen[k][0]; GENEROS_POD[k].term[L] = d.gen[k][1]; }
+  for (const k of Object.keys(d.radio)) TEMAS_RADIO[k].nombre[L] = d.radio[k];
+  if (d.palabras) PALABRAS[L] = d.palabras.split(' ');
+  if (d.escritura) ESCRITURAS.push([L, d.escritura]);
+}
+// Japonés primero (también usa los caracteres chinos).
+ESCRITURAS.sort((a, b) => (a[0] === 'ja' ? -1 : 0) - (b[0] === 'ja' ? -1 : 0));
 // Prueba los servidores espejo del directorio uno por uno; recuerda el último que anduvo.
 let rbBueno = 0;
 async function rb(ruta) {

@@ -183,22 +183,32 @@ Object.assign(TX.pt, {
   creditosDormir:"Dormir: {0} usos grátis", creditosTele:"Transmitir: {0} usos grátis", reiniciarPrueba:"Reiniciar créditos e espaço (teste)", reiniciado:"Créditos e espaço reiniciados",
   chipTop:"Top 50", chipCats:"Categorias", chipNuevos:"Novos episódios", nuevosTxtSubs:"O mais recente dos podcasts que você segue", nuevosTxtTop:"O mais recente dos podcasts mais ouvidos", nuevosVacio:"Nenhum episódio novo por enquanto.", porMes:"{0} por mês", porAnio:"{0} por ano", ahorroPct:"Economize {0}%", compraFallo:"Não foi possível concluir a compra. Tente de novo.", sinProductos:"Os planos ainda não carregaram. Tente daqui a pouco.", gestionar:"Gerenciar assinatura", nadaRestaurar:"Nenhuma compra para restaurar", restaurado:"Pronto, seu Premium voltou", volvioInternet:"A internet voltou", novedades:"Novidades", sinNovedades:"Nenhuma novidade por enquanto", sinNovedadesTxt:"Siga podcasts e salve rádios: vamos avisar aqui quando houver algo novo.", nuevoEp:"Novo episódio de {0}", radioTeEspera:"Sua rádio favorita está esperando", seguiEscuchando:"Continuar ouvindo", teQuedaste:"Você parou em {0}", activarAvisos:"Ative os avisos", activarAvisosTxt:"Avisamos sobre suas rádios e o que você deixou pela metade. No máximo um por dia.", activar:"Ativar", avisosOn:"Pronto, vamos avisar você", avisosNo:"Para receber avisos, permita nos ajustes do celular.", notifs:"Notificações", notifRecord:"Lembretes", notifRecordTxt:"Sua rádio favorita e o que você deixou pela metade (no máximo um por dia).", notifRadioTit:"📻 {0} está esperando", notifRadioTxt:"Está ao vivo agora. Toque para ouvir.", notifSeguirTit:"🎧 Continuar ouvindo", notifSeguirTxt:"Você parou em {0} · {1}", chipRadios:"Rádios", paisRadio:"País", todosPaises:"Todos os países", verMas:"Ver mais", mundoRadios:"Mundo todo", radiosVivo:"Rádios ao vivo", enVivo:"AO VIVO", guardarRadio:"Salvar rádio", enFavoritas:"Nas suas rádios", radiosFav:"Suas rádios", buscarRadioPh:"Buscar uma rádio", masEscuchadasR:"Mais ouvidas", sinRadios:"Não encontramos rádios aqui.", radioGuardada:"{0} salva nas suas rádios", radioSacada:"{0} removida das suas rádios", radioNoAnda:"Esta rádio não está respondendo. Tente outra.", widgetVacio:"Escolha algo para ouvir", widgetSinRadios:"Salve rádios com a ★", cpSinPods:"Siga podcasts no celular", premTit:"Ouça sem limites", legalSub:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser nos ajustes da sua conta Apple, pelo menos 24 horas antes da renovação.", legalSubAnd:"A assinatura é renovada automaticamente pelo mesmo preço até você cancelar. Você pode cancelar quando quiser no Google Play → Pagamentos e assinaturas.", premSub:"Sem anúncios, offline e na TV", premNota:"Cancele quando quiser."
 });
-const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"]];
+// Los demás idiomas vienen de idiomas.js (se carga antes que este archivo).
+if (window.TX_MAS) Object.assign(TX, window.TX_MAS);
+const IDIOMAS = [["es","Español"],["en","English"],["pt","Português"],["fr","Français"],["de","Deutsch"],["it","Italiano"],["nl","Nederlands"],["pl","Polski"],["tr","Türkçe"],["id","Bahasa Indonesia"],["ru","Русский"],["ar","العربية"],["hi","हिन्दी"],["ja","日本語"],["ko","한국어"],["zh","中文"]].filter(([id]) => TX[id]);
+
+// Texto del logo de arriba (la parte en <i> va en color).
+const LOGO = { es:"audiolibros <i>gratis</i>", en:"free <i>audiobooks</i>", pt:"audiolivros <i>grátis</i>", fr:"livres audio <i>gratuits</i>", de:"<i>kostenlose</i> Hörbücher",
+  it:"audiolibri <i>gratis</i>", nl:"<i>gratis</i> luisterboeken", pl:"<i>darmowe</i> audiobooki", tr:"<i>ücretsiz</i> sesli kitap", id:"buku audio <i>gratis</i>",
+  ru:"<i>бесплатные</i> аудиокниги", ar:"كتب صوتية <i>مجانية</i>", hi:"<i>मुफ़्त</i> ऑडियोबुक", ja:"<i>無料</i>オーディオブック", ko:"<i>무료</i> 오디오북", zh:"<i>免费</i>有声书" };
 
 // ================= Estado guardado en el teléfono =================
 const CLAVE = "ag:v1";
 let E = { progreso:{}, recientes:[], lista:[], subs:[], desc:{}, gustos:{}, voz:"ef_dora", vel:1, idioma:null };
 try { Object.assign(E, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
-if (!E.idioma || !TX[E.idioma]) { const n = (navigator.language || "es").slice(0, 2).toLowerCase(); E.idioma = TX[n] ? n : "es"; }
+// Idioma del teléfono; si la app no lo tiene, inglés (le sirve a más gente que el español).
+if (!E.idioma || !TX[E.idioma]) { const n = (navigator.language || "en").slice(0, 2).toLowerCase(); E.idioma = TX[n] ? n : "en"; }
 // País del ranking de podcasts: sale de la configuración del teléfono (es-AR → Argentina).
-const PAISES_IDIOMA = { es:["ar","mx","es","co","cl","pe","uy","ec","ve"], en:["us","gb","ca","au","ie","nz"], pt:["br","pt"] };
+const PAISES_IDIOMA = { es:["ar","mx","es","co","cl","pe","uy","ec","ve"], en:["us","gb","ca","au","ie","nz","in"], pt:["br","pt"],
+  fr:["fr","ca","be","ch"], de:["de","at","ch"], it:["it","ch"], nl:["nl","be"], pl:["pl"], tr:["tr"], id:["id"], ru:["ru","kz","by"],
+  ar:["sa","ae","eg","ma","jo","kw","qa"], hi:["in"], ja:["jp"], ko:["kr"], zh:["tw","hk","sg"] };
 function paisInicial(lang){
   for (const l of (navigator.languages || [navigator.language || ""])) { const r = (String(l).split("-")[1] || "").toLowerCase(); if (PAISES_IDIOMA[lang].includes(r)) return r; }
   return PAISES_IDIOMA[lang][0];
 }
 if (!E.pais || (E.pais !== "mundo" && !PAISES_IDIOMA[E.idioma].includes(E.pais))) E.pais = paisInicial(E.idioma);
 let L = E.idioma;
-const t = (k, ...a) => String((TX[L] && TX[L][k]) || TX.es[k] || k).replace(/\{(\d)\}/g, (_, i) => a[i]);
+const t = (k, ...a) => String((TX[L] && TX[L][k]) || TX.en[k] || TX.es[k] || k).replace(/\{(\d)\}/g, (_, i) => a[i]);
 let guardarT = null;
 function guardar(){ clearTimeout(guardarT); guardarT = setTimeout(() => { try { localStorage.setItem(CLAVE, JSON.stringify(E)); } catch (e) {} enviarWidget(); enviarCarPlay(); }, 300); }
 const corto = x => ({ id:x.id, tipo:x.tipo, titulo:x.titulo, autor:x.autor, portada:x.portada });
@@ -228,7 +238,7 @@ function largo(s){ s = Math.round(s || 0); if (!s) return ""; const h = Math.flo
 function megas(b){ return b > 1e9 ? (b / 1e9).toFixed(1) + " GB" : Math.max(0.1, b / 1e6).toFixed(b > 1e8 ? 0 : 1) + " MB"; }
 function fecha(iso){ if (!iso) return ""; const d = new Date(iso), hoy = new Date(); const dias = Math.floor((hoy - d) / 864e5);
   if (dias < 1) return t("hoy"); if (dias < 2) return t("ayer"); if (dias < 7) return t("haceDias", dias);
-  return d.toLocaleDateString({ es:"es-AR", en:"en-US", pt:"pt-BR" }[L], { day:"numeric", month:"short", year: d.getFullYear() === hoy.getFullYear() ? undefined : "numeric" }); }
+  return d.toLocaleDateString({ es:"es-AR", en:"en-US", pt:"pt-BR", zh:"zh-TW" }[L] || L, { day:"numeric", month:"short", year: d.getFullYear() === hoy.getFullYear() ? undefined : "numeric" }); }
 
 // ================= Portadas =================
 const PALETA = [["#7C2D12","#3B1206"],["#1F5130","#0C2615"],["#3B3470","#16123A"],["#8A5A1F","#3E2608"],["#1D4E89","#0A2244"],["#5B1A2B","#24060F"],["#2F5D62","#0F2A2D"],["#6B6B2A","#2B2B0C"]];
@@ -359,7 +369,7 @@ async function vInicio(){
   }
   const d = cacheInicio;
   const hs = (d.destacados && d.destacados.length) ? d.destacados : (d.destacado ? [d.destacado] : []);
-  const hd = '<div class="hd"><span class="logo">' + ICO.auris + '<span>' + (L === "en" ? "free <i>audiobooks</i>" : L === "pt" ? "audiolivros <i>grátis</i>" : "audiolibros <i>gratis</i>") + '</span></span><span class="hd-der"><a class="hd-btn campana" href="#/novedades" aria-label="' + t("novedades") + '">' + ICO.campana + '<i class="badge" id="badge"' + (nNovedades() ? '' : ' hidden') + '>' + nNovedades() + '</i></a><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
+  const hd = '<div class="hd"><span class="logo">' + ICO.auris + '<span>' + (LOGO[L] || LOGO.en) + '</span></span><span class="hd-der"><a class="hd-btn campana" href="#/novedades" aria-label="' + t("novedades") + '">' + ICO.campana + '<i class="badge" id="badge"' + (nNovedades() ? '' : ' hidden') + '>' + nNovedades() + '</i></a><button class="hd-btn cast-btn" data-cast hidden aria-label="' + t("transmitir") + '">' + ICO.cast + '</button><a class="hd-btn" href="#/ajustes" aria-label="' + t("ajustes") + '">' + ICO.ajustes + '</a></span></div>';
   const info = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>';
   let html = "";
   if (hs.length) {

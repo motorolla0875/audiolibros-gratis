@@ -186,6 +186,16 @@ falso.listen(0, '127.0.0.1', async () => {
       assert.deepEqual(r.body.paises.map(p => p.id), ['br', 'pt', 'mundo']);
       assert.equal(r.body.libros[0].nombre, 'Contos');
 
+      // Idiomas nuevos: nombres traducidos, países propios y filas del inicio en su idioma.
+      r = await api('/api/categorias?idioma=ja');
+      assert.deepEqual(r.body.paises.map(p => p.id), ['jp', 'mundo']);
+      assert.equal(r.body.libros[1].nombre, '小説');
+      assert.equal(r.body.podcasts[0].nombre, '歴史');
+      r = await api('/api/inicio?idioma=fr');
+      assert.equal(r.body.filas.find(f => f.id === 'cuentos').titulo, 'Nouvelles');
+      r = await api('/api/categorias?idioma=xx');
+      assert.equal(r.body.libros[0].nombre, 'Cuentos', 'idioma desconocido: el servidor sigue en español');
+
       r = await api('/api/config');
       assert.equal(r.body.afiliado, null);
 
