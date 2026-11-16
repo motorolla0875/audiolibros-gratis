@@ -55,6 +55,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: |
           echo "$KEYSTORE_B64" | base64 -d > android/app/upload.jks
+          cp native/android/proguard-app.pro android/app/proguard-app.pro
           cat >> android/app/build.gradle <<GRADLE
 
           android {
@@ -73,6 +74,8 @@ jobs:
               buildTypes {
                   release {
                       signingConfig signingConfigs.release
+                      minifyEnabled true
+                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-app.pro'
                   }
               }
           }
@@ -86,6 +89,9 @@ jobs:
             grep -E "error:|FAILURE|What went wrong|e: " -A4 $RUNNER_TEMP/gradle.log | head -60 | sed 's/^/::error::/'
             exit 1; }
           ls -lh app/build/outputs/bundle/release/
+          M=$(find app/build/intermediates -path "*release*" -name AndroidManifest.xml | grep -i merged | head -1)
+          echo "Manifest final: $M"
+          if grep -q "BOOT_COMPLETED" "$M"; then grep -n "BOOT_COMPLETED" -B6 "$M" | sed 's/^/::error::/'; exit 1; else echo "Sin receptores de BOOT_COMPLETED"; fi
 
       - uses: actions/upload-artifact@v4
         with:
