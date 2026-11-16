@@ -15,5 +15,7 @@ if 'xmlns:tools' not in s:
 if 'LocalNotificationRestoreReceiver' not in s:
     s = s.replace('</application>', '    <receiver android:name="com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver" tools:node="remove" />\n    </application>', 1)
     s = s.replace('<application', '<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />\n\n    <application', 1)
+if 'MediaNotificationService' not in s:
+    s = s.replace('</application>', '    <service android:name="com.google.android.gms.cast.framework.media.MediaNotificationService" tools:node="remove" />\n    </application>', 1)
 open(p, "w", encoding="utf-8").write(s)
 print("manifest ok")

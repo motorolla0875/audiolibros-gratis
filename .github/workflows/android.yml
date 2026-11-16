@@ -42,6 +42,7 @@ jobs:
 
       - name: Crear proyecto Android
         run: |
+          python3 native/android/patch_cast.py node_modules/@strasberry/capacitor-chromecast/android/src/main/java/com/tbachir/plugins/chromecast/CastOptionsProvider.java
           npx cap add android > $RUNNER_TEMP/c.log 2>&1 || { tail -20 $RUNNER_TEMP/c.log | sed 's/^/::error::cap: /'; exit 1; }
           npx capacitor-assets generate --android \
             --iconBackgroundColor '#0E0C0A' --iconBackgroundColorDark '#0E0C0A' \
@@ -91,7 +92,7 @@ jobs:
           ls -lh app/build/outputs/bundle/release/
           M=$(find app/build/intermediates -path "*release*" -name AndroidManifest.xml | grep -i merged | head -1)
           echo "Manifest final: $M"
-          if grep -q "BOOT_COMPLETED" "$M"; then grep -n "BOOT_COMPLETED" -B6 "$M" | sed 's/^/::error::/'; exit 1; else echo "Sin receptores de BOOT_COMPLETED"; fi
+          if grep -qE "LocalNotificationRestoreReceiver|cast.framework.media.MediaNotificationService" "$M"; then grep -nE "LocalNotificationRestoreReceiver|MediaNotificationService" "$M" | sed 's/^/::error::/'; exit 1; else echo "OK: sin receptor de reinicio de avisos ni servicio de notificacion de Cast"; fi
 
       - uses: actions/upload-artifact@v4
         with:
